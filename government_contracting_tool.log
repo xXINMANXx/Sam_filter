@@ -1,0 +1,669 @@
+2025-09-10 18:40:35,418 - __main__ - ERROR - Error during project tracking migration: Working outside of request context.
+
+This typically means that you attempted to use functionality that needed
+an active HTTP request. Consult the documentation on testing for
+information about how to avoid this problem.
+2025-09-10 18:40:35,426 - werkzeug - WARNING -  * Debugger is active!
+2025-09-10 18:40:35,427 - werkzeug - INFO -  * Debugger PIN: 598-886-357
+2025-09-10 18:40:36,247 - __main__ - ERROR - Error during project tracking migration: Working outside of request context.
+
+This typically means that you attempted to use functionality that needed
+an active HTTP request. Consult the documentation on testing for
+information about how to avoid this problem.
+2025-09-10 18:40:36,255 - werkzeug - WARNING -  * Debugger is active!
+2025-09-10 18:40:36,256 - werkzeug - INFO -  * Debugger PIN: 598-886-357
+2025-09-10 18:40:43,151 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:40:43] "GET / HTTP/1.1" 200 -
+2025-09-10 18:40:43,337 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:40:43] "GET /static/flag.png HTTP/1.1" 200 -
+2025-09-10 18:40:52,830 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-10 18:40:52,858 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:40:52] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-10 18:41:03,581 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:41:03] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-10 18:41:03,648 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:41:03] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-10 18:41:09,478 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:41:09] "GET /opportunity/140P1425Q0045 HTTP/1.1" 200 -
+2025-09-10 18:41:09,615 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:41:09] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-10 18:41:17,158 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-10 18:41:17,158 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:41:17] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-10 18:41:27,754 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-10 18:41:27,755 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:41:27] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-10 18:41:29,189 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-10 18:41:29,190 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:41:29] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-10 18:41:31,266 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:41:31] "[35m[1mGET /my_solicitations HTTP/1.1[0m" 500 -
+2025-09-10 18:41:31,580 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:41:31] "GET /my_solicitations?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2025-09-10 18:41:31,583 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:41:31] "GET /my_solicitations?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2025-09-10 18:41:31,899 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:41:31] "GET /my_solicitations?__debugger__=yes&cmd=resource&f=console.png&s=8M4CAo0xqa35MfW6Ylqx HTTP/1.1" 200 -
+2025-09-10 18:41:32,204 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:41:32] "GET /my_solicitations?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-09-10 18:41:39,063 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:41:39] "GET / HTTP/1.1" 200 -
+2025-09-10 18:41:39,393 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:41:39] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-10 18:41:41,747 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-10 18:41:41,748 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:41:41] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-10 18:44:24,804 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:44:24] "[35m[1mPOST /sam-start/140P1425Q0045 HTTP/1.1[0m" 500 -
+2025-09-10 18:44:45,295 - __main__ - ERROR - Error during project tracking migration: Working outside of request context.
+
+This typically means that you attempted to use functionality that needed
+an active HTTP request. Consult the documentation on testing for
+information about how to avoid this problem.
+2025-09-10 18:44:45,307 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-10 18:44:45,307 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-09-10 18:44:45,308 - werkzeug - INFO -  * Restarting with stat
+2025-09-10 18:44:45,795 - __main__ - ERROR - Error during project tracking migration: Working outside of request context.
+
+This typically means that you attempted to use functionality that needed
+an active HTTP request. Consult the documentation on testing for
+information about how to avoid this problem.
+2025-09-10 18:44:45,803 - werkzeug - WARNING -  * Debugger is active!
+2025-09-10 18:44:45,804 - werkzeug - INFO -  * Debugger PIN: 598-886-357
+2025-09-10 18:44:50,302 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-10 18:44:50,303 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:44:50] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-10 18:44:56,598 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:44:56] "GET / HTTP/1.1" 200 -
+2025-09-10 18:44:56,927 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:44:56] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-10 18:45:00,713 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-10 18:45:00,713 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:45:00] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-10 18:45:43,962 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-10 18:45:43,963 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:45:43] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-10 18:46:31,566 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:46:31] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-10 18:46:31,876 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:46:31] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-10 18:46:39,733 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:46:39] "GET /opportunity/FA700025Q0106 HTTP/1.1" 200 -
+2025-09-10 18:46:40,043 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:46:40] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-10 18:46:49,367 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-10 18:46:49,368 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:46:49] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-10 18:47:15,548 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:47:15] "GET / HTTP/1.1" 200 -
+2025-09-10 18:47:15,879 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:47:15] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-10 18:47:29,188 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-10 18:47:29,231 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:47:29] "[35m[1mGET /sam-start/140P1425Q0045?kick=1 HTTP/1.1[0m" 500 -
+2025-09-10 18:47:43,074 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-10 18:47:43,074 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:47:43] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-10 18:47:48,939 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:47:48] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-10 18:47:48,946 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:47:48] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-10 18:47:59,400 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-10 18:47:59,401 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:47:59] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-10 18:48:08,294 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:48:08] "GET /reload-info HTTP/1.1" 200 -
+2025-09-10 18:48:08,320 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:48:08] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-10 18:48:44,948 - __main__ - ERROR - Error during project tracking migration: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-10 18:48:44,948 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:48:44] "GET /migrate_project_data HTTP/1.1" 200 -
+2025-09-10 18:48:44,974 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:48:44] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-10 18:49:41,898 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:49:41] "POST /upload-data HTTP/1.1" 200 -
+2025-09-10 18:49:42,346 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:49:42] "POST /filter HTTP/1.1" 200 -
+2025-09-10 18:49:44,137 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:49:44] "[35m[1mPOST /sam-start/FA700025Q0106 HTTP/1.1[0m" 500 -
+2025-09-10 18:49:49,047 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-10 18:49:49,048 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:49:49] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-10 18:50:24,085 - __main__ - ERROR - Error during project tracking migration: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-10 18:50:24,085 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:50:24] "GET /migrate_project_data HTTP/1.1" 200 -
+2025-09-10 18:50:24,112 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:50:24] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-10 18:51:39,727 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:51:39] "GET / HTTP/1.1" 200 -
+2025-09-10 18:51:53,353 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:51:53] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-10 18:51:53,587 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:51:53] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-10 18:51:57,260 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-10 18:51:57,261 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:51:57] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-10 18:52:17,695 - __main__ - ERROR - Error during project tracking migration: Working outside of request context.
+
+This typically means that you attempted to use functionality that needed
+an active HTTP request. Consult the documentation on testing for
+information about how to avoid this problem.
+2025-09-10 18:52:17,709 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-10 18:52:17,709 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-09-10 18:52:17,710 - werkzeug - INFO -  * Restarting with stat
+2025-09-10 18:52:18,185 - __main__ - ERROR - Error during project tracking migration: Working outside of request context.
+
+This typically means that you attempted to use functionality that needed
+an active HTTP request. Consult the documentation on testing for
+information about how to avoid this problem.
+2025-09-10 18:52:18,192 - werkzeug - WARNING -  * Debugger is active!
+2025-09-10 18:52:18,193 - werkzeug - INFO -  * Debugger PIN: 598-886-357
+2025-09-10 18:52:24,741 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:52:24] "GET / HTTP/1.1" 200 -
+2025-09-10 18:52:24,911 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:52:24] "GET /static/flag.png HTTP/1.1" 200 -
+2025-09-10 18:52:26,276 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:52:26] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-10 18:52:30,968 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-10 18:52:30,969 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:52:30] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-10 18:52:31,251 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:52:31] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-10 18:52:36,530 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-10 18:52:36,530 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:52:36] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-10 18:52:36,837 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:52:36] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-10 18:52:37,946 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-10 18:52:37,947 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:52:37] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-10 18:52:38,075 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:52:38] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-10 18:52:38,443 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-10 18:52:38,451 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:52:38] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-10 18:52:38,750 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:52:38] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-10 18:52:39,140 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-10 18:52:39,141 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:52:39] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-10 18:52:39,234 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:52:39] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-10 18:53:04,572 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2025 18:53:04] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 17:07:15,632 - __main__ - ERROR - Error during project tracking migration: Working outside of request context.
+
+This typically means that you attempted to use functionality that needed
+an active HTTP request. Consult the documentation on testing for
+information about how to avoid this problem.
+2025-09-11 17:07:15,678 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-11 17:07:15,678 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-09-11 17:07:15,680 - werkzeug - INFO -  * Restarting with stat
+2025-09-11 17:07:16,174 - __main__ - ERROR - Error during project tracking migration: Working outside of request context.
+
+This typically means that you attempted to use functionality that needed
+an active HTTP request. Consult the documentation on testing for
+information about how to avoid this problem.
+2025-09-11 17:07:16,182 - werkzeug - WARNING -  * Debugger is active!
+2025-09-11 17:07:16,184 - werkzeug - INFO -  * Debugger PIN: 598-886-357
+2025-09-11 17:07:29,409 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:07:29] "GET / HTTP/1.1" 200 -
+2025-09-11 17:07:29,507 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:07:29] "GET /static/flag.png HTTP/1.1" 200 -
+2025-09-11 17:07:31,384 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:07:31] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 17:07:39,119 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:07:39] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-11 17:07:39,127 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:07:39] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 17:07:39,151 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:07:39] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 17:07:43,761 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 17:07:43,786 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:07:43] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 17:07:44,397 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:07:44] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 17:07:49,812 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:07:49] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 17:20:38,363 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 17:20:38,384 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:20:38] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 17:20:38,410 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:20:38] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 17:20:41,854 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:20:41] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 17:21:02,902 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:21:02] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 17:26:11,599 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 17:26:11,628 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:26:11] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 17:26:11,650 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:26:11] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 17:26:14,956 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:26:14] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 17:26:17,463 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:26:17] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-11 17:26:17,491 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:26:17] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 17:26:55,358 - __main__ - ERROR - Error during project tracking migration: Working outside of request context.
+
+This typically means that you attempted to use functionality that needed
+an active HTTP request. Consult the documentation on testing for
+information about how to avoid this problem.
+2025-09-11 17:26:55,403 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-11 17:26:55,403 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-09-11 17:26:55,404 - werkzeug - INFO -  * Restarting with stat
+2025-09-11 17:26:55,874 - __main__ - ERROR - Error during project tracking migration: Working outside of request context.
+
+This typically means that you attempted to use functionality that needed
+an active HTTP request. Consult the documentation on testing for
+information about how to avoid this problem.
+2025-09-11 17:26:55,880 - werkzeug - WARNING -  * Debugger is active!
+2025-09-11 17:26:55,882 - werkzeug - INFO -  * Debugger PIN: 598-886-357
+2025-09-11 17:27:07,315 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:27:07] "GET / HTTP/1.1" 200 -
+2025-09-11 17:27:07,562 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:27:07] "GET /static/flag.png HTTP/1.1" 200 -
+2025-09-11 17:27:08,998 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:27:08] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 17:27:12,071 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:27:12] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-11 17:27:12,078 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:27:12] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 17:27:12,098 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:27:12] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 17:27:14,442 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 17:27:14,448 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:27:14] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 17:27:14,727 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:27:14] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 17:27:24,542 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:27:24] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 17:27:52,201 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:27:52] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 17:32:44,568 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 17:32:44,595 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:32:44] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 17:32:44,619 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:32:44] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 17:32:49,686 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 17:32:49,687 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:32:49] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 17:32:50,245 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:32:50] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 17:32:56,149 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:32:56] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 17:37:17,574 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 17:37:17,605 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:37:17] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 17:37:17,632 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:37:17] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 17:37:20,915 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:37:20] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 17:38:41,000 - __main__ - ERROR - Error during project tracking migration: Working outside of request context.
+
+This typically means that you attempted to use functionality that needed
+an active HTTP request. Consult the documentation on testing for
+information about how to avoid this problem.
+2025-09-11 17:38:41,014 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-11 17:38:41,014 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-09-11 17:38:41,015 - werkzeug - INFO -  * Restarting with stat
+2025-09-11 17:38:41,534 - __main__ - ERROR - Error during project tracking migration: Working outside of request context.
+
+This typically means that you attempted to use functionality that needed
+an active HTTP request. Consult the documentation on testing for
+information about how to avoid this problem.
+2025-09-11 17:38:41,541 - werkzeug - WARNING -  * Debugger is active!
+2025-09-11 17:38:41,543 - werkzeug - INFO -  * Debugger PIN: 598-886-357
+2025-09-11 17:38:49,794 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:38:49] "GET / HTTP/1.1" 200 -
+2025-09-11 17:38:49,997 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:38:49] "GET /static/flag.png HTTP/1.1" 200 -
+2025-09-11 17:38:51,368 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:38:51] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 17:38:53,579 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:38:53] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-11 17:38:53,587 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:38:53] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 17:38:53,621 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:38:53] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 17:38:55,081 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 17:38:55,086 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:38:55] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 17:38:55,606 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:38:55] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 17:38:58,011 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:38:58] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 17:40:21,955 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 17:40:21,980 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:40:21] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 17:40:21,999 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:40:21] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 17:40:25,253 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:40:25] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 17:40:58,573 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:40:58] "[35m[1mGET /project-tracking HTTP/1.1[0m" 500 -
+2025-09-11 17:40:58,696 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:40:58] "GET /project-tracking?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2025-09-11 17:40:58,831 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:40:58] "GET /project-tracking?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2025-09-11 17:40:58,878 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:40:58] "GET /project-tracking?__debugger__=yes&cmd=resource&f=console.png&s=9WSELE9DDqNnBVP8WLaB HTTP/1.1" 200 -
+2025-09-11 17:40:59,146 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:40:59] "GET /project-tracking?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-09-11 17:41:02,140 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:41:02] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 17:51:33,261 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 17:51:33,288 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:51:33] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 17:51:33,311 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:51:33] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 17:51:37,533 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 17:51:37] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 18:02:50,087 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 18:02:50,087 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:02:50] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 18:02:50,112 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:02:50] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 18:02:54,272 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:02:54] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 18:03:08,016 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:03:08] "GET / HTTP/1.1" 200 -
+2025-09-11 18:03:08,182 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:03:08] "GET /static/flag.png HTTP/1.1" 200 -
+2025-09-11 18:03:09,583 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:03:09] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 18:03:11,510 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 18:03:11,511 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:03:11] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 18:03:11,801 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:03:11] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 18:03:16,231 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:03:16] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 18:03:27,939 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:03:27] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-11 18:03:27,946 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:03:27] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 18:03:28,059 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:03:28] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 18:03:37,592 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 18:03:37,592 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:03:37] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 18:03:37,701 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:03:37] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 18:03:45,430 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 18:03:45,430 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:03:45] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 18:03:45,739 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:03:45] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 18:14:54,175 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:14:54] "GET / HTTP/1.1" 200 -
+2025-09-11 18:14:54,207 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:14:54] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 18:14:58,716 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:14:58] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 18:36:50,029 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 18:36:50,054 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:36:50] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 18:36:50,080 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:36:50] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 18:36:53,038 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:36:53] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 18:37:47,840 - __main__ - ERROR - Error during project tracking migration: Working outside of request context.
+
+This typically means that you attempted to use functionality that needed
+an active HTTP request. Consult the documentation on testing for
+information about how to avoid this problem.
+2025-09-11 18:37:47,855 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-11 18:37:47,855 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-09-11 18:37:47,856 - werkzeug - INFO -  * Restarting with stat
+2025-09-11 18:37:48,358 - __main__ - ERROR - Error during project tracking migration: Working outside of request context.
+
+This typically means that you attempted to use functionality that needed
+an active HTTP request. Consult the documentation on testing for
+information about how to avoid this problem.
+2025-09-11 18:37:48,365 - werkzeug - WARNING -  * Debugger is active!
+2025-09-11 18:37:48,366 - werkzeug - INFO -  * Debugger PIN: 598-886-357
+2025-09-11 18:38:06,490 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:38:06] "GET / HTTP/1.1" 200 -
+2025-09-11 18:38:06,812 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:38:06] "GET /static/flag.png HTTP/1.1" 200 -
+2025-09-11 18:38:08,911 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:38:08] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 18:38:10,158 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:38:10] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-11 18:38:10,362 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:38:10] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 18:38:10,394 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:38:10] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 18:38:12,787 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 18:38:12,792 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:38:12] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 18:38:13,132 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:38:13] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 18:38:15,701 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:38:15] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 18:43:48,485 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:43:48] "GET / HTTP/1.1" 200 -
+2025-09-11 18:43:48,514 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:43:48] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 18:43:53,277 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:43:53] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 18:48:11,867 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:48:11] "POST /upload-data HTTP/1.1" 200 -
+2025-09-11 18:48:12,128 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:48:12] "POST /filter HTTP/1.1" 200 -
+2025-09-11 18:48:20,865 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:48:20] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-11 18:48:21,099 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:48:21] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 18:48:21,891 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:48:21] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 18:48:28,185 - __main__ - INFO - Created backup: data\backups\my_solicitations_backup_20250911_184828.xlsx
+2025-09-11 18:48:28,204 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:48:28] "POST /delete-solicitation HTTP/1.1" 200 -
+2025-09-11 18:48:28,600 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:48:28] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 18:48:29,724 - __main__ - INFO - Created backup: data\backups\my_solicitations_backup_20250911_184829.xlsx
+2025-09-11 18:48:29,738 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:48:29] "POST /delete-solicitation HTTP/1.1" 200 -
+2025-09-11 18:48:30,145 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:48:30] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 18:48:31,085 - __main__ - INFO - Created backup: data\backups\my_solicitations_backup_20250911_184831.xlsx
+2025-09-11 18:48:31,098 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:48:31] "POST /delete-solicitation HTTP/1.1" 200 -
+2025-09-11 18:48:31,505 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:48:31] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 18:48:32,670 - __main__ - INFO - Created backup: data\backups\my_solicitations_backup_20250911_184832.xlsx
+2025-09-11 18:48:32,684 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:48:32] "POST /delete-solicitation HTTP/1.1" 200 -
+2025-09-11 18:48:33,094 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:48:33] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 18:48:34,117 - __main__ - INFO - Created backup: data\backups\my_solicitations_backup_20250911_184834.xlsx
+2025-09-11 18:48:34,130 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:48:34] "POST /delete-solicitation HTTP/1.1" 200 -
+2025-09-11 18:48:34,534 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:48:34] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 18:48:35,729 - __main__ - INFO - Created backup: data\backups\my_solicitations_backup_20250911_184835.xlsx
+2025-09-11 18:48:35,742 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:48:35] "POST /delete-solicitation HTTP/1.1" 200 -
+2025-09-11 18:48:36,148 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:48:36] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 18:48:38,494 - __main__ - INFO - Created backup: data\backups\my_solicitations_backup_20250911_184838.xlsx
+2025-09-11 18:48:38,507 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:48:38] "POST /delete-solicitation HTTP/1.1" 200 -
+2025-09-11 18:48:38,913 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:48:38] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 18:48:40,651 - __main__ - INFO - Created backup: data\backups\my_solicitations_backup_20250911_184840.xlsx
+2025-09-11 18:48:40,663 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:48:40] "POST /delete-solicitation HTTP/1.1" 200 -
+2025-09-11 18:48:41,069 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:48:41] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 18:49:04,443 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:49:04] "GET / HTTP/1.1" 200 -
+2025-09-11 18:49:04,511 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:49:04] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 18:49:08,733 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:49:08] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 18:49:12,537 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:49:12] "POST /add-to-my-solicitations HTTP/1.1" 200 -
+2025-09-11 18:49:18,715 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:49:18] "POST /add-to-my-solicitations HTTP/1.1" 200 -
+2025-09-11 18:49:25,856 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:49:25] "POST /add-to-my-solicitations HTTP/1.1" 200 -
+2025-09-11 18:49:29,602 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:49:29] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-11 18:49:29,681 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:49:29] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 18:49:30,265 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:49:30] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 18:49:34,787 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:49:34] "GET /opportunity/M6786125Q0060 HTTP/1.1" 200 -
+2025-09-11 18:49:34,895 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:49:34] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 18:49:35,205 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:49:35] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 18:49:40,965 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:49:40] "GET /opportunity/W81K0425QA032 HTTP/1.1" 200 -
+2025-09-11 18:49:41,276 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:49:41] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 18:49:41,589 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:49:41] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 18:49:43,205 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:49:44,778 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:49:44] "GET /opportunity/140P5325Q0053 HTTP/1.1" 200 -
+2025-09-11 18:49:45,088 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:49:45] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 18:49:45,401 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:49:45] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 18:49:50,245 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:49:50,750 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:49:51,255 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:49:51,759 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:49:52,263 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:49:52,767 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:49:53,271 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:49:53,775 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:49:54,280 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:49:54,784 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:49:55,288 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:49:55,792 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:49:56,298 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:49:56,803 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:49:57,309 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:49:57,814 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:49:58,823 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:49:59,328 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:49:59,833 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:00,338 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:00,843 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:01,348 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:01,853 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:02,358 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:02,863 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:03,368 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:03,874 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:04,379 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:04,884 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:06,397 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:06,902 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:07,407 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:07,913 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:08,418 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:09,426 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:09,932 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:10,437 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:10,779 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 18:50:10,780 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:50:10] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 18:50:10,942 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:11,137 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:50:11] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 18:50:11,951 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:12,457 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:12,972 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:13,418 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:50:13] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 18:50:17,511 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:18,016 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:18,521 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:25,083 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:25,589 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:26,095 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:26,600 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:27,610 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:28,618 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:29,125 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:29,642 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:32,667 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:33,172 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:34,179 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:35,196 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:45,276 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:50:45,822 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:52:47,006 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:52:47] "[35m[1mPOST /sam-start/W81K0425QA032 HTTP/1.1[0m" 500 -
+2025-09-11 18:52:49,351 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:52:49] "[35m[1mPOST /sam-start/140P5325Q0053 HTTP/1.1[0m" 500 -
+2025-09-11 18:52:50,422 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:52:50] "[35m[1mPOST /sam-start/M6786125Q0060 HTTP/1.1[0m" 500 -
+2025-09-11 18:53:57,048 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:53:57,607 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:55:51,426 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:55:51] "[35m[1mGET /sam-start/W81K0425QA032?kick=1 HTTP/1.1[0m" 500 -
+2025-09-11 18:55:53,792 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2025-09-11 18:55:53,812 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:55:53] "[35m[1mGET /sam-start/140P5325Q0053?kick=1 HTTP/1.1[0m" 500 -
+2025-09-11 18:55:54,861 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 18:55:54] "[35m[1mGET /sam-start/M6786125Q0060?kick=1 HTTP/1.1[0m" 500 -
+2025-09-11 19:01:28,504 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 19:01:28,504 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:01:28] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 19:01:28,562 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:01:28] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:01:31,530 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:01:31] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 19:02:17,982 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:02:17] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 19:14:58,364 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 19:14:58,394 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:14:58] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 19:14:58,418 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:14:58] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:15:01,140 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:15:01] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 19:17:24,874 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:17:24] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-11 19:17:24,900 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:17:24] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 19:17:25,041 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:17:25] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:17:30,276 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 19:17:30,276 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:17:30] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 19:17:30,585 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:17:30] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:19:59,924 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 19:19:59,949 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:19:59] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 19:19:59,970 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:19:59] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:20:03,131 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 19:20:03,131 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:20:03] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 19:20:03,443 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:20:03] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:20:54,916 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 19:20:54,940 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:20:54] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 19:20:54,962 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:20:54] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:20:56,283 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 19:20:56,284 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:20:56] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 19:20:56,308 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:20:56] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:20:56,533 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 19:20:56,534 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:20:56] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 19:20:56,749 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 19:20:56,750 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:20:56] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 19:20:56,921 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:20:56] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:24:20,978 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 19:24:21,002 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:24:21] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 19:24:21,024 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:24:21] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:24:25,229 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:24:25] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 19:30:40,309 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:30:40] "GET / HTTP/1.1" 200 -
+2025-09-11 19:30:40,333 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:30:40] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 19:30:44,499 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:30:44] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:31:06,067 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:31:06] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-11 19:31:06,153 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:31:06] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 19:31:06,772 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:31:06] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:32:35,643 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 19:32:35,643 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:32:35] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 19:32:35,769 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:32:35] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:32:39,243 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:32:39] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 19:35:34,957 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 19:35:34,980 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:35:34] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 19:35:35,002 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:35:35] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:35:38,063 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:35:38] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 19:36:52,120 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:36:52] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 19:37:12,582 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 19:37:12,604 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:37:12] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 19:37:12,890 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:37:12] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:37:15,227 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:37:15] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 19:37:28,187 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:37:28] "GET / HTTP/1.1" 200 -
+2025-09-11 19:37:28,253 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:37:28] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 19:37:32,525 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:37:32] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:40:27,485 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:40:27] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-11 19:40:27,566 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:40:27] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 19:40:28,162 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:40:28] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:40:33,018 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:40:33] "GET / HTTP/1.1" 200 -
+2025-09-11 19:40:33,040 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:40:33] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 19:40:37,427 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:40:37] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:40:56,095 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:40:56] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-11 19:40:56,170 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:40:56] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 19:40:56,757 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:40:56] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:42:35,586 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:42:35] "POST /sam-start/140P5325Q0053 HTTP/1.1" 200 -
+2025-09-11 19:45:05,588 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 19:45:05,589 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:45:05] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 19:45:05,727 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:45:05] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:45:10,229 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:45:10] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 19:46:31,976 - __main__ - INFO - Created backup: data\backups\my_solicitations_backup_20250911_194631.xlsx
+2025-09-11 19:46:31,993 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:46:31] "POST /delete-solicitation HTTP/1.1" 200 -
+2025-09-11 19:46:32,299 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:46:32] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 19:46:35,212 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:46:35] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 19:47:03,607 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:47:03] "GET /opportunity/M6786125Q0060 HTTP/1.1" 200 -
+2025-09-11 19:47:03,750 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:47:03] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 19:47:04,062 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:47:04] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:47:57,319 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:47:57] "GET / HTTP/1.1" 200 -
+2025-09-11 19:47:57,643 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:47:57] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 19:48:01,559 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:48:01] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:48:03,634 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:48:03] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-11 19:48:04,010 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:48:04] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 19:48:04,574 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:48:04] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:49:40,642 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:49:40] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 19:50:07,560 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:50:07] "[35m[1mPOST /sam-start/M6786125Q0060 HTTP/1.1[0m" 500 -
+2025-09-11 19:50:58,111 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:50:58] "GET / HTTP/1.1" 200 -
+2025-09-11 19:50:58,434 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:50:58] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 19:51:02,242 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:51:02] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:51:07,993 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:51:07] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-11 19:51:08,365 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:51:08] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 19:51:08,909 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:51:08] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:51:54,246 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:51:54] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-11 19:51:54,556 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:51:54] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 19:51:54,867 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:51:54] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:51:59,056 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 19:51:59,057 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:51:59] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 19:51:59,410 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:51:59] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:52:36,549 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-11 19:52:36,550 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:52:36] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-11 19:52:36,707 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:52:36] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:53:01,421 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:53:01] "GET /opportunity/M6786125Q0060 HTTP/1.1" 200 -
+2025-09-11 19:53:01,732 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:53:01] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 19:53:02,049 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:53:02] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:53:24,672 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:53:24] "[35m[1mGET /sam-start/M6786125Q0060?kick=1 HTTP/1.1[0m" 500 -
+2025-09-11 19:55:03,976 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:55:03] "POST /my-filter HTTP/1.1" 200 -
+2025-09-11 19:56:05,609 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:56:05] "[35m[1mPOST /sam-start/M6786125Q0060 HTTP/1.1[0m" 500 -
+2025-09-11 19:57:41,922 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:57:41] "GET / HTTP/1.1" 200 -
+2025-09-11 19:57:41,944 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:57:41] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-11 19:57:45,743 - werkzeug - INFO - 127.0.0.1 - - [11/Sep/2025 19:57:45] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-11 19:58:18,894 - werkzeug - INFO -  * Detected change in 'C:\\Users\\mrinm\\Sam_filter\\app.py', reloading
+2025-09-11 19:58:21,128 - werkzeug - INFO -  * Restarting with stat
+2025-09-12 16:48:31,256 - __main__ - ERROR - Error during project tracking migration: Working outside of request context.
+
+This typically means that you attempted to use functionality that needed
+an active HTTP request. Consult the documentation on testing for
+information about how to avoid this problem.
+2025-09-12 16:48:31,293 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-12 16:48:31,293 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-09-12 16:48:31,295 - werkzeug - INFO -  * Restarting with stat
+2025-09-12 16:48:31,759 - __main__ - ERROR - Error during project tracking migration: Working outside of request context.
+
+This typically means that you attempted to use functionality that needed
+an active HTTP request. Consult the documentation on testing for
+information about how to avoid this problem.
+2025-09-12 16:48:31,766 - werkzeug - WARNING -  * Debugger is active!
+2025-09-12 16:48:31,767 - werkzeug - INFO -  * Debugger PIN: 598-886-357
+2025-09-12 16:48:50,285 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 16:48:50] "GET / HTTP/1.1" 200 -
+2025-09-12 16:48:50,378 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 16:48:50] "GET /static/flag.png HTTP/1.1" 200 -
+2025-09-12 16:48:52,304 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 16:48:52] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 16:48:54,596 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 16:48:54] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-12 16:48:54,603 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 16:48:54] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-12 16:48:54,633 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 16:48:54] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 16:48:56,906 - __main__ - ERROR - Error loading/migrating active file: Excel file format cannot be determined, you must specify an engine manually.
+2025-09-12 16:48:56,940 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 16:48:56] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-12 16:48:57,252 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 16:48:57] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 16:48:59,992 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 16:48:59] "POST /my-filter HTTP/1.1" 200 -
+2025-09-12 17:04:51,113 - werkzeug - INFO -  * Detected change in 'C:\\Users\\mrinm\\Sam_filter\\app.py', reloading
+2025-09-12 17:04:51,198 - werkzeug - INFO -  * Restarting with stat
+2025-09-12 17:26:52,851 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-12 17:26:52,851 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-09-12 17:26:52,852 - werkzeug - INFO -  * Restarting with stat
+2025-09-12 17:26:53,331 - werkzeug - WARNING -  * Debugger is active!
+2025-09-12 17:26:53,332 - werkzeug - INFO -  * Debugger PIN: 598-886-357
+2025-09-12 17:27:02,540 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:27:02] "GET / HTTP/1.1" 200 -
+2025-09-12 17:27:02,735 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:27:02] "GET /static/flag.png HTTP/1.1" 200 -
+2025-09-12 17:27:04,184 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:27:04] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 17:27:07,872 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:27:07] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-12 17:27:07,878 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:27:07] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-12 17:27:07,896 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:27:07] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 17:27:09,882 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:27:09] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-12 17:27:10,048 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:27:10] "POST /my-filter HTTP/1.1" 200 -
+2025-09-12 17:27:10,115 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:27:10] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 17:28:00,229 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:28:00] "POST /my-filter HTTP/1.1" 200 -
+2025-09-12 17:28:04,197 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:28:04] "GET / HTTP/1.1" 200 -
+2025-09-12 17:28:04,231 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:28:04] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-12 17:28:06,953 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:28:06] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 17:28:18,905 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:28:18] "POST /add-to-my-solicitations HTTP/1.1" 200 -
+2025-09-12 17:28:23,424 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:28:23] "POST /add-to-my-solicitations HTTP/1.1" 200 -
+2025-09-12 17:28:31,500 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:28:31] "POST /add-to-my-solicitations HTTP/1.1" 200 -
+2025-09-12 17:28:44,252 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:28:44] "POST /add-to-my-solicitations HTTP/1.1" 200 -
+2025-09-12 17:28:46,125 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:28:46] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-12 17:28:46,357 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:28:46] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-12 17:28:46,664 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:28:46] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 17:28:49,633 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:28:49] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-12 17:28:49,948 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:28:49] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 17:28:50,056 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:28:50] "POST /my-filter HTTP/1.1" 200 -
+2025-09-12 17:39:02,203 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:39:02] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-12 17:39:02,267 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:39:02] "POST /my-filter HTTP/1.1" 200 -
+2025-09-12 17:39:02,437 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:39:02] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 17:39:06,501 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:39:06] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-12 17:39:06,601 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:39:06] "POST /my-filter HTTP/1.1" 200 -
+2025-09-12 17:39:06,754 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:39:06] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 17:39:08,890 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:39:08] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-12 17:39:09,008 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:39:09] "POST /my-filter HTTP/1.1" 200 -
+2025-09-12 17:39:09,145 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:39:09] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 17:39:15,080 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:39:15] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-12 17:39:15,143 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:39:15] "POST /my-filter HTTP/1.1" 200 -
+2025-09-12 17:39:15,335 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:39:15] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 17:45:26,475 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:45:26] "GET / HTTP/1.1" 200 -
+2025-09-12 17:45:26,641 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:45:26] "GET /static/flag.png HTTP/1.1" 200 -
+2025-09-12 17:45:28,047 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:45:28] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 17:45:29,733 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:45:29] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-12 17:45:29,781 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:45:29] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-12 17:45:29,913 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:45:29] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 17:45:31,122 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:45:31] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-12 17:45:31,416 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:45:31] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 17:48:32,094 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:48:32] "GET / HTTP/1.1" 200 -
+2025-09-12 17:48:32,121 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:48:32] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-12 17:48:34,464 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:48:34] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-12 17:48:34,814 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:48:34] "POST /my-filter HTTP/1.1" 200 -
+2025-09-12 17:48:34,817 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:48:34] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 17:48:35,124 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:48:35] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 17:53:32,764 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:53:32] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-12 17:53:32,830 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:53:32] "POST /my-filter HTTP/1.1" 200 -
+2025-09-12 17:53:32,994 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 17:53:32] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 18:00:34,126 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:00:34] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-12 18:00:34,208 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:00:34] "POST /my-filter HTTP/1.1" 200 -
+2025-09-12 18:00:34,343 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:00:34] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 18:00:49,764 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:00:49] "POST /my-filter HTTP/1.1" 200 -
+2025-09-12 18:11:54,179 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:11:54] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-12 18:11:54,246 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:11:54] "POST /my-filter HTTP/1.1" 200 -
+2025-09-12 18:11:54,397 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:11:54] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 18:12:54,212 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:12:54] "GET / HTTP/1.1" 200 -
+2025-09-12 18:12:54,238 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:12:54] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-12 18:12:55,815 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:12:55] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-12 18:12:56,199 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:12:56] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 18:12:56,213 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:12:56] "POST /my-filter HTTP/1.1" 200 -
+2025-09-12 18:12:58,494 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:12:58] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 18:13:41,020 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:13:41] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-12 18:13:41,311 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:13:41] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 18:13:53,564 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:13:53] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-12 18:13:53,572 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:13:53] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-12 18:13:53,734 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:13:53] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 18:13:54,602 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:13:54] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-12 18:13:54,755 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:13:54] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 18:14:23,846 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:14:23] "GET / HTTP/1.1" 200 -
+2025-09-12 18:14:24,064 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:14:24] "GET /static/flag.png HTTP/1.1" 200 -
+2025-09-12 18:14:25,459 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:14:25] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 18:14:26,965 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:14:26] "GET /my-solicitations HTTP/1.1" 200 -
+2025-09-12 18:14:26,981 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:14:26] "[36mGET /static/flag.png HTTP/1.1[0m" 304 -
+2025-09-12 18:14:27,121 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:14:27] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 18:14:28,265 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:14:28] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-12 18:14:28,571 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:14:28] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-12 18:15:09,403 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:15:09] "GET /project_tracking HTTP/1.1" 200 -
+2025-09-12 18:15:09,481 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:15:09] "POST /my-filter HTTP/1.1" 200 -
+2025-09-12 18:15:09,725 - werkzeug - INFO - 127.0.0.1 - - [12/Sep/2025 18:15:09] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-09-13 11:31:30,698 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-13 11:31:30,699 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-09-13 11:31:30,699 - werkzeug - INFO -  * Restarting with stat
+2025-09-13 11:31:31,195 - werkzeug - WARNING -  * Debugger is active!
+2025-09-13 11:31:31,197 - werkzeug - INFO -  * Debugger PIN: 619-476-116
+2025-09-13 11:47:20,719 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-13 11:47:20,719 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-09-13 11:47:20,719 - werkzeug - INFO -  * Restarting with stat
+2025-09-13 11:47:21,228 - werkzeug - WARNING -  * Debugger is active!
+2025-09-13 11:47:21,230 - werkzeug - INFO -  * Debugger PIN: 126-033-734
+2025-09-13 11:56:11,989 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-13 11:56:11,989 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-09-13 11:56:11,990 - werkzeug - INFO -  * Restarting with stat
+2025-09-13 11:56:12,480 - werkzeug - WARNING -  * Debugger is active!
+2025-09-13 11:56:12,481 - werkzeug - INFO -  * Debugger PIN: 340-994-232

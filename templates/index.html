@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SAM.gov Filter Tool</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+  <style>
+    :root{
+      --navy:#112a57; --bg:#f7f7fb; --card:#ffffff; --border:#e6e6ef;
+      --grid-blue:#c3d3ff;
+      --min-col-w: 140px;
+      --right-gutter: 140px;
+      --bottom-bar-h: 18px;
+      --chip-bg:#eef3ff; --chip-fg:#111;
+      --mysol-btn-fg-light: var(--navy);
+      --mysol-btn-fg-dark:  #9bb0ff;
+    }
+    body[data-theme="dark"]{
+      --bg:#0f1220;
+      --chip-bg: rgba(195,211,255,0.18);
+      --chip-fg:#090707;
+    }
+
+    html, body { height: 100%; overflow: hidden; }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background: var(--bg); color:#222; margin:0;
+    }
+
+    .sticky-top { position: relative; z-index: 50; background: var(--bg); box-shadow: 0 6px 10px rgba(16,24,40,0.06); }
+
+    .app-header { margin: 0; padding: 0; }
+    .flag-banner {
+      width: 100%; height: 220px;
+      background-image: url("{{ url_for('static', filename='flag.png') }}");
+      background-size: 110% auto; background-position: center; background-repeat: no-repeat;
+      animation: flagWave 7.5s ease-in-out infinite alternate;
+    }
+    @keyframes flagWave {
+      0%   { background-position: 50% 42%; transform: perspective(800px) rotateX(0.6deg) skewY(-0.2deg); }
+      100% { background-position: 48% 38%; transform: perspective(800px) rotateX(-0.6deg) skewY(0.2deg); }
+    }
+
+    .title-row{
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      background: var(--bg);
+    }
+    .app-title{
+      grid-column: 2;
+      font-weight: 800; font-size: clamp(28px, 4.2vw, 44px);
+      line-height: 1.1; color: var(--navy); margin: 0; text-align: center;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.35);
+    }
+    .title-actions{
+      grid-column: 3; display:flex; align-items:center; gap:10px; justify-content:flex-end;
+    }
+    .toplink-btn{
+      display:inline-block; padding:8px 12px; border-radius:10px; border:1px solid var(--grid-blue);
+      background: var(--chip-bg); color: var(--mysol-btn-fg-light); font-weight:800; text-decoration:none;
+    }
+    #toMySolBtn { color: var(--mysol-btn-fg-light); }
+    body[data-theme="dark"] #toMySolBtn { color: var(--mysol-btn-fg-dark); }
+
+    #themeToggle{
+      border:1px solid var(--grid-blue); background: var(--chip-bg); color: var(--chip-fg);
+      border-radius:10px; height:36px; padding:0 10px; cursor:pointer; font-weight:700;
+    }
+
+    /* Project Tracker Button Styles */
+    .project-tracker-cta {
+      margin: 1.5rem 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .btn-project-tracker {
+      display: flex;
+      align-items: center;
+      background: linear-gradient(135deg, var(--navy), #0d2456);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      min-width: 300px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 4px 12px rgba(17, 42, 87, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-project-tracker::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn-project-tracker:hover::before {
+      left: 100%;
+    }
+
+    .btn-project-tracker:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(17, 42, 87, 0.4);
+      color: white;
+      text-decoration: none;
+    }
+
+    .btn-content {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      position: relative;
+      z-index: 2;
+    }
+
+    .btn-icon {
+      font-size: 1.5rem;
+      margin-right: 1rem;
+      opacity: 0.9;
+    }
+
+    .btn-text {
+      flex: 1;
+      text-align: left;
+    }
+
+    .btn-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      line-height: 1.2;
+    }
+
+    .btn-subtitle {
+      font-size: 0.85rem;
+      opacity: 0.8;
+      line-height: 1.2;
+    }
+
+    .btn-arrow {
+      font-size: 1rem;
+      margin-left: 1rem;
+      transition: transform 0.3s ease;
+      opacity: 0.8;
+    }
+
+    .btn-project-tracker:hover .btn-arrow {
+      transform: translateX(4px);
+    }
+
+    @media (max-width: 768px) {
+      .btn-project-tracker {
+        min-width: 280px;
+        padding: 1rem;
+      }
+      
+      .btn-title {
+        font-size: 1rem;
+      }
+      
+      .btn-subtitle {
+        font-size: 0.8rem;
+      }
+    }
+
+    .controls-wrap { max-width: 100%; margin: 0 auto; padding: 4px 10px 0; }
+    .controls {
+      position: relative;
+      display: grid; width: 100%;
+      grid-template-columns: auto auto auto minmax(0, 3.6fr) auto auto auto;
+      align-items: center; gap: 10px;
+      background: var(--chip-bg); border: 1px solid var(--grid-blue); border-radius: 12px;
+      padding: 10px; box-shadow: 0 2px 10px rgba(16,24,40,0.06);
+      color: var(--chip-fg);
+    }
+    .controls input, .controls select, .controls button { font-size: 14px; }
+    .controls input{
+      padding: 10px 12px; border: 1.25px solid var(--grid-blue); border-radius: 10px; outline: none;
+      background: #fff; color: #111; font-weight: 600; width: 100%;
+    }
+    .controls input::placeholder { font-weight: 800; opacity: 0.9; color:#0a0a0a; }
+    .controls input:focus { outline: 0; border-color: var(--grid-blue); box-shadow: 0 0 0 2px rgba(195,211,255,0.45); }
+    .controls button { padding: 10px 14px; border: 1px solid var(--border); border-radius: 10px; font-weight: 600; cursor: pointer; }
+    #applyBtn { background: var(--navy); color:#fff; }
+    #resetBtn { background: #fff; color:#222; }
+
+    :root { --ctl-h: 44px; --ctl-pad-x: 14px; }
+    .controls :is(.star-btn, .lock-btn, .date-btn, .start-btn, #applyBtn, #resetBtn){
+      display:inline-flex; align-items:center; gap:8px; height:var(--ctl-h);
+      padding:0 var(--ctl-pad-x); line-height:1; border-radius:10px; white-space:nowrap;
+    }
+    .controls #keyword{ height:var(--ctl-h); padding:0 12px; }
+
+    .star-btn{
+      display:inline-flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--grid-blue);
+      border-radius:999px; padding:10px 14px; font-weight:800; cursor:pointer; white-space:nowrap;
+    }
+    .star-btn svg{ width:25px; height:25px; color:#f5c518; }
+    .lock-btn{ background:#fff; border:1px solid var(--grid-blue); border-radius:10px; padding:10px 12px; font-weight:700; cursor:pointer; white-space:nowrap; }
+    .lock-btn[aria-pressed="true"]{ background:#eef3ff; }
+    .date-btn{
+      display:inline-flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--grid-blue);
+      border-radius:10px; padding:10px 12px; font-weight:700; cursor:pointer; white-space:nowrap;
+    }
+    .date-summary{ font-size:12px; font-weight:600; opacity:.8; }
+    .start-btn{ display:inline-flex; align-items:center; gap:8px; }
+    .start-btn svg{ width:30px; height:30px; }
+
+    .visually-hidden{ position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }
+
+    .count { text-align: right; padding: 6px 20px 8px; font-weight: bold; color: var(--navy); }
+
+    .table-scroll{
+      height: calc(100vh - (220px + 10px + 52px + 14px + var(--bottom-bar-h)));
+      overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch;
+      padding: 0 10px calc(12px + var(--bottom-bar-h)) 10px; position: relative;
+    }
+    .hrow { display: inline-flex; align-items: stretch; width: max-content; min-width: 100%; }
+    .scroll-spacer{ width: var(--right-gutter); flex: 0 0 var(--right-gutter); display:block; }
+
+    table{
+      width:auto; min-width:100%; border-collapse:collapse; background:#fff;
+      box-shadow:0 2px 5px rgba(0,0,0,0.1); border:1px solid var(--grid-blue);
+      table-layout:fixed;
+    }
+    th, td{
+      padding:12px 12px 12px 16px;
+      border:1px solid var(--grid-blue);
+      text-align:left; vertical-align:top;
+      white-space:normal; word-break:break-word; overflow-wrap:anywhere;
+      min-width:var(--min-col-w);
+      color:#0a0a0a; background:#fff;
+    }
+    .table-scroll thead th{
+      position:sticky; top:0; z-index:25; background:var(--navy); color:#fff; box-shadow:0 2px 0 rgba(0,0,0,0.05);
+    }
+    .desc{ max-width:none; white-space:normal; }
+
+    a.notice-link{ color: var(--navy); text-decoration: underline; }
+    body[data-theme="dark"] a.notice-link{ color:#0e2b6c; }
+
+    th.sortable{ cursor:pointer; user-select:none; }
+    th.sortable .sort-indicator{ margin-left:6px; font-size:12px; opacity:.9; }
+
+    thead th{ position:sticky; top:0; z-index:25; }
+    thead th .col-resizer{
+      position:absolute; right:-6px; top:0; bottom:0; width:12px; cursor:col-resize; z-index:200;
+      background:transparent; pointer-events:auto;
+    }
+    thead th .col-resizer:hover, thead th .col-resizer.active{ background:rgba(17,42,87,0.15); }
+    body.cols-locked thead th .col-resizer{ pointer-events:none; cursor:not-allowed; background:transparent !important; }
+
+    .no-select{ user-select:none; }
+
+    .bottom-hscroll{
+      position:fixed; left:0; right:0; bottom:0; height:var(--bottom-bar-h);
+      background:#fff; border-top:1px solid var(--grid-blue); overflow-x:auto; overflow-y:hidden; z-index:60;
+    }
+    .bottom-hscroll .spacer{ height:1px; width:1px; }
+
+    .date-panel{
+      position:absolute; top:calc(100% + 8px); left:10px; width:340px; max-height:340px;
+      background:#fff; border:1px solid var(--grid-blue); border-radius:12px;
+      box-shadow:0 8px 24px rgba(16,24,40,0.12); padding:8px; overflow:auto; z-index:80; display:none;
+    }
+    .date-panel.open{ display:block; }
+    .tree{ list-style:none; margin:0; padding:0; }
+    .tree details{ border:1px solid var(--grid-blue); border-radius:8px; padding:4px 6px; margin:6px 0; }
+    .tree summary{ cursor:pointer; font-weight:700; }
+    .tree .node{ margin:4px 0 4px 14px; }
+    .tree .node input[type="checkbox"]{ margin-right:6px; }
+    .tree .path{ font-size:12px; opacity:.75; margin-left:8px; }
+
+    body[data-theme="dark"] #keyword{ background:#fff !important; color:#0a0a0a !important; border-color:#9bb0ff !important; }
+    body[data-theme="dark"] #applyBtn{ background:#fff !important; color:#0a0a0a !important; border-color:#9bb0ff !important; }
+  </style>
+</head>
+<body>
+  <div class="sticky-top">
+    <header class="app-header">
+      <div class="flag-banner"></div>
+      <div class="title-row">
+        <h1 class="app-title">SAM.gov Filter Tool</h1>
+        <div class="title-actions">
+          <a href="/my-solicitations" id="toMySolBtn" class="toplink-btn">Go to My Solicitations Page</a>
+          <button id="themeToggle" type="button" title="Toggle theme">🌓</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- PROJECT TRACKER BUTTON -->
+    <div class="project-tracker-cta">
+      <a href="/project_tracking" class="btn-project-tracker" target="_blank" rel="noopener">
+        <div class="btn-content">
+          <div class="btn-icon">
+            <i class="fas fa-chart-gantt">📊</i>
+          </div>
+          <div class="btn-text">
+            <div class="btn-title">Go to Project Tracker</div>
+            <div class="btn-subtitle">Manage timelines & track progress</div>
+          </div>
+          <div class="btn-arrow">
+            →
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="controls-wrap">
+      <div class="controls" id="controls">
+        <button id="uploadBtn" class="star-btn" type="button" title="Upload Excel/CSV File into data/">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 3l2.94 5.95 6.56.95-4.75 4.64 1.12 6.53L12 18.9 6.13 21.07l1.12-6.53L2.5 9.9l6.56-.95L12 3z"
+                  stroke="currentColor" stroke-width="1.2" fill="currentColor"/>
+          </svg>
+          Upload Excel/CSV File
+        </button>
+        <input id="uploadInput" class="visually-hidden" type="file" accept=".csv,.xlsx,.xls" />
+
+        <button id="lockColsBtn" class="lock-btn" type="button" aria-pressed="false" title="Lock column widths">🔓 Columns Unlocked</button>
+
+        <div style="position:relative;">
+          <button id="dateBtn" class="date-btn" type="button" aria-expanded="false" aria-controls="datePanel">
+            📅 Response Date Search
+            <span class="date-summary" id="dateSummary">(All dates)</span>
+          </button>
+          <div id="datePanel" class="date-panel" role="dialog" aria-label="Response Date Search">
+            <div class="panel-actions" style="justify-content:space-between; align-items:center; display:flex; gap:8px; margin-bottom:6px;">
+              <strong>Select date ranges (multi-select)</strong>
+              <div>
+                <button id="clearDateBtn" type="button">Clear</button>
+                <button id="applyDateBtn" type="button">Apply</button>
+              </div>
+            </div>
+            <ul id="dateTree" class="tree" aria-live="polite"></ul>
+          </div>
+        </div>
+
+        <input id="keyword" type="text" placeholder="Keyword in Title/Description" />
+
+        <button id="downloadBtn" class="start-btn" type="button" title="Download current filtered rows as Excel">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 3v10m0 0l4-4m-4 4l-4-4M4 20h16"
+                  stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Download Updated File
+        </button>
+
+        <button id="applyBtn" type="button" title="Apply filters">Apply</button>
+        <button id="resetBtn" type="button" title="Clear filters">Reset</button>
+      </div>
+    </div>
+
+    <div class="count">Total Solicitations: <span id="total-count">{{ total_count }}</span></div>
+  </div>
+
+  <section class="table-scroll" id="scrollArea">
+    <div class="hrow" id="hrow">
+      <table id="result-table">
+        <colgroup>
+          {% for col in columns %}
+            <col />
+          {% endfor %}
+        </colgroup>
+        <thead>
+          <tr>
+            {% for col in columns %}
+              <th data-col="{{ col }}">
+                <span class="th-label">{{ col }}</span>
+                <span class="col-resizer" data-col-index="{{ loop.index0 }}"></span>
+              </th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody id="solicitation-body">
+          {% for s in solicitations %}
+          <tr>
+            {% for col in columns %}
+              {% set lc = col|lower %}
+              {% if 'summary' in lc %}
+                <td data-col="{{ col }}" class="summary">{{ s.get(col, '')|safe }}</td>
+              {% elif 'desc' in lc %}
+                <td data-col="{{ col }}" class="desc">{{ s.get(col, '') }}</td>
+              {% elif 'notice' in lc and 'id' in lc %}
+                {% set nid = s.get(col, '') %}
+                <td data-col="{{ col }}">
+                  <a href="#" class="notice-link" data-notice="{{ nid|e }}">{{ nid }}</a>
+                  <div class="notice-popover" style="display:none; position:absolute; transform: translateY(4px); background:#e7e7ea; border:1px solid #a9a9b2; border-radius:8px; padding:8px; box-shadow:0 6px 14px rgba(0,0,0,.15); z-index:120;">
+                    <div style="font-weight:700; margin-bottom:6px;">Send this row to My Solicitations?</div>
+                    <div style="display:flex; gap:8px;">
+                      <button class="send-yes">Yes</button>
+                      <button class="send-no">No</button>
+                    </div>
+                  </div>
+                </td>
+              {% else %}
+                <td data-col="{{ col }}">{{ s.get(col, '') }}</td>
+              {% endif %}
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="scroll-spacer" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <div id="bottomScroll" class="bottom-hscroll" role="scrollbar" aria-label="Horizontal scroll">
+    <div id="bottomSpacer" class="spacer" aria-hidden="true"></div>
+  </div>
+
+  <script>
+    /* ---- Helpers to avoid modern syntax ---- */
+    function byId(id){ return document.getElementById(id); }
+    function q(sel, root){ return (root||document).querySelector(sel); }
+    function qa(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
+    function safeTextFrom(th){
+      var lbl = th.querySelector('.th-label');
+      return lbl ? (lbl.textContent || '') : '';
+    }
+    function limitsTail(arr){ return arr[arr.length - 1]; }
+
+    /* === Theme bootstrap === */
+    (function initTheme(){
+      var stored = localStorage.getItem('sam_theme');
+      var initial = stored || 'dark';
+      document.body.setAttribute('data-theme', initial);
+      var btn = byId('themeToggle');
+      if (btn){
+        btn.addEventListener('click', function(){
+          var cur = document.body.getAttribute('data-theme') || 'light';
+          var next = (cur === 'light') ? 'dark' : 'light';
+          document.body.setAttribute('data-theme', next);
+          localStorage.setItem('sam_theme', next);
+        });
+      }
+    })();
+
+    var COLUMNS = {{ columns|tojson|safe }};
+
+    /* ---------- Width limits ---------- */
+    var WIDTH_LIMITS = [
+      { match: 'desc',       max: 10000, def: 320, min: 160 },
+      { match: 'summary',    max: 520,   def: 420, min: 160 },
+      { match: 'title',      max: 420,   def: 360, min: 160 },
+      { match: 'notice id',  max: 320,   def: 220, min: 120 },
+      { match: 'agency',     max: 320,   def: 220, min: 140 },
+      { match: 'date',       max: 300,   def: 220, min: 140 },
+      { match: '*',          max: 640,   def: 220, min: parseInt(getComputedStyle(document.documentElement).getPropertyValue('--min-col-w')) || 140 }
+    ];
+    function limitsFor(name){
+      var n = (name || '').toLowerCase();
+      for (var i=0;i<WIDTH_LIMITS.length;i++){
+        var r = WIDTH_LIMITS[i];
+        if (r.match === '*' || n.indexOf(r.match) !== -1) return r;
+      }
+      return limitsTail(WIDTH_LIMITS);
+    }
+
+    /* ---------- Persisted widths + lock ---------- */
+    var LS_WIDTHS = 'sam_col_widths_map_v6';
+    var LS_LOCKED = 'sam_cols_locked_v1';
+
+    function getHeaderNames(){
+      var ths = qa('thead th');
+      return ths.map(function(th){
+        return th.getAttribute('data-col') || safeTextFrom(th) || '';
+      });
+    }
+    function saveCurrentWidths(){
+      var names = getHeaderNames(); var map = {};
+      var ths = qa('thead th');
+      for (var i=0;i<names.length;i++){
+        var name = names[i];
+        var th = ths[i];
+        var lim = limitsFor(name);
+        var w = Math.round(th.getBoundingClientRect().width);
+        map[name] = Math.max((lim.min!=null?lim.min:60), Math.min(w, lim.max));
+      }
+      localStorage.setItem(LS_WIDTHS, JSON.stringify(map));
+    }
+    function applyStoredWidths(){
+      var json = localStorage.getItem(LS_WIDTHS);
+      if (!json) return;
+      var map = {};
+      try { map = JSON.parse(json || '{}'); } catch(e){ map = {}; }
+      var names = getHeaderNames();
+      var cols  = qa('colgroup col');
+      for (var i=0;i<names.length;i++){
+        var name = names[i];
+        var lim  = limitsFor(name);
+        var w    = map[name];
+        if (w) cols[i].style.width = Math.max((lim.min!=null?lim.min:60), Math.min(w, lim.max)) + 'px';
+      }
+      updateBottomBarWidth();
+    }
+    function setLockedUI(isLocked){
+      var btn = byId('lockColsBtn');
+      if (!btn) return;
+      btn.setAttribute('aria-pressed', String(isLocked));
+      btn.textContent = isLocked ? '🔒 Columns Locked' : '🔓 Columns Unlocked';
+      if (isLocked) document.body.classList.add('cols-locked');
+      else document.body.classList.remove('cols-locked');
+    }
+    function toggleLock(){
+      var cur = localStorage.getItem(LS_LOCKED) === 'true';
+      var next = !cur;
+      if (next) saveCurrentWidths();
+      localStorage.setItem(LS_LOCKED, String(next));
+      setLockedUI(next);
+    }
+    function isLocked(){ return localStorage.getItem(LS_LOCKED) === 'true'; }
+
+    /* ---------- Date tree filter ---------- */
+    var MONTHS=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+    var WEEKS=[[1,7],[8,14],[15,21],[22,28],[29,31]];
+    var dateSelected=[];
+
+    function setDateSummary(){
+      if(!dateSelected.length){ byId('dateSummary').textContent="(All dates)"; return; }
+      var parts = dateSelected.map(function(b){
+        var y=b.year;
+        if(b.day!=null) return y+"/"+MONTHS[b.month-1]+"/"+String(b.day).padStart(2,'0');
+        if(b.week_start!=null && b.week_end!=null) return y+"/"+MONTHS[b.month-1]+"/"+b.week_start+"-"+b.week_end;
+        if(b.month!=null) return y+"/"+MONTHS[b.month-1];
+        return ""+y;
+      });
+      byId('dateSummary').textContent = parts.join(" • ");
+    }
+    function clearDateFilter(){ dateSelected=[]; setDateSummary(); }
+    function parseDateSafe(s){
+      var d=new Date(s); if(!isNaN(d.getTime())) return d;
+      var m=String(s).match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+      if(m){
+        var mm=m[1], dd=m[2], yyyy=m[3];
+        if(yyyy.length===2) yyyy='20'+yyyy;
+        var d2=new Date(Number(yyyy), Number(mm)-1, Number(dd));
+        if(!isNaN(d2.getTime())) return d2;
+      }
+      return null;
+    }
+    function findResponseDateColIndex(){
+      var ths = qa('thead th');
+      var idx = -1;
+      for (var i=0;i<ths.length;i++){
+        var t = (ths[i].getAttribute('data-col') || ths[i].textContent || '').trim().toLowerCase();
+        if (t === 'current response date'){ idx = i; break; }
+      }
+      if (idx === -1){
+        for (var j=0;j<ths.length;j++){
+          var tt=(ths[j].getAttribute('data-col') || ths[j].textContent || '').trim().toLowerCase();
+          if (tt.indexOf('response')!==-1 && tt.indexOf('date')!==-1){ idx=j; break; }
+        }
+      }
+      return idx;
+    }
+    function gatherDatesFromTable(){
+      var idx=findResponseDateColIndex(); if(idx===-1) return [];
+      var rows=qa('#solicitation-body tr'); var dates=[];
+      for (var i=0;i<rows.length;i++){
+        var cell=rows[i].children[idx]; if(!cell) continue;
+        var text=cell.textContent.trim(); var d=parseDateSafe(text); if(d) dates.push(d);
+      }
+      return dates;
+    }
+    function buildDateTree(){
+      var treeEl=byId('dateTree'); treeEl.innerHTML="";
+      var dates=gatherDatesFromTable();
+      if(!dates.length){ treeEl.innerHTML='<li style="padding:6px 8px;">No dates found in "Current Response Date".</li>'; return; }
+      var map=new Map();
+      dates.forEach(function(d){
+        var y=d.getFullYear(), m=d.getMonth()+1, day=d.getDate();
+        if(!map.has(y)) map.set(y, new Map());
+        var mm=map.get(y);
+        if(!mm.has(m)) mm.set(m,new Set());
+        mm.get(m).add(day);
+      });
+      function addCheck(label,bucket,container){
+        var id='chk_'+Math.random().toString(36).slice(2);
+        var wrap=document.createElement('div'); wrap.className='node';
+        var cb=document.createElement('input'); cb.type='checkbox'; cb.id=id;
+        cb.checked = dateSelected.some(function(b){
+          return b.year===bucket.year &&
+                 (bucket.month==null?null:bucket.month)===(b.month==null?null:b.month) &&
+                 (bucket.week_start==null?null:bucket.week_start)===(b.week_start==null?null:b.week_start) &&
+                 (bucket.week_end==null?null:bucket.week_end)===(b.week_end==null?null:b.week_end) &&
+                 (bucket.day==null?null:bucket.day)===(b.day==null?null:b.day);
+        });
+        cb.addEventListener('change', function(){
+          var idx = -1;
+          for (var k=0;k<dateSelected.length;k++){
+            var b=dateSelected[k];
+            if (b.year===bucket.year &&
+                (bucket.month==null?null:bucket.month)===(b.month==null?null:b.month) &&
+                (bucket.week_start==null?null:bucket.week_start)===(b.week_start==null?null:b.week_start) &&
+                (bucket.week_end==null?null:bucket.week_end)===(b.week_end==null?null:b.week_end) &&
+                (bucket.day==null?null:bucket.day)===(b.day==null?null:b.day)) { idx=k; break; }
+          }
+          if (cb.checked && idx===-1) dateSelected.push(bucket);
+          if (!cb.checked && idx!==-1) dateSelected.splice(idx,1);
+          setDateSummary();
+        });
+        var lbl=document.createElement('label'); lbl.setAttribute('for',id); lbl.textContent=label;
+        wrap.appendChild(cb); wrap.appendChild(lbl); container.appendChild(wrap);
+      }
+      Array.from(map.keys()).sort(function(a,b){return b-a;}).forEach(function(year){
+        var yDetails=document.createElement('details'); yDetails.open=true;
+        yDetails.innerHTML='<summary>'+year+' <span class="path">(Year)</span></summary>';
+        var yNode=document.createElement('div'); yNode.className='node';
+        addCheck('Filter '+year, {year:year}, yNode);
+        yDetails.appendChild(yNode);
+
+        var monthsDiv=document.createElement('div'); monthsDiv.className='node';
+        var months=map.get(year);
+        Array.from(months.keys()).sort(function(a,b){return a-b;}).forEach(function(month){
+          var mDetails=document.createElement('details');
+          mDetails.innerHTML='<summary>'+MONTHS[month-1]+' <span class="path">(Month)</span></summary>';
+          var mNode=document.createElement('div'); mNode.className='node';
+          addCheck('Filter '+year+'/'+MONTHS[month-1], {year:year, month:month}, mNode);
+          mDetails.appendChild(mNode);
+
+          var daysSet=months.get(month);
+          var maxDay=Math.max.apply(null, Array.from(daysSet));
+          var weekDiv=document.createElement('div'); weekDiv.className='node';
+          WEEKS.forEach(function(pair){
+            var s=pair[0], e=pair[1];
+            if(s>maxDay) return;
+            var ee=Math.min(e,maxDay);
+            var hasAny=false; for (var d=s; d<=ee; d++){ if(daysSet.has(d)){ hasAny=true; break; } }
+            if(!hasAny) return;
+            var wDetails=document.createElement('details');
+            wDetails.innerHTML='<summary>'+s+'-'+ee+' <span class="path">(Week)</span></summary>';
+            var wNode=document.createElement('div'); wNode.className='node';
+            addCheck('Filter '+year+'/'+MONTHS[month-1]+'/'+s+'-'+ee, {year:year, month:month, week_start:s, week_end:ee}, wNode);
+            var daysWrap=document.createElement('div'); daysWrap.className='node';
+            for (var d=s; d<=ee; d++){ if(!daysSet.has(d)) continue; addCheck('Day '+d, {year:year, month:month, day:d}, daysWrap); }
+            wNode.appendChild(daysWrap);
+            wDetails.appendChild(wNode);
+            weekDiv.appendChild(wDetails);
+          });
+          mDetails.appendChild(weekDiv);
+          monthsDiv.appendChild(mDetails);
+        });
+        yDetails.appendChild(monthsDiv);
+        treeEl.appendChild(yDetails);
+      });
+      setDateSummary();
+    }
+
+    /* ---------- Filters / rendering ---------- */
+    async function applyFilters(){
+      var keyword = byId("keyword").value;
+
+      var payload = { keyword: keyword, date_filter: dateSelected };
+
+      var res = await fetch("/filter",{
+        method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload)
+      });
+      var data = await res.json();
+
+      byId("total-count").textContent = data.count || 0;
+
+      var cols = (Array.isArray(data.columns) && data.columns.length) ? data.columns : COLUMNS;
+      var tbody = byId("solicitation-body");
+      tbody.innerHTML = "";
+
+      (data.solicitations || []).forEach(function(row){
+        var tr = document.createElement("tr");
+        tr.innerHTML = cols.map(function(col){
+          var val = (row[col] != null ? row[col] : "");
+          var lc = String(col).toLowerCase();
+          if (lc.indexOf("summary")!==-1) {
+            return '<td data-col="'+col+'\" class="summary">'+val+'</td>';
+          } else if (lc.indexOf("desc")!==-1) {
+            return '<td data-col="'+col+'\" class="desc">'+val+'</td>';
+          } else if (lc.indexOf("notice")!==-1 && lc.indexOf("id")!==-1) {
+            var nid = (row[col] || '').toString().replace(/"/g,'&quot;');
+            return '<td data-col="'+col+'">'+
+                     '<a href="#" class="notice-link" data-notice="'+nid+'">'+nid+'</a>'+
+                     '<div class="notice-popover" style="display:none; position:absolute; transform: translateY(4px); background:#e7e7ea; border:1px solid #a9a9b2; border-radius:8px; padding:8px; box-shadow:0 6px 14px rgba(0,0,0,.15); z-index:120;">'+
+                       '<div style="font-weight:700; margin-bottom:6px;">Send this row to My Solicitations?</div>'+
+                       '<div style="display:flex; gap:8px;">'+
+                         '<button class="send-yes">Yes</button>'+
+                         '<button class="send-no">No</button>'+
+                       '</div>'+
+                     '</div>'+
+                   '</td>';
+          }
+          return '<td data-col="'+col+'">'+val+'</td>';
+        }).join("");
+        tbody.appendChild(tr);
+      });
+
+      applyActiveSort();
+      highlightKeywordInTable(keyword);
+
+      initNoticeMenus();
+      initColumnResizers();
+      enforceWidthLimits(true);
+      applyStoredWidths();
+      updateBottomBarWidth();
+
+      if (q('#datePanel').classList.contains('open')) buildDateTree();
+    }
+
+    function resetFilters(){ byId("keyword").value = ""; clearDateFilter(); applyFilters(); }
+
+    byId("applyBtn").addEventListener("click", applyFilters);
+    byId("resetBtn").addEventListener("click", resetFilters);
+    byId("keyword").addEventListener("keydown", function(e){ if(e.key==="Enter") applyFilters(); });
+
+    var dateBtn = byId('dateBtn');
+    var datePanel = byId('datePanel');
+    byId('applyDateBtn').addEventListener('click', function(){ datePanel.classList.remove('open'); dateBtn.setAttribute('aria-expanded','false'); applyFilters(); });
+    byId('clearDateBtn').addEventListener('click', function(){ clearDateFilter(); setDateSummary(); });
+    dateBtn.addEventListener('click', function(){
+      var open = !datePanel.classList.contains('open');
+      if (open) datePanel.classList.add('open'); else datePanel.classList.remove('open');
+      dateBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) buildDateTree();
+    });
+    document.addEventListener('click', function(e){
+      if (!datePanel.contains(e.target) && !dateBtn.contains(e.target)) {
+        datePanel.classList.remove('open');
+        dateBtn.setAttribute('aria-expanded','false');
+      }
+    });
+
+    /* ---------- Upload handling ---------- */
+    var uploadBtn = byId('uploadBtn');
+    var uploadInput = byId('uploadInput');
+    uploadBtn.addEventListener('click', function(){ uploadInput.click(); });
+    uploadInput.addEventListener('change', async function(e){
+      var file = e.target.files && e.target.files[0];
+      if (!file) return;
+      try{
+        var fd = new FormData(); fd.append('file', file);
+        var res = await fetch('/upload-data',{ method:'POST', body: fd });
+        var data = await res.json();
+        if(!res.ok || !data.ok){ alert(data.message || 'Upload failed.'); return; }
+        await applyFilters();
+        alert('Uploaded: '+data.saved_as+' ('+data.rows+' rows)');
+      }catch(err){ console.error(err); alert('Error uploading file.'); }
+      finally{ uploadInput.value=''; }
+    });
+
+    /* ---------- Download current filtered rows ---------- */
+    async function downloadFiltered(){
+      try{
+        var keyword = byId("keyword").value;
+        var payload = { keyword: keyword, date_filter: dateSelected };
+        var res = await fetch("/export",{ method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload) });
+        if(!res.ok){ alert("Export failed."); return; }
+        var blob = await res.blob();
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url; a.download = "Download_Updated_File.xlsx";
+        document.body.appendChild(a); a.click(); a.remove();
+        URL.revokeObjectURL(url);
+      }catch(e){ console.error(e); alert("Error creating the Excel file."); }
+    }
+    byId("downloadBtn").addEventListener("click", downloadFiltered);
+
+    /* ---------- Click-to-sort ---------- */
+    window._sortState=null;
+    function textToNumber(s){ var t=(s||"").toString().replace(/[$,%\s,]/g,""); var n=parseFloat(t); return isNaN(n)?null:n; }
+    function textToDate(s){ var d=new Date(s); return isNaN(d.getTime())?null:d.getTime(); }
+    function inferTypeForColumn(rows,colIndex){
+      var numHits=0, dateHits=0, checked=0;
+      for(var i=0;i<rows.length;i++){
+        var r=rows[i]; var cell=r.children[colIndex]; if(!cell) continue;
+        var v=cell.textContent.trim(); if(!v) continue;
+        checked++; if(textToNumber(v)!==null) numHits++; else if(textToDate(v)!==null) dateHits++;
+        if(checked>=10) break;
+      }
+      if(numHits && numHits>=dateHits) return "number";
+      if(dateHits) return "date";
+      return "string";
+    }
+    function compareVals(a,b,type,asc){
+      var A=(a==null?"":a).toString().trim(), B=(b==null?"":b).toString().trim(); var res=0;
+      if(type==="number"){ var nA=textToNumber(A), nB=textToNumber(B);
+        if(nA===null && nB===null) res=A.localeCompare(B);
+        else if(nA===null) res=1; else if(nB===null) res=-1; else res=nA-nB;
+      } else if(type==="date"){ var dA=textToDate(A), dB=textToDate(B);
+        if(dA===null && dB===null) res=A.localeCompare(B);
+        else if(dA===null) res=1; else if(dB===null) res=-1; else res=dA-dB;
+      } else { res=A.localeCompare(B, undefined, {sensitivity:"base", numeric:true}); }
+      return asc?res:-res;
+    }
+    function sortRows(table,colIndex,direction){
+      var tbody=table.querySelector("tbody");
+      var rows=qa("tr", tbody);
+      var type=inferTypeForColumn(rows,colIndex);
+      var asc=(direction==="asc");
+      rows.sort(function(r1,r2){
+        var v1=r1.children[colIndex]?r1.children[colIndex].textContent:"";
+        var v2=r2.children[colIndex]?r2.children[colIndex].textContent:"";
+        return compareVals(v1,v2,type,asc);
+      });
+      rows.forEach(function(r){ tbody.appendChild(r); });
+    }
+    function clearIndicators(ths){ ths.forEach(function(th){ th.classList.add("sortable"); var si=th.querySelector(".sort-indicator"); if(si) si.remove(); th.removeAttribute("data-sort"); }); }
+    function setIndicator(th,dir){ var ind=th.querySelector(".sort-indicator"); if(!ind){ ind=document.createElement("span"); ind.className="sort-indicator"; th.appendChild(ind); } ind.textContent=(dir==="asc"?"▲":"▼"); th.setAttribute("data-sort",dir); }
+    function applyActiveSort(){ var state=window._sortState; if(!state) return; var table=byId("result-table"); if(!table) return; sortRows(table,state.index,state.dir); var ths=qa("thead th"); clearIndicators(ths); var th=ths[state.index]; if(th) setIndicator(th,state.dir); }
+    function initClickSorting(){
+      var table=byId("result-table"); if(!table) return;
+      var ths=qa("thead th");
+      ths.forEach(function(th,idx){
+        th.classList.add("sortable"); th.title="Click to sort";
+        th.addEventListener("click",function(){
+          var current=th.getAttribute("data-sort");
+          var nextDir = (current==="asc")?"desc":"asc";
+          clearIndicators(ths); setIndicator(th,nextDir);
+          window._sortState={index:idx, dir:nextDir};
+          sortRows(table,idx,nextDir);
+        });
+      });
+    }
+
+    /* ---------- Resizers + bottom scrollbar ---------- */
+    function enforceWidthLimits(setDefaults){
+      var names=getHeaderNames(); var cols=qa('colgroup col'); var ths=qa('thead th');
+      for (var i=0;i<names.length;i++){
+        var name=names[i]; var lim=limitsFor(name);
+        var min=(lim.min!=null?lim.min:60);
+        var def=(lim.def!=null?lim.def:Math.min(lim.max, parseInt(getComputedStyle(document.documentElement).getPropertyValue('--min-col-w')) || 140));
+        var w;
+        if (setDefaults || !cols[i].style.width) {
+          w = Math.max(min, Math.min(def, lim.max));
+        } else {
+          var current = parseInt(cols[i].style.width || 0) || Math.round(ths[i].getBoundingClientRect().width);
+          w = Math.max(min, Math.min(current, lim.max));
+        }
+        cols[i].style.width = w + 'px';
+      }
+      updateBottomBarWidth();
+    }
+
+    function initColumnResizers(){
+      var table=byId('result-table'); if(!table) return;
+      var theadThs=qa('thead th'); var cols=qa('colgroup col');
+      if(theadThs.length!==cols.length) return;
+
+      theadThs.forEach(function(th,i){
+        var name=th.getAttribute('data-col') || safeTextFrom(th) || '';
+        var lim=limitsFor(name);
+        var stored={}; try{ stored=JSON.parse(localStorage.getItem(LS_WIDTHS) || '{}'); }catch(e){ stored={}; }
+        if(!stored[name] && lim.def && !cols[i].style.width){
+          cols[i].style.width = Math.max((lim.min!=null?lim.min:60), Math.min(lim.def, lim.max)) + 'px';
+        }
+        var handle=th.querySelector('.col-resizer'); if(!handle) return;
+        handle.addEventListener('mousedown', function(e){ startResize(e,i,name); });
+        handle.addEventListener('dblclick',  function(e){ resetWidth(e,i,name); });
+        handle.addEventListener('click',     function(e){ e.stopPropagation(); });
+        th.addEventListener('dblclick', function(e){ if(e.altKey){ e.preventDefault(); e.stopPropagation(); resetWidth(e,i,name); } });
+      });
+
+      var startX=0, startW=0, colEl=null, handleEl=null, limCur=null;
+
+      function startResize(e, idx, name){
+        if(isLocked()) return;
+        e.preventDefault(); e.stopPropagation();
+        handleEl=e.currentTarget; handleEl.classList.add('active');
+        colEl=cols[idx]; limCur=limitsFor(name);
+        var th=qa('thead th')[idx];
+        var min=(limCur.min!=null?limCur.min:(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--min-col-w')) || 60));
+        startW=th.getBoundingClientRect().width;
+        colEl.style.width = Math.max(min, Math.min(startW, limCur.max)) + 'px';
+        startX=e.clientX;
+        document.body.classList.add('no-select'); document.body.style.cursor='col-resize';
+        window.addEventListener('mousemove', onDrag);
+        window.addEventListener('mouseup', endDrag);
+      }
+      function onDrag(e){
+        if(!colEl) return;
+        var dx=e.clientX - startX;
+        var min=(limCur.min!=null?limCur.min:(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--min-col-w')) || 60));
+        var newW=Math.max(min, Math.min(Math.round(startW + dx), limCur.max));
+        colEl.style.width=newW + 'px';
+        updateBottomBarWidth();
+      }
+      function endDrag(){
+        if(handleEl) handleEl.classList.remove('active');
+        handleEl=null; colEl=null; limCur=null;
+        document.body.classList.remove('no-select'); document.body.style.cursor='';
+        window.removeEventListener('mousemove', onDrag);
+        window.removeEventListener('mouseup', endDrag);
+        updateBottomBarWidth();
+        saveCurrentWidths();
+      }
+      function resetWidth(e, idx, name){
+        if(isLocked()) return;
+        e.preventDefault(); e.stopPropagation();
+        var lim=limitsFor(name);
+        var defW=Math.max((lim.min!=null?lim.min:60), Math.min((lim.def!=null?lim.def:lim.max), lim.max));
+        cols[idx].style.width = defW + 'px';
+        var map={}; try{ map=JSON.parse(localStorage.getItem(LS_WIDTHS) || '{}'); }catch(ex){ map={}; }
+        delete map[name]; localStorage.setItem(LS_WIDTHS, JSON.stringify(map));
+        updateBottomBarWidth();
+      }
+    }
+
+    function updateBottomBarWidth(){
+      var content=byId('hrow'); var spacer=byId('bottomSpacer');
+      if(content && spacer) spacer.style.width = content.scrollWidth + 'px';
+    }
+    (function syncBars(){
+      var area=byId('scrollArea'); var bar=byId('bottomScroll'); if(!area||!bar) return;
+      var locking=false;
+      area.addEventListener('scroll', function(){ if(locking) return; locking=true; bar.scrollLeft=area.scrollLeft; locking=false; });
+      bar.addEventListener('scroll',  function(){ if(locking) return; locking=true; area.scrollLeft=bar.scrollLeft; locking=false; });
+      updateBottomBarWidth(); window.addEventListener('resize', function(){ updateBottomBarWidth(); });
+    })();
+
+    /* ---------- Notice ID popover (send row) ---------- */
+    function initNoticeMenus(){
+      qa('.notice-link').forEach(function(link){
+        var cell = link.closest('td');
+        var pop  = cell.querySelector('.notice-popover');
+        function openPop(){
+          cell.style.position='relative'; pop.style.display='block';
+          var rect=link.getBoundingClientRect(); var cellRect=cell.getBoundingClientRect();
+          pop.style.left = (rect.left - cellRect.left) + 'px';
+          pop.style.top  = (rect.bottom - cellRect.top + 2) + 'px';
+        }
+        function closePop(){ pop.style.display='none'; }
+        link.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); openPop(); });
+        pop.querySelector('.send-no').addEventListener('click', function(e){ e.stopPropagation(); closePop(); });
+        pop.querySelector('.send-yes').addEventListener('click', async function(e){
+          e.stopPropagation();
+          var tr=cell.closest('tr'); var row={};
+          qa('td[data-col]', tr).forEach(function(td){
+            var key = td.getAttribute('data-col') || '';
+            var value = '';
+            var lk = td.querySelector('a.notice-link');
+            if (lk) value = (lk.textContent || '').trim();
+            else value = (td.textContent || '').trim();
+            row[key] = value;
+          });
+          try{
+            var res = await fetch('/add-to-my-solicitations', { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify({ row: row }) });
+            var data = await res.json();
+            if(!res.ok || !data.ok){ alert(data.message || 'Failed to add row.'); return; }
+            alert('Sent to My Solicitations.');
+          }catch(err){ console.error(err); alert('Could not send row.'); }
+          finally{ closePop(); }
+        });
+        document.addEventListener('click', function(ev){ if(!pop.contains(ev.target) && ev.target!==link) closePop(); });
+      });
+    }
+
+    /* ---------- Keyword highlight ---------- */
+    function escapeRegExp(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"); }
+    function highlightKeywordInTable(keyword){
+      var kw=(keyword||"").trim(); var table=byId("result-table"); if(!table||!kw) return;
+      var terms=kw.split(/\s+/).filter(Boolean).map(escapeRegExp); if(!terms.length) return;
+      var re=new RegExp("(" + terms.join("|") + ")", "gi");
+      qa("tbody td[data-col]").forEach(function(td){
+        var col=(td.getAttribute("data-col")||"").toLowerCase();
+        if(col.indexOf("summary")!==-1) return;
+        if(col.indexOf("title")!==-1 || col.indexOf("desc")!==-1){
+          td.innerHTML = (td.textContent || '').replace(re, '<mark class="hl">$1</mark>');
+        }
+      });
+    }
+
+    /* ---------- Init ---------- */
+    byId("downloadBtn").addEventListener("click", downloadFiltered);
+    byId("lockColsBtn").addEventListener("click", toggleLock);
+    window.addEventListener('beforeunload', saveCurrentWidths);
+
+    document.addEventListener("DOMContentLoaded", function(){
+      setLockedUI(isLocked());
+      initClickSorting();
+      initNoticeMenus();
+      initColumnResizers();
+      enforceWidthLimits(true);
+      applyStoredWidths();
+      updateBottomBarWidth();
+    });
+  </script>
+</body>
+</html> Oh **** I didn't have any anybody's clerk

@@ -1,0 +1,15 @@
+2025/09/08-17:21:20.244 da70 Reusing MANIFEST C:\Users\mrinm\Sam_filter\.sam_profile_edge\Default\EdgeCoupons/coupons_data.db/MANIFEST-000001
+2025/09/08-17:21:20.245 da70 Recovering log #7
+2025/09/08-17:21:20.246 da70 Level-0 table #10: started
+2025/09/08-17:21:20.250 da70 Level-0 table #10: 672220 bytes OK
+2025/09/08-17:21:20.251 da70 Recovering log #9
+2025/09/08-17:21:20.251 da70 Reusing old log C:\Users\mrinm\Sam_filter\.sam_profile_edge\Default\EdgeCoupons/coupons_data.db/000009.log 
+2025/09/08-17:21:20.255 da70 Delete type=0 #7
+2025/09/08-17:21:20.255 126e8 Compacting 4@0 + 0@1 files
+2025/09/08-17:21:20.259 126e8 Generated table #11@0: 4 keys, 672243 bytes
+2025/09/08-17:21:20.259 126e8 Compacted 4@0 + 0@1 files => 672243 bytes
+2025/09/08-17:21:20.262 126e8 compacted to: files[ 0 1 0 0 0 0 0 ]
+2025/09/08-17:21:20.262 126e8 Delete type=2 #3
+2025/09/08-17:21:20.262 126e8 Delete type=2 #6
+2025/09/08-17:21:20.262 126e8 Delete type=2 #8
+2025/09/08-17:21:20.262 126e8 Delete type=2 #10
