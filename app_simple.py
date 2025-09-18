@@ -14,6 +14,8 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-change-in-produ
 # Set different limits based on environment
 if os.environ.get('VERCEL'):
     app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024  # 1MB for Vercel
+elif os.environ.get('RENDER'):
+    app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB for Render
 else:
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB for local
 
@@ -179,7 +181,12 @@ def my_filter():
 
 @app.errorhandler(413)
 def too_large(e):
-    max_size = "1MB" if os.environ.get('VERCEL') else "16MB"
+    if os.environ.get('VERCEL'):
+        max_size = "1MB"
+    elif os.environ.get('RENDER'):
+        max_size = "50MB"
+    else:
+        max_size = "16MB"
     return jsonify({
         "ok": False,
         "message": f"File too large. Maximum size is {max_size}."
@@ -194,4 +201,8 @@ def internal_error(error):
     return "Internal server error", 500
 
 if __name__ == "__main__":
-    app.run(debug=True, host="127.0.0.1", port=5000)
+    import os
+    port = int(os.environ.get('PORT', 5000))
+    debug = not os.environ.get('RENDER')  # Disable debug on Render
+    host = '0.0.0.0' if os.environ.get('RENDER') else '127.0.0.1'
+    app.run(debug=debug, host=host, port=port)
