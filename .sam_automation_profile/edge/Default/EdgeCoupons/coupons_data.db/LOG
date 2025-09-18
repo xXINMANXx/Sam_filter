@@ -1,4 +1,0 @@
-2025/09/08-16:32:50.372 136f0 Creating DB C:\Users\mrinm\Sam_filter\.sam_automation_profile\edge\Default\EdgeCoupons/coupons_data.db since it was missing.
-2025/09/08-16:32:50.387 136f0 Reusing MANIFEST C:\Users\mrinm\Sam_filter\.sam_automation_profile\edge\Default\EdgeCoupons/coupons_data.db/MANIFEST-000001
-2025/09/08-16:32:50.389 12510 Level-0 table #5: started
-2025/09/08-16:32:50.394 12510 Level-0 table #5: 672117 bytes OK
