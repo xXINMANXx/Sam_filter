@@ -1,7 +1,0 @@
-2025/09/08-17:21:43.877 8d88 Reusing MANIFEST C:\Users\mrinm\Sam_filter\.sam_profile_edge\Default\EdgeCoupons/coupons_data.db/MANIFEST-000001
-2025/09/08-17:21:43.878 8d88 Recovering log #9
-2025/09/08-17:21:43.879 8d88 Level-0 table #14: started
-2025/09/08-17:21:43.883 8d88 Level-0 table #14: 672220 bytes OK
-2025/09/08-17:21:43.883 8d88 Recovering log #12
-2025/09/08-17:21:43.884 8d88 Reusing old log C:\Users\mrinm\Sam_filter\.sam_profile_edge\Default\EdgeCoupons/coupons_data.db/000012.log 
-2025/09/08-17:21:43.893 8d88 Delete type=0 #9

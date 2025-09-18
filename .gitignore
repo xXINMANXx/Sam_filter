@@ -61,5 +61,6 @@ align_*.py
 # Manual test files
 manual_test.html
 
-# Browser automation profile
+# Browser automation profiles
 .sam_automation_profile/
+.sam_profile_edge/
