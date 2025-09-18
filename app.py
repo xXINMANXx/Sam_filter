@@ -97,9 +97,10 @@ MY_FILE = os.path.join(DATA_DIR, "my_solicitations.xlsx")
 BACKUP_DIR = os.path.join(DATA_DIR, "backups")
 AI_SUMMARIES_FILE = os.path.join(DATA_DIR, "ai_summaries.json")
 
-# Ensure directories exist
-for directory in [DATA_DIR, UPLOAD_DIR, CONTRACTS_BASE, BACKUP_DIR]:
-    os.makedirs(directory, exist_ok=True)
+# Ensure directories exist (only in development)
+if not os.environ.get('VERCEL'):
+    for directory in [DATA_DIR, UPLOAD_DIR, CONTRACTS_BASE, BACKUP_DIR]:
+        os.makedirs(directory, exist_ok=True)
 
 # Global variables for persistent session management
 _persistent_driver = None
@@ -187,6 +188,10 @@ def find_data_file() -> str | None:
 
 def load_data() -> pd.DataFrame:
     """Load the current dataset (preserve original headers)."""
+    # In Vercel, return empty dataframe for now
+    if os.environ.get('VERCEL'):
+        return pd.DataFrame()
+
     fpath = find_data_file()
     if not fpath:
         print("[DATA] No CSV or Excel file found in /data")
