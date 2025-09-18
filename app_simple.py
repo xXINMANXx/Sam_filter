@@ -44,6 +44,46 @@ def get_sample_data():
     }
     return pd.DataFrame(sample_data)
 
+# Helper functions from original app
+def _find_col(df: pd.DataFrame, candidates: list[str]) -> str | None:
+    """Find a column by exact-lower match first, then by contains."""
+    norm_to_orig = {str(col).strip().lower(): col for col in df.columns}
+    for cand in candidates:
+        key = cand.strip().lower()
+        if key in norm_to_orig:
+            return norm_to_orig[key]
+    for col in df.columns:
+        if any(cand in str(col).strip().lower() for cand in candidates):
+            return col
+    return None
+
+def add_highlight_summary_column(df: pd.DataFrame) -> pd.DataFrame:
+    """Add a 'Highlight Summary' column after Description."""
+    if df.empty:
+        return df
+
+    # Make a copy to avoid modifying the original
+    df_copy = df.copy()
+
+    # Find the description column
+    DESC_CANDS = ["description", "details", "summary"]
+    desc_col = _find_col(df_copy, DESC_CANDS)
+
+    # Get current column order
+    columns = list(df_copy.columns)
+
+    # If description column exists, insert after it
+    if desc_col and desc_col in columns:
+        insert_idx = columns.index(desc_col) + 1
+    else:
+        # If no description column, insert at the end
+        insert_idx = len(columns)
+
+    # Insert the new column with empty values initially
+    df_copy.insert(insert_idx, "Highlight Summary", "")
+
+    return df_copy
+
 # In-memory storage for demo purposes
 app_data = {
     'main_data': get_sample_data(),  # Start with sample data
@@ -54,6 +94,8 @@ app_data = {
 def index():
     """Main index page."""
     df = app_data['main_data']
+    if not df.empty:
+        df = add_highlight_summary_column(df)
     return render_template("index.html",
                          columns=list(df.columns) if not df.empty else [],
                          total_count=len(df),
@@ -104,15 +146,25 @@ def upload_data():
         # Read file content
         content = file.read()
 
-        # Parse the file based on extension
+        # Parse the file based on extension (match original app's logic)
         if ext == '.csv':
-            df = pd.read_csv(BytesIO(content), dtype=str)
+            try:
+                df = pd.read_csv(BytesIO(content), dtype=str, encoding="utf-8")
+            except UnicodeDecodeError:
+                df = pd.read_csv(BytesIO(content), dtype=str, encoding="cp1252")
         elif ext in ['.xlsx', '.xls']:
+            # Requires openpyxl for .xlsx
             df = pd.read_excel(BytesIO(content), dtype=str)
 
-        # Clean the data
-        for col in df.columns:
-            df[col] = df[col].astype(str).fillna("")
+        # Normalize cell values to strings; keep header names as-is (match original)
+        for c in df.columns:
+            try:
+                df[c] = df[c].astype(str).fillna("")
+            except Exception:
+                pass
+
+        # Add Highlight Summary column (match original functionality)
+        df = add_highlight_summary_column(df)
 
         # Store in memory
         app_data['main_data'] = df
