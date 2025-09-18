@@ -11,11 +11,36 @@ from io import BytesIO
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-change-in-production')
-app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10MB max file size
+app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024  # 2MB max file size for Vercel
+
+# Sample data for demo
+def get_sample_data():
+    """Generate sample contract data for demonstration"""
+    sample_data = {
+        'Notice ID': ['ABC123', 'DEF456', 'GHI789', 'JKL012', 'MNO345'],
+        'Title': [
+            'IT Support Services Contract',
+            'Building Maintenance Agreement',
+            'Software Development Project',
+            'Security Guard Services',
+            'Office Supply Agreement'
+        ],
+        'Description': [
+            'Comprehensive IT support for government offices including help desk and network maintenance',
+            'Ongoing maintenance of federal building facilities including HVAC and electrical systems',
+            'Custom software development for data management and reporting systems',
+            'Professional security services for federal facilities during business hours',
+            'Supply of office materials including paper, pens, and computer accessories'
+        ],
+        'Current Response Date': ['01/15/2025', '02/20/2025', '03/10/2025', '01/30/2025', '02/15/2025'],
+        'Agency': ['GSA', 'DOD', 'VA', 'DHS', 'EPA'],
+        'Set-Aside': ['Small Business', 'Unrestricted', 'Small Business', 'SDVOSB', 'HUBZone']
+    }
+    return pd.DataFrame(sample_data)
 
 # In-memory storage for demo purposes
 app_data = {
-    'main_data': pd.DataFrame(),
+    'main_data': get_sample_data(),  # Start with sample data
     'my_solicitations': pd.DataFrame()
 }
 
@@ -144,7 +169,7 @@ def my_filter():
 def too_large(e):
     return jsonify({
         "ok": False,
-        "message": "File too large. Maximum size is 10MB."
+        "message": "File too large. Maximum size is 2MB for this demo. Try a smaller file or compress your data."
     }), 413
 
 @app.errorhandler(404)
