@@ -1,0 +1,62 @@
+# Large files and executables
+*.exe
+*.msi
+*.zip
+
+# Contract documents (too large for deployment)
+Contracts/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Data backups
+data/backups/
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# IDE files
+.vscode/
+.idea/
+
+# Environment variables
+.env
+
+# Test files
+test_*.py
+test_*.html
+
+# Backup files
+*.backup
+*.backup_*
+
+# Development scripts
+apply_*.py
+fix_*.py
+create_*.py
+revert_*.py
+add_*.py
+move_*.py
+increase_*.py
+remove_*.py
+undo_*.py
+update_*.py
+widen_*.py
+align_*.py
+
+# Batch files
+*.bat
+*.cmd
+*.ps1
+
+# JavaScript test files
+*.js
+
+# Manual test files
+manual_test.html
