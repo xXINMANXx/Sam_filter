@@ -85,9 +85,13 @@ def upload_data():
         })
 
     except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"Upload error: {error_details}")
         return jsonify({
             "ok": False,
-            "message": f"Error processing file: {str(e)}"
+            "message": f"Error processing file: {str(e)}",
+            "details": error_details[:500]  # Limit details for response
         }), 500
 
 @app.route("/filter", methods=["POST"])
@@ -135,6 +139,13 @@ def my_filter():
         "columns": list(df.columns),
         "solicitations": filtered.to_dict(orient="records")
     })
+
+@app.errorhandler(413)
+def too_large(e):
+    return jsonify({
+        "ok": False,
+        "message": "File too large. Maximum size is 10MB."
+    }), 413
 
 @app.errorhandler(404)
 def not_found_error(error):
