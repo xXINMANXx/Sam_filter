@@ -998,13 +998,24 @@
       var file = e.target.files && e.target.files[0];
       if (!file) return;
       try{
+        console.log('Uploading file:', file.name, 'Size:', file.size);
         var fd = new FormData(); fd.append('file', file);
         var res = await fetch('/upload-data',{ method:'POST', body: fd });
+        console.log('Response status:', res.status);
+
         var data = await res.json();
-        if(!res.ok || !data.ok){ alert(data.message || 'Upload failed.'); return; }
+        console.log('Response data:', data);
+
+        if(!res.ok || !data.ok){
+          alert('Upload failed: ' + (data.message || 'Unknown error'));
+          return;
+        }
         await applyFilters();
         alert('Uploaded: '+data.saved_as+' ('+data.rows+' rows)');
-      }catch(err){ console.error(err); alert('Error uploading file.'); }
+      }catch(err){
+        console.error('Upload error:', err);
+        alert('Error uploading file: ' + err.message);
+      }
       finally{ uploadInput.value=''; }
     });
 
