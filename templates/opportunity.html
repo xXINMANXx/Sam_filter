@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contract View</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+  <style>
+    :root { --navy:#112a57; --bg:#f7f7fb; --card:#ffffff; --grid-blue:#c3d3ff; --border:#e6e6ef; }
+    :root[data-theme="dark"] { color-scheme: dark; --bg:#0f1320; --card:#151a2d; --navy:#9ab6ff; }
+    html,body{height:100%;}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:#222;}
+    .app-header{text-align:center;}
+    .flag-banner{width:100%; height:180px; background-image:url("{{ url_for('static', filename='flag.png') }}"); background-size:110% auto; background-position:center; background-repeat:no-repeat; }
+    .title-bar{position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:12px 20px 22px;}
+    h1{margin:0; color:var(--navy); font-weight:800; font-size:clamp(28px,4vw,44px); text-shadow:0 1px 0 rgba(255,255,255,.35);}
+    h2{margin:6px 0 0; font-size:clamp(18px,2.2vw,26px); font-weight:700; color:#2d3d79;}
+    .container{max-width:1440px;margin:18px auto;padding:0 18px;}
+    .layout{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(320px,1fr);gap:18px;align-items:start;}
+    @media (max-width: 980px){ .layout{grid-template-columns:1fr;} }
+    .card{background:var(--card);border:1px solid var(--grid-blue);border-radius:12px;padding:16px;}
+    .meta{display:flex; flex-wrap:wrap; gap:10px; align-items:center;}
+    .meta .label{font-weight:800; color:#112a57;}
+    .right{margin-left:auto; display:flex; gap:8px;}
+    .btn{padding:8px 12px; border-radius:10px; border:1px solid var(--border); background:#fff; text-decoration:none; color:#112a57; font-weight:700;}
+    .btn.primary{background:#112a57; color:#fff; border-color:#112a57;}
+    .top-cta-left{position:absolute; left:22px; top:50%; transform:translateY(-50%); display:inline-block; padding:10px 18px; border-radius:999px; border:1px solid var(--grid-blue); background:#fff; text-decoration:none; color: #2d3d79; font-weight:800; font-size:clamp(14px,1.4vw,18px); box-shadow:0 2px 8px rgba(16,24,40,0.06); white-space:nowrap;}
+    .theme-toggle{position:absolute; right:22px; top:50%; transform:translateY(-50%); width:40px; height:40px; border-radius:999px; border:1px solid var(--grid-blue); background:#fff; cursor:pointer; box-shadow:0 2px 8px rgba(16,24,40,0.06); font-size:18px;}
+    :root[data-theme="dark"] .theme-toggle{ background:#1a2240; color:#e9ecf6; }
+    .kv-grid { display:grid; grid-template-columns: 220px 1fr; gap:8px 14px; align-items:start; }
+    .kv-label { font-weight:800; color:#112a57; }
+    .kv-value { word-break:break-word; }
+    .desc-text { max-height:6.5em; overflow:hidden; }
+    .desc-text.expanded { max-height:none; }
+    .desc-text.collapsed { mask-image: linear-gradient(180deg, #000 60%, rgba(0,0,0,0)); }
+    @media (max-width: 640px){ .kv-grid { grid-template-columns: 140px 1fr; } }
+    .badge{display:inline-block;padding:.25rem .6rem;border-radius:999px;border:1px solid var(--grid-blue);background:#fff;color:#112a57;font-weight:700;font-size:.86rem; margin-right:8px; margin-bottom:6px;}
+    :root[data-theme="dark"] .badge{ background:#1a2240; color:#e9ecf6; border-color:#2d3d79; }
+    .meta-sticky{position:sticky; top:10px; z-index:5;}
+    .actions{display:flex; flex-wrap:wrap; gap:8px;}
+    .btn.block{display:inline-flex; justify-content:center; width:100%;}
+    .section{ border:1px solid var(--grid-blue); border-radius:10px; background:var(--card); margin-bottom:12px; }
+    .section-title{ padding:10px 12px; font-weight:800;
+      background:linear-gradient(180deg, rgba(195,211,255,.35), rgba(195,211,255,.05));
+      border-bottom:1px solid var(--grid-blue); color:#2d3d79; }
+    :root[data-theme="dark"] .section-title{
+      background:linear-gradient(180deg, rgba(154,182,255,.22), rgba(154,182,255,.06));
+      color:#e9ecf6; border-color:#2d3d79; }
+    .section-body{ padding:12px; }
+    .section .kv-grid{ margin-top:4px; }
+    :root[data-theme="dark"] body{ color:#e9ecf6; }
+    :root[data-theme="dark"] h1{ color:#e9ecf6; text-shadow:none; }
+    :root[data-theme="dark"] h2{ color:#e9ecf6; }
+    :root[data-theme="dark"] .kv-label{ color:#e9ecf6; }
+    :root[data-theme="dark"] .kv-value{ color:#e9ecf6; }
+    :root[data-theme="dark"] .meta .label{ color:#e9ecf6; }
+    :root[data-theme="dark"] .card{ color:#e9ecf6; }
+    .build-tag{ margin-top:10px; font-size:12px; opacity:.7; }
+  </style>
+</head>
+<body>
+  {% macro display(val) -%}
+    {%- if val is not defined or val is none -%}—
+    {%- elif val != val -%}—
+    {%- elif (val|string)|trim == '' -%}—
+    {%- else -%}{{ val }}{%- endif -%}
+  {%- endmacro %}
+
+  {% macro display_any(v) -%}
+    {%- if v is mapping or (v is sequence and v is not string) -%}{{ v|tojson }}
+    {%- else -%}{{ display(v) }}{%- endif -%}
+  {%- endmacro %}
+
+  {% set rec = record or {} %}
+
+  <header class="app-header">
+    <div class="flag-banner"></div>
+    <div class="title-bar">
+      <a class="top-cta-left" href="/my-solicitations" title="Back to My Solicitations">My Solicitations</a>
+      <h1>Contract View</h1>
+      <h2 id="jobTitle">{{ display(job_title) }}</h2>
+      <button id="themeToggle" class="theme-toggle" type="button" aria-pressed="false" title="Toggle dark mode">🌙</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="layout">
+      <div>
+        <div class="card meta meta-sticky" id="metaCard">
+          <div class="label">Notice ID:</div><div id="nid">{{ notice_id }}</div>
+          <div class="right actions">
+            <a id="samBtn" class="btn primary" target="_blank" rel="noopener" href="https://sam.gov/opp/{{ notice_id }}/view">Open on SAM.gov</a>
+          </div>
+          <div id="badgesRow" style="margin:10px 0 6px;">
+            {% if rec.get('Set Aside') %}<span class="badge">{{ display(rec.get('Set Aside')) }}</span>{% endif %}
+            {% if rec.get('NAICS') %}<span class="badge">{{ display(rec.get('NAICS')) }}</span>{% endif %}
+            {% if rec.get('PSC') %}<span class="badge">{{ display(rec.get('PSC')) }}</span>{% endif %}
+          </div>
+          <div class="build-tag">Build CV-20250908-2</div>
+        </div>
+
+        {% if not rec %}
+        <div id="noDataHint" class="card" style="margin-top:12px; border:1px dashed var(--grid-blue);">
+          <div><strong>No data found for this Notice ID.</strong> Try refreshing My Solicitations or confirm the Notice ID exists in your dataset.</div>
+        </div>
+        {% endif %}
+
+        <div class="section" id="sec-general">
+          <div class="section-title">General Information</div>
+          <div class="section-body">
+            <div id="gridGeneral" class="kv-grid">
+              <div class="kv-label">Title</div><div class="kv-value">{{ display(job_title or rec.get('Title')) }}</div>
+              <div class="kv-label">Notice ID</div><div class="kv-value">{{ notice_id }}</div>
+              <div class="kv-label">Contract Opportunity Type</div><div class="kv-value">{{ display(rec.get('Contract Opportunity Type')) }}</div>
+              <div class="kv-label">Active/Inactive</div><div class="kv-value">{{ display(rec.get('Active/Inactive')) }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" id="sec-dates">
+          <div class="section-title">Dates</div>
+          <div class="section-body">
+            <div id="gridDates" class="kv-grid">
+              <div class="kv-label">Current Response Date</div><div class="kv-value">{{ display(rec.get('Current Response Date')) }}</div>
+              <div class="kv-label">Last Modified Date</div><div class="kv-value">{{ display(rec.get('Last Modified Date')) }}</div>
+              <div class="kv-label">Last Published Date</div><div class="kv-value">{{ display(rec.get('Last Published Date')) }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" id="sec-class">
+          <div class="section-title">Classification</div>
+          <div class="section-body">
+            <div id="gridClass" class="kv-grid">
+              <div class="kv-label">Set Aside</div><div class="kv-value">{{ display(rec.get('Set Aside')) }}</div>
+              <div class="kv-label">NAICS</div><div class="kv-value">{{ display(rec.get('NAICS')) }}</div>
+              <div class="kv-label">PSC</div><div class="kv-value">{{ display(rec.get('PSC')) }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" id="sec-poc">
+          <div class="section-title">Point of Contact</div>
+          <div class="section-body">
+            <div id="gridPoc" class="kv-grid">
+              <div class="kv-label">POC Information</div><div class="kv-value">{{ display(rec.get('POC Information')) }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" id="sec-award">
+          <div class="section-title">Award Information</div>
+          <div class="section-body">
+            <div id="gridAward" class="kv-grid">
+              <div class="kv-label">Contract Award Number</div><div class="kv-value">{{ display(rec.get('Contract Award Number')) }}</div>
+              <div class="kv-label">Contract Award Date</div><div class="kv-value">{{ display(rec.get('Contract Award Date')) }}</div>
+              <div class="kv-label">Awardee</div><div class="kv-value">{{ display(rec.get('Awardee')) }}</div>
+              <div class="kv-label">Modification Number</div><div class="kv-value">{{ display(rec.get('Modification Number')) }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" id="sec-desc">
+          <div class="section-title">Description</div>
+          <div class="section-body">
+            <div id="descText" class="desc-text collapsed">{{ display(rec.get('Description')) }}</div>
+            <button id="descToggle" class="btn" type="button" style="margin-top:10px;">Show more</button>
+          </div>
+        </div>
+which one of these Al no cut the ****
+        <div class="section" id="sec-all">
+          <div class="section-title">All Available Fields</div>
+          <div class="section-body">
+            <div class="kv-grid">
+              {% set shown = [
+                'Title','Notice ID','Contract Opportunity Type','Active/Inactive',
+                'Current Response Date','Last Modified Date','Last Published Date',
+                'Set Aside','NAICS','PSC','POC Information',
+                'Contract Award Number','Contract Award Date','Awardee','Modification Number'
+              ] %}
+              {% for k, v in rec.items()|list|sort %}
+                {% if k not in shown %}
+                  <div class="kv-label">{{ k }}</div>
+                  <div class="kv-value">{{ display_any(v) }}</div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div>
+        <div class="card" id="statusCard" style="margin-top:0;">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px;">
+            <div style="font-weight:700;">SAM.gov Automation</div>
+            <div class="actions">
+              <button id="retryAutoBtn" class="btn" type="button">Run Again</button>
+              <a id="samBtnSide" class="btn" target="_blank" rel="noopener" href="https://sam.gov/opp/{{ notice_id }}/view">Open on SAM.gov</a>
+            </div>
+          </div>
+          <div id="status">Preparing…</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (function(){
+      const KEY='sam_theme_v1'; const root=document.documentElement; const btn=document.getElementById('themeToggle');
+      function apply(mode){ if(mode==='dark'){ root.setAttribute('data-theme','dark'); if(btn){ btn.textContent='☀️'; btn.title='Switch to light mode'; btn.setAttribute('aria-pressed','true'); } }
+        else{ root.removeAttribute('data-theme'); if(btn){ btn.textContent='🌙'; btn.title='Switch to dark mode'; btn.setAttribute('aria-pressed','false'); } } }
+      let saved=localStorage.getItem(KEY); if(!saved){ const d=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches; saved=d?'dark':'light'; localStorage.setItem(KEY,saved); }
+      apply(saved); if(btn){ btn.addEventListener('click', ()=>{ const next=(localStorage.getItem(KEY)==='dark')?'light':'dark'; localStorage.setItem(KEY,next); apply(next); }); }
+    })();
+    (function(){
+      const txt=document.getElementById('descText'); const tog=document.getElementById('descToggle');
+      if(txt&&tog){ const t=(txt.textContent||'').trim(); if(!t||t==='—'){ tog.style.display='none'; } else { tog.addEventListener('click', ()=>{ const exp=txt.classList.toggle('expanded'); txt.classList.toggle('collapsed', !exp); tog.textContent=exp?'Show less':'Show more'; }); } }
+    })();
+    (function(){
+      const nid={{ (notice_id or '')|tojson|safe }}; const status=document.getElementById('status');
+      async function runAutomation(){
+        try{
+          if(!nid){ status.textContent='❌ Missing Notice ID.'; return; }
+          status.textContent='Starting… creating folder and launching browser…';
+          const res=await fetch('/sam-start/'+encodeURIComponent(nid),{method:'POST'}); let data=null; try{data=await res.json();}catch(_){}
+          if(!res.ok||!data){
+            status.textContent='❌ Automation failed to start ('+res.status+').';
+            try{
+              const res2=await fetch('/sam-start/'+encodeURIComponent(nid)+'?kick=1'); let d2=null; try{d2=await res2.json();}catch(_){}
+              if(res2.ok && d2 && d2.ok){ data=d2; }
+            }catch(e2){}
+          }
+          if(data){
+            if(!data.ok){
+              status.textContent='❌ '+(data.message||'Automation error.')+(data.folder?'\\nFolder: '+data.folder:'');
+            }else{
+              const atts=Array.isArray(data.attachments)?data.attachments:[];
+              let text='✅ Downloaded PDF to: '+(data.pdf||'(none)')+'\\nFolder: '+data.folder;
+              if(atts.length){ text+='\\nAttachments ('+atts.length+'):\\n - '+atts.join('\\n - '); }
+              else{ text+='\\nAttachments: none detected or step skipped.'; }
+              status.textContent=text;
+            }
+          }
+        }catch(e){
+          console.error(e);
+          status.textContent='❌ Error: '+e;
+        }
+      }
+      const retryBtn=document.getElementById('retryAutoBtn'); if(retryBtn){ retryBtn.addEventListener('click', runAutomation); }
+      runAutomation();
+    })();
+  </script>
+</body>
+</html>
