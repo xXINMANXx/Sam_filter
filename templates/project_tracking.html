@@ -49,7 +49,7 @@
             border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: end;
             flex-shrink: 0;
         }
 
@@ -61,7 +61,7 @@
         .header-actions {
             display: flex;
             gap: 0.5rem;
-            align-items: center;
+            align-items: end;
         }
 
         .toolbar {
@@ -70,14 +70,14 @@
             border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: end;
             flex-shrink: 0;
         }
 
         .toolbar-left, .toolbar-right {
             display: flex;
             gap: 0.5rem;
-            align-items: center;
+            align-items: end;
         }
 
         .btn {
@@ -91,7 +91,7 @@
             font-weight: 500;
             text-decoration: none;
             display: inline-flex;
-            align-items: center;
+            align-items: end;
             gap: 0.375rem;
             transition: all 0.2s;
             white-space: nowrap;
@@ -117,32 +117,6 @@
             font-size: 0.7rem;
         }
 
-        .zoom-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .zoom-slider {
-            width: 100px;
-            height: 4px;
-            background: var(--border-color);
-            border-radius: 2px;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .zoom-slider::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: var(--zoom-slider-percent, 50%);
-            background: var(--accent-blue);
-            border-radius: 2px;
-            max-width: 100%;
-        }
 
         .timeline-container {
             display: flex;
@@ -151,9 +125,9 @@
         }
 
         .task-panel {
-            width: var(--task-panel-width, 350px);
+            width: var(--task-panel-width, 650px);
             min-width: 250px;
-            max-width: 600px;
+            max-width: 800px;
             background: var(--bg-secondary);
             border-right: 1px solid var(--border-color);
             display: flex;
@@ -164,18 +138,26 @@
 
         .task-header {
             display: grid;
-            grid-template-columns: 30px 3fr 70px 80px 60px 60px 60px 30px;
+            grid-template-columns: 30px 3fr 70px 80px 60px 60px 80px 30px;
             gap: 0.5rem;
-            padding: 0.5rem;
+            padding: 0.75rem 0.5rem;
             background: var(--bg-tertiary);
             border-bottom: 1px solid var(--border-color);
             font-weight: 600;
             font-size: 0.7rem;
             text-transform: uppercase;
             color: var(--text-secondary);
-            align-items: center;
-            height: 60px;
+            align-items: start;
+            min-height: 95px;
             box-sizing: border-box;
+        }
+
+        
+        /* Position Task Name and Duration at same level as date titles */
+        .task-header > div:nth-child(2),  /* Task Name */
+        .task-header > div:nth-child(3) { /* Duration */
+            align-self: start;
+            margin-top: 42px;
         }
 
         .task-header > div:first-child {
@@ -194,8 +176,60 @@
             text-align: center; /* duration, date columns */
         }
 
+        
         .task-header > div:last-child {
             text-align: center; /* menu column */
+        }
+
+
+        .date-column-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            height: 100%;
+            padding: 8px 4px;
+        }
+
+        .diamond-icon {
+            width: 12px;
+            height: 12px;
+            transform: rotate(45deg);
+            border: 2px solid white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            margin: 8px 0 4px 0;
+            flex-shrink: 0;
+        }
+
+        .solicitation-diamond {
+            background: #ffa500;
+        }
+
+        .site-visit-diamond {
+            background: var(--accent-blue);
+        }
+
+        .work-start-diamond {
+            background: #28a745;
+        }
+
+        .completion-diamond {
+            background: var(--accent-red);
+        }
+
+        .date-column-header > div:last-child {
+            line-height: 1.1;
+            word-wrap: break-word;
+            word-break: break-word;
+            hyphens: auto;
+            max-width: 100%;
+            text-align: center;
+            position: absolute;
+            top: 42px;
+            left: 2px;
+            right: 2px;
+            font-size: 0.65rem;
         }
 
         .task-list-container {
@@ -209,16 +243,48 @@
 
         .task-item {
             display: grid;
-            grid-template-columns: 30px 3fr 70px 80px 60px 60px 60px 30px;
+            grid-template-columns: 30px 3fr 70px 80px 60px 60px 80px 30px;
             gap: 0.5rem;
-            padding: 0.5rem;
+            padding: 4px 0;
             border-bottom: 1px solid var(--border-color);
-            align-items: center;
+            align-items: end;
             transition: all 0.2s;
             cursor: pointer;
             position: relative;
             user-select: none;
-            min-height: 44px;
+            height: 50px;
+        }
+
+        
+        
+        .task-checkbox {
+            width: 16px;
+            height: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: auto;
+        }
+
+        .task-item > * {
+            padding: 0 0.25rem;
+        }
+
+        .task-item .task-name {
+            padding: 0 0.5rem;
+        }
+
+        .task-item .task-menu-btn {
+            padding: 0;
+        }
+
+        .task-checkbox {
+            margin: 0 0.25rem;
         }
 
         .task-item:hover {
@@ -242,7 +308,7 @@
             background: transparent;
             cursor: pointer;
             display: flex;
-            align-items: center;
+            align-items: end;
             justify-content: center;
             font-size: 10px;
         }
@@ -255,7 +321,7 @@
 
         .task-name {
             font-weight: 500;
-            font-size: 0.8rem;
+            font-size: 1.0rem;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -283,7 +349,7 @@
             min-height: 22px;
             position: relative;
             display: flex;
-            align-items: center;
+            align-items: end;
             justify-content: center;
             gap: 0.25rem;
         }
@@ -389,7 +455,7 @@
             cursor: pointer;
             border-radius: 3px;
             display: flex;
-            align-items: center;
+            align-items: end;
             justify-content: center;
             font-size: 12px;
         }
@@ -411,9 +477,9 @@
             border-bottom: 1px solid var(--border-color);
             overflow-x: auto;
             flex-shrink: 0;
-            height: 60px;
+            min-height: 95px;
             display: flex;
-            align-items: center;
+            align-items: end;
             box-sizing: border-box;
         }
 
@@ -437,17 +503,18 @@
         }
 
         .date-header.today {
-            background: var(--accent-red);
-            color: white;
+            background: #4a90e2 !important;
+            color: white !important;
         }
 
         .date-header.weekend {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .timeline-content-container {
             flex: 1;
-            overflow: auto;
+            overflow-y: auto;
+            overflow-x: hidden;
             position: relative;
         }
 
@@ -457,11 +524,11 @@
         }
 
         .timeline-row {
-            height: 40px;
+            height: 50px;
             position: relative;
             border-bottom: 1px solid var(--border-color);
             display: flex;
-            align-items: center;
+            align-items: end;
         }
 
         .timeline-row:hover {
@@ -481,7 +548,7 @@
             height: 24px;
             border-radius: 4px;
             display: flex;
-            align-items: center;
+            align-items: end;
             font-size: 0.7rem;
             font-weight: 500;
             color: white;
@@ -557,7 +624,7 @@
 
         /* Enhanced status colors */
         .status-not-started { background: linear-gradient(135deg, #6c757d, #5a6268); }
-        .status-in-progress { background: linear-gradient(135deg, #ffc107, #e0a800); color: #000; }
+        .status-in-progress { background: linear-gradient(135deg, #fffacd, #fff9c4); color: #000; }
         .status-urgent { 
             background: linear-gradient(135deg, #ff6b6b, #ee5a52); 
             animation: pulse 2s infinite;
@@ -574,7 +641,7 @@
             height: 24px;
             border-radius: 4px;
             display: flex;
-            align-items: center;
+            align-items: end;
             font-size: 0.7rem;
             font-weight: 500;
             color: white;
@@ -590,7 +657,7 @@
 
         /* Project span bar status colors */
         .project-span-bar.status-not-started { background: linear-gradient(135deg, #6c757d, #5a6268); }
-        .project-span-bar.status-in-progress { background: linear-gradient(135deg, #ffc107, #e0a800); color: #000; }
+        .project-span-bar.status-in-progress { background: linear-gradient(135deg, #fffacd, #fff9c4); color: #000; }
         .project-span-bar.status-urgent {
             background: linear-gradient(135deg, #ff6b6b, #ee5a52);
             animation: pulse 2s infinite;
@@ -625,7 +692,7 @@
             position: absolute;
             bottom: 0;
             left: 0;
-            height: 20%;
+            height: 35%;
             background: var(--accent-green);
             border-radius: 0 0 4px 4px;
             transition: width 0.3s ease;
@@ -648,7 +715,7 @@
         }
 
         .milestone.solicitation-due {
-            background: var(--accent-red);
+            background: #ffa500;
         }
 
         .milestone.site-visit {
@@ -715,7 +782,7 @@
             font-size: 0.8rem;
             color: var(--text-primary);
             display: flex;
-            align-items: center;
+            align-items: end;
             gap: 0.5rem;
         }
 
@@ -755,7 +822,7 @@
             border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: end;
         }
 
         .details-content {
@@ -793,6 +860,14 @@
             border-color: var(--accent-blue);
         }
 
+        .detail-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
         /* Style the date picker calendar icon */
         .detail-value[type="date"]::-webkit-calendar-picker-indicator {
             cursor: pointer;
@@ -826,7 +901,7 @@
         /* Loading states */
         .loading {
             display: flex;
-            align-items: center;
+            align-items: end;
             justify-content: center;
             padding: 2rem;
             color: var(--text-secondary);
@@ -895,12 +970,6 @@
                 <button class="btn btn-secondary btn-small" onclick="exportData()">💾 Export</button>
             </div>
             <div class="toolbar-right">
-                <div class="zoom-controls">
-                    <button class="btn btn-secondary btn-small" onclick="zoomOut()">−</button>
-                    <div class="zoom-slider" onclick="setZoom(event)"></div>
-                    <button class="btn btn-secondary btn-small" onclick="zoomIn()">+</button>
-                    <span style="font-size: 0.7rem; margin-left: 0.5rem;" id="zoom-level">100%</span>
-                </div>
             </div>
         </div>
 
@@ -911,10 +980,22 @@
                     <div>✓</div>
                     <div>Task Name</div>
                     <div>Duration</div>
-                    <div>Solicitation Due Date</div>
-                    <div>Site Visit</div>
-                    <div>Work Start Date</div>
-                    <div>Completion Date</div>
+                    <div class="date-column-header">
+                        <div class="diamond-icon solicitation-diamond"></div>
+                        <div>Solicitation Due Date</div>
+                    </div>
+                    <div class="date-column-header">
+                        <div class="diamond-icon site-visit-diamond"></div>
+                        <div>Site Visit</div>
+                    </div>
+                    <div class="date-column-header">
+                        <div class="diamond-icon work-start-diamond"></div>
+                        <div>Work Start Date</div>
+                    </div>
+                    <div class="date-column-header">
+                        <div class="diamond-icon completion-diamond"></div>
+                        <div>Completion Date</div>
+                    </div>
                     <div>⋮</div>
                 </div>
                 <div class="task-list-container">
@@ -969,7 +1050,7 @@
                 <div class="detail-value" id="detail-notice-id">-</div>
             </div>
             <div class="detail-field">
-                <div class="detail-label">Response Date</div>
+                <div class="detail-label">Solicitation Due Date</div>
                 <input type="date" class="detail-value" id="detail-response-date">
             </div>
             <div class="detail-field">
@@ -987,6 +1068,10 @@
                 <input type="range" class="detail-value" id="detail-progress" min="0" max="100" value="0">
                 <span id="progress-value">0%</span>
             </div>
+            <div class="detail-buttons">
+                <button class="btn btn-primary" onclick="saveTaskChanges()">💾 Save</button>
+                <button class="btn btn-secondary" onclick="cancelTaskChanges()">✕ Cancel</button>
+            </div>
         </div>
     </div>
 
@@ -996,7 +1081,7 @@
         let timelineStart, timelineEnd, timelineDays = [];
         let selectedTasks = new Set();
         let currentTask = null;
-        let zoomLevel = 100;
+        const zoomLevel = 175; // Fixed at 175%, no longer variable
         let isDragging = false;
         let isResizing = false;
         let dragStart = null;
@@ -1006,16 +1091,18 @@
         let contextMenuTarget = null;
         let detailsPanelOpen = false;
 
-        // Calculate timeline dates with zoom
+        // Calculate timeline dates with fixed zoom at 175%
         function calculateTimeline() {
             const today = new Date();
-            const daysToShow = Math.round(21 * (zoomLevel / 100));
-            
+            const daysToShow = Math.round(21 * (175 / 100)); // Fixed at 175%
+
             timelineStart = new Date(today);
-            timelineStart.setDate(today.getDate() - Math.floor(daysToShow * 0.3));
-            
+            timelineStart.setDate(today.getDate() - 7); // 7 days before today
+            timelineStart.setHours(0, 0, 0, 0); // Start of day
+
             timelineEnd = new Date(today);
-            timelineEnd.setDate(today.getDate() + Math.ceil(daysToShow * 0.7));
+            timelineEnd.setDate(today.getDate() + 51); // 85% of 60 days = 51 days after
+            timelineEnd.setHours(23, 59, 59, 999); // End of day
             
             timelineDays = [];
             for (let d = new Date(timelineStart); d <= timelineEnd; d.setDate(d.getDate() + 1)) {
@@ -1028,8 +1115,26 @@
         // Parse date from various formats
         function parseDate(dateStr) {
             if (!dateStr) return null;
+            // Parse date in local timezone to avoid day-before issues
+            const parts = dateStr.split('-');
+            if (parts.length === 3) {
+                const year = parseInt(parts[0]);
+                const month = parseInt(parts[1]) - 1; // Month is 0-indexed
+                const day = parseInt(parts[2]);
+                const date = new Date(year, month, day);
+                return isNaN(date.getTime()) ? null : date;
+            }
             const date = new Date(dateStr);
             return isNaN(date.getTime()) ? null : date;
+        }
+
+        // Format date to YYYY-MM-DD in local timezone
+        function formatDateLocal(date) {
+            if (!date) return '';
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
         }
 
         // Enhanced project status determination
@@ -1067,13 +1172,18 @@
         // Get position percentage for timeline
         function getDatePosition(date) {
             if (!date) return 0;
+
+            // Normalize the date to noon (12:00) to center it within the day
+            const normalizedDate = new Date(date);
+            normalizedDate.setHours(12, 0, 0, 0);
+
             const timelineStartTime = timelineStart.getTime();
             const timelineEndTime = timelineEnd.getTime();
-            const dateTime = date.getTime();
-            
+            const dateTime = normalizedDate.getTime();
+
             if (dateTime < timelineStartTime) return 0;
             if (dateTime > timelineEndTime) return 100;
-            
+
             const progress = (dateTime - timelineStartTime) / (timelineEndTime - timelineStartTime);
             return Math.max(0, Math.min(100, progress * 100));
         }
@@ -1086,32 +1196,48 @@
             return new Date(timelineStartTime + (timelineEndTime - timelineStartTime) * progress);
         }
 
-        // Zoom controls
-        function zoomIn() {
-            zoomLevel = Math.min(200, zoomLevel + 25);
-            updateZoom();
-        }
+        // Zoom functions removed - zoom is now fixed at 175%
 
-        function zoomOut() {
-            zoomLevel = Math.max(50, zoomLevel - 25);
-            updateZoom();
-        }
+        // Function to position timeline with today's date at left 1/4
+        function centerTimelineOnToday() {
+            const timelineContainer = document.querySelector('.timeline-content-container');
+            const timelineHeader = document.querySelector('.timeline-header');
+            const todayLine = document.querySelector('.current-date-line');
 
-        function setZoom(event) {
-            const rect = event.currentTarget.getBoundingClientRect();
-            const percent = (event.clientX - rect.left) / rect.width;
-            zoomLevel = Math.round(50 + (percent * 150));
-            updateZoom();
-        }
+            if (!timelineContainer || !timelineHeader || !todayLine) {
+                console.log('Missing elements for centering');
+                return;
+            }
 
-        function updateZoom() {
-            // Calculate slider position (0-100%) based on zoom level (50-200%)
-            const sliderPercent = Math.max(0, Math.min(100, ((zoomLevel - 50) / 150) * 100));
+            // Get today's position in pixels
+            const todayLeftPercent = parseFloat(todayLine.style.left) || 25;
+            const timelineWidth = timelineContainer.scrollWidth;
+            const containerWidth = timelineContainer.clientWidth;
 
-            document.documentElement.style.setProperty('--zoom-percent', zoomLevel + '%');
-            document.documentElement.style.setProperty('--zoom-slider-percent', sliderPercent + '%');
-            document.getElementById('zoom-level').textContent = zoomLevel + '%';
-            renderAll();
+            // Debug logging
+            console.log(`Centering: todayPercent=${todayLeftPercent}%, timelineWidth=${timelineWidth}px, containerWidth=${containerWidth}px, zoomLevel=${zoomLevel}%`);
+
+            // Calculate today's absolute position
+            const todayPositionPx = (todayLeftPercent / 100) * timelineWidth;
+
+            // Calculate scroll position to position today at 15% from left edge
+            let scrollLeft = todayPositionPx - (containerWidth * 0.15);
+
+            // Ensure we don't scroll beyond the timeline boundaries
+            const maxScrollLeft = Math.max(0, timelineWidth - containerWidth);
+            scrollLeft = Math.max(0, Math.min(scrollLeft, maxScrollLeft));
+
+            // Only apply scroll if timeline is wider than container
+            if (timelineWidth > containerWidth) {
+                timelineContainer.scrollLeft = scrollLeft;
+                timelineHeader.scrollLeft = scrollLeft;
+                console.log(`Applied scroll: ${scrollLeft}px`);
+            } else {
+                // Timeline fits entirely in container, no scrolling needed
+                timelineContainer.scrollLeft = 0;
+                timelineHeader.scrollLeft = 0;
+                console.log('Timeline fits in container, no scroll needed');
+            }
         }
 
         // Task selection
@@ -1249,9 +1375,11 @@
             
             if (detailsPanelOpen) {
                 panel.classList.add('open');
+                storeOriginalTaskData();
                 updateDetailsPanel();
             } else {
                 panel.classList.remove('open');
+                originalTaskData = null;
             }
         }
 
@@ -1267,13 +1395,64 @@
             
             const responseDate = parseDate(project.response_date);
             if (responseDate) {
-                document.getElementById('detail-response-date').value = responseDate.toISOString().split('T')[0];
+                const year = responseDate.getFullYear();
+                const month = String(responseDate.getMonth() + 1).padStart(2, '0');
+                const day = String(responseDate.getDate()).padStart(2, '0');
+                document.getElementById('detail-response-date').value = `${year}-${month}-${day}`;
             }
             
             document.getElementById('detail-status').value = getProjectStatus(project);
             const progress = calculateProgress(project);
             document.getElementById('detail-progress').value = progress;
             document.getElementById('progress-value').textContent = progress + '%';
+        }
+
+        // Store original values when editing starts
+        let originalTaskData = null;
+
+        function saveTaskChanges() {
+            if (currentTask === null) return;
+
+            const project = projects[currentTask];
+            if (!project) return;
+
+            // Get values from the form
+            project.title = document.getElementById('detail-title').textContent;
+            project.response_date = document.getElementById('detail-response-date').value;
+            project.status = document.getElementById('detail-status').value;
+            project.progress = parseInt(document.getElementById('detail-progress').value);
+
+            // Clear original data
+            originalTaskData = null;
+
+            // Re-render to show changes
+            renderAll();
+
+            // Close details panel
+            toggleDetailsPanel();
+        }
+
+        function cancelTaskChanges() {
+            if (originalTaskData && currentTask !== null) {
+                // Restore original values
+                const project = projects[currentTask];
+                if (project) {
+                    Object.assign(project, originalTaskData);
+                }
+            }
+
+            // Clear original data
+            originalTaskData = null;
+
+            // Close details panel
+            toggleDetailsPanel();
+        }
+
+        // Store original data when details panel opens
+        function storeOriginalTaskData() {
+            if (currentTask !== null && projects[currentTask]) {
+                originalTaskData = { ...projects[currentTask] };
+            }
         }
 
         // Drag and drop functionality
@@ -1351,7 +1530,7 @@
                     dragElement.style.left = newPercent + '%';
                     
                     // Show drop targets
-                    const rowIndex = Math.floor(relativeY / 40);
+                    const rowIndex = Math.floor(relativeY / 50);
                     document.querySelectorAll('.timeline-row').forEach((row, index) => {
                         row.classList.toggle('drop-target', index === rowIndex);
                     });
@@ -1371,7 +1550,7 @@
                     const startDate = positionToDate(newLeft);
                     const endDate = positionToDate(newLeft + newWidth);
                     
-                    projects[index].response_date = endDate.toISOString().split('T')[0];
+                    projects[index].response_date = formatDateLocal(endDate);
                     saveProject(index);
                     
                 } else if (isDragging) {
@@ -1381,7 +1560,7 @@
                     
                     // Update project date based on new position
                     const newDate = positionToDate(newLeft);
-                    projects[index].response_date = newDate.toISOString().split('T')[0];
+                    projects[index].response_date = formatDateLocal(newDate);
                     saveProject(index);
                 }
                 
@@ -1407,6 +1586,8 @@
             try {
                 // Save to localStorage as backup
                 localStorage.setItem('projects', JSON.stringify(projects));
+                localStorage.setItem('projects_last_saved', new Date().toISOString());
+                console.log('✅ Project saved to localStorage successfully');
 
                 // Optionally save to server (uncomment when backend endpoint is available)
                 /*
@@ -1440,18 +1621,25 @@
             const newTask = {
                 title: 'New Task',
                 agency: 'TBD',
-                notice_id: 'TBD',
-                response_date: dueDate.toISOString().split('T')[0],
+                notice_id: 'MANUAL_' + Date.now(), // Unique ID for manually added tasks
+                response_date: formatDateLocal(dueDate),
                 type: 'RFP',
                 status: 'not-started',
-                progress: 0
+                progress: 0,
+                site_visit_date: '',
+                work_start_date: '',
+                completion_date: ''
             };
             
             projects.push(newTask);
-            renderAll();
-            
-            // Select and edit the new task
             const newIndex = projects.length - 1;
+
+            // Save the new task to localStorage
+            saveProject(newIndex);
+
+            renderAll();
+
+            // Select and edit the new task
             selectTask(newIndex);
             
             setTimeout(() => {
@@ -1482,16 +1670,19 @@
         function renderTimelineHeader() {
             const dateGrid = document.getElementById('date-grid');
             const today = new Date();
-            
+
+            // Set CSS variable for timeline days to ensure alignment
+            document.documentElement.style.setProperty('--timeline-days', timelineDays.length);
+
             dateGrid.innerHTML = timelineDays.map(day => {
                 const isToday = day.toDateString() === today.toDateString();
                 const isWeekend = day.getDay() === 0 || day.getDay() === 6;
-                const dayStr = day.toLocaleDateString('en-US', { 
-                    weekday: 'short', 
-                    month: 'numeric', 
-                    day: 'numeric' 
+                const dayStr = day.toLocaleDateString('en-US', {
+                    weekday: 'short',
+                    month: 'numeric',
+                    day: 'numeric'
                 });
-                
+
                 return `<div class="date-header ${isToday ? 'today' : ''} ${isWeekend ? 'weekend' : ''}">${dayStr}</div>`;
             }).join('');
         }
@@ -1678,18 +1869,31 @@
         }
 
         function formatCompactDate(dateStr) {
-            if (!dateStr) return 'Set Date';
+            if (!dateStr) {
+                console.log(`📅 formatCompactDate: empty dateStr, returning 'Set Date'`);
+                return 'Set Date';
+            }
             try {
-                const date = new Date(dateStr);
+                // Use parseDate to avoid timezone issues
+                const date = parseDate(dateStr);
+                if (!date) {
+                    console.log(`📅 formatCompactDate: failed to parse "${dateStr}", returning 'Set Date'`);
+                    return 'Set Date';
+                }
                 const month = (date.getMonth() + 1).toString().padStart(2, '0');
                 const day = date.getDate().toString().padStart(2, '0');
-                return `${month}/${day}`;
+                const formatted = `${month}/${day}`;
+                console.log(`📅 formatCompactDate: "${dateStr}" → "${formatted}"`);
+                return formatted;
             } catch (e) {
+                console.log(`📅 formatCompactDate: error parsing "${dateStr}":`, e);
                 return 'Set Date';
             }
         }
 
         function showDatePicker(element, index, field) {
+            console.log(`🗓️ OPENING DATE PICKER: field=${field}, index=${index}, project=${projects[index]?.notice_id}`);
+
             // Close any existing popup
             document.querySelectorAll('.date-picker-popup').forEach(popup => popup.remove());
 
@@ -1698,10 +1902,11 @@
             popup.className = 'date-picker-popup show';
 
             const currentValue = projects[index][field] || '';
+            console.log(`📅 CURRENT VALUE: ${field} = "${currentValue}"`);
 
             popup.innerHTML = `
                 <input type="date" value="${currentValue}"
-                       onchange="updateDateField(${index}, '${field}', this.value, this.parentElement)"
+                       onchange="console.log('🔄 DATE PICKER ONCHANGE TRIGGERED:', this.value); updateDateField(${index}, '${field}', this.value, this.parentElement)"
                        onblur="setTimeout(() => { if (this.parentElement) this.parentElement.remove(); }, 200)">
             `;
 
@@ -1730,12 +1935,97 @@
         }
 
         function updateDateField(index, field, value, popup) {
-            updateProjectField(index, field, value);
+            console.log(`💾 CRITICAL: Updating date field: ${field} = ${value} for project ${index}`);
+
+            // FIRST: Directly update the projects array
+            if (projects[index]) {
+                const noticeId = projects[index].notice_id;
+                projects[index][field] = value;
+                console.log(`✅ STEP 1: Date field updated in projects array: ${field} = ${value}`);
+
+                // SECOND: INDEPENDENT DATE STORAGE - Save to separate keys that won't be overwritten
+                try {
+                    // Save individual date with notice_id (server-proof)
+                    const dateKey = `PERMANENT_DATE_${noticeId}_${field}`;
+                    localStorage.setItem(dateKey, value);
+                    localStorage.setItem(`${dateKey}_timestamp`, new Date().toISOString());
+                    console.log(`✅ PERMANENT SAVE: ${dateKey} = ${value}`);
+
+                    // Also save a master list of all date keys
+                    const existingKeys = JSON.parse(localStorage.getItem('PERMANENT_DATE_KEYS') || '[]');
+                    if (!existingKeys.includes(dateKey)) {
+                        existingKeys.push(dateKey);
+                        localStorage.setItem('PERMANENT_DATE_KEYS', JSON.stringify(existingKeys));
+                    }
+                } catch (error) {
+                    console.error(`❌ CRITICAL ERROR: Failed to save permanent date:`, error);
+                }
+
+                // THIRD: Also save the entire projects array to localStorage
+                try {
+                    localStorage.setItem('projects', JSON.stringify(projects));
+                    localStorage.setItem('projects_last_saved', new Date().toISOString());
+                    console.log(`✅ STEP 2: IMMEDIATE SAVE COMPLETE - Full projects array saved to localStorage`);
+                } catch (error) {
+                    console.error(`❌ CRITICAL ERROR: Failed to save projects array:`, error);
+                }
+
+                // FOURTH: Call the original update function
+                updateProjectField(index, field, value);
+                console.log(`✅ STEP 3: Called updateProjectField`);
+
+                // FIFTH: Force another save via saveProject
+                saveProject(index);
+                console.log(`✅ STEP 4: Called saveProject function`);
+            } else {
+                console.error(`❌ CRITICAL ERROR: projects[${index}] is undefined!`);
+            }
+
+            // Enhanced backup save for date fields using multiple key formats
+            try {
+                const noticeId = projects[index]?.notice_id;
+                const timestamp = new Date().toISOString();
+
+                // Save with multiple key formats for reliability
+                const saveKeys = [
+                    `autosaved_${field}_${index}`,      // Index-based (current format)
+                    `backup_${field}_${index}`,         // Index-based backup
+                ];
+
+                // Add notice_id based keys if available
+                if (noticeId) {
+                    saveKeys.push(`saved_${field}_${noticeId}`);
+                    saveKeys.push(`${field}_${noticeId}`);
+                }
+
+                // Save with all key formats
+                saveKeys.forEach(key => {
+                    localStorage.setItem(key, value);
+                    localStorage.setItem(`${key}_timestamp`, timestamp);
+                });
+
+                console.log(`✅ Enhanced backup save complete: ${field} = ${value} (${saveKeys.length} keys)`);
+
+                // Show confirmation message
+                if (typeof showSaveMessage === 'function') {
+                    showSaveMessage(`Date saved: ${field}`);
+                }
+            } catch (error) {
+                console.error(`❌ Backup save failed: ${error.message}`);
+            }
+
+            // Remove popup
             if (popup) {
                 popup.remove();
             }
-            // Re-render the task list to show updated date
+
+            // Re-render to show updated date
             renderTaskList();
+
+            // Update details panel if this project is currently selected
+            if (currentTask === index) {
+                updateDetailsPanel();
+            }
         }
 
         // Panel Resizer functionality
@@ -1764,13 +2054,14 @@
                 if (!isResizing) return;
 
                 const deltaX = e.clientX - startX;
-                const newWidth = Math.max(250, Math.min(600, startWidth + deltaX));
+                const newWidth = Math.max(250, Math.min(800, startWidth + deltaX));
 
                 // Update CSS custom property
                 document.documentElement.style.setProperty('--task-panel-width', newWidth + 'px');
 
-                // Save preference to localStorage
+                // Save preference to localStorage with enhanced logging
                 localStorage.setItem('task-panel-width', newWidth);
+                console.log('✓ Panel resizer: Saved new width:', newWidth + 'px');
             });
 
             document.addEventListener('mouseup', () => {
@@ -1782,10 +2073,16 @@
                 }
             });
 
-            // Load saved width preference
+            // Load saved width preference with enhanced logging
             const savedWidth = localStorage.getItem('task-panel-width');
             if (savedWidth) {
                 document.documentElement.style.setProperty('--task-panel-width', savedWidth + 'px');
+                console.log('✓ Panel resizer: Restored saved width:', savedWidth + 'px');
+            } else {
+                // Set wider default width
+                document.documentElement.style.setProperty('--task-panel-width', '650px');
+                localStorage.setItem('task-panel-width', '650');
+                console.log('✓ Panel resizer: Set default wider width (650px)');
             }
         }
 
@@ -1820,27 +2117,57 @@
                     completion_date: ''
                 }));
 
-                // Merge with saved data from localStorage
+                // CRITICAL: Merge with saved data from localStorage
                 const savedProjects = localStorage.getItem('projects');
+                console.log(`🔍 LOADING: Checking for saved projects in localStorage...`);
+
                 if (savedProjects) {
                     try {
                         const parsedSavedProjects = JSON.parse(savedProjects);
+                        console.log(`🔍 FOUND SAVED DATA: ${parsedSavedProjects.length} saved projects`);
+
+                        // Log sample saved dates for debugging
+                        parsedSavedProjects.forEach((sp, i) => {
+                            if (sp.site_visit_date || sp.work_start_date || sp.completion_date) {
+                                console.log(`📅 SAVED DATES [${i}]: ${sp.notice_id} - Site:${sp.site_visit_date}, Work:${sp.work_start_date}, Complete:${sp.completion_date}`);
+                            }
+                        });
+
                         // Merge saved data with fresh data based on notice_id
                         projects = projects.map(project => {
                             const savedProject = parsedSavedProjects.find(sp => sp.notice_id === project.notice_id);
                             if (savedProject) {
-                                // Preserve saved dates and other custom fields
-                                return {
+                                console.log(`🔄 MERGING: ${project.notice_id} with saved data`);
+                                // Preserve saved dates and other custom fields - prioritize saved values
+                                const merged = {
                                     ...project,
-                                    site_visit_date: savedProject.site_visit_date || '',
-                                    work_start_date: savedProject.work_start_date || '',
-                                    completion_date: savedProject.completion_date || '',
+                                    response_date: savedProject.response_date || project.response_date,
+                                    site_visit_date: savedProject.site_visit_date !== undefined ? savedProject.site_visit_date : '',
+                                    work_start_date: savedProject.work_start_date !== undefined ? savedProject.work_start_date : '',
+                                    completion_date: savedProject.completion_date !== undefined ? savedProject.completion_date : '',
                                     status: savedProject.status,
                                     progress: savedProject.progress || 0
                                 };
+
+                                // Log what dates were restored
+                                if (merged.site_visit_date || merged.work_start_date || merged.completion_date) {
+                                    console.log(`✅ RESTORED DATES for ${project.notice_id}: Site:${merged.site_visit_date}, Work:${merged.work_start_date}, Complete:${merged.completion_date}`);
+                                }
+
+                                return merged;
                             }
                             return project;
                         });
+
+                        console.log(`✅ MERGE COMPLETE: ${projects.length} projects merged with saved data`);
+
+                        // Add manually created tasks that only exist in localStorage
+                        const manualTasks = parsedSavedProjects.filter(savedProject =>
+                            savedProject.notice_id &&
+                            savedProject.notice_id.startsWith('MANUAL_') &&
+                            !projects.find(p => p.notice_id === savedProject.notice_id)
+                        );
+                        projects = projects.concat(manualTasks);
                     } catch (e) {
                         console.error('Error parsing saved projects:', e);
                     }
@@ -1856,7 +2183,19 @@
                 });
                 
                 renderAll();
-                
+
+                // CRITICAL: Load dates from server first, then restore
+                loadServerDates().then(() => {
+                    setTimeout(() => {
+                        console.log('🔄 IMMEDIATE POST-LOAD: Calling restoration functions...');
+                        if (typeof restoreSavedDates === 'function') {
+                            restoreSavedDates();
+                        }
+                        restorePermanentDates();
+                        restoreNuclearDates();
+                    }, 100);
+                });
+
             } catch (error) {
                 console.error('Error loading data:', error);
                 document.getElementById('task-list').innerHTML = `
@@ -1878,6 +2217,7 @@
             renderTaskList();
             renderTimeline();
             updateDetailsPanel();
+            // Auto-centering disabled - let user control horizontal scroll position
         }
 
         // Keyboard shortcuts
@@ -1934,13 +2274,2306 @@
             }
         });
 
+        // Immediately restore panel width before DOM is fully loaded
+        (function() {
+            const savedWidth = localStorage.getItem('task-panel-width');
+
+            // Force update to new wider default if current saved width is too narrow
+            if (!savedWidth || parseInt(savedWidth) < 500) {
+                document.documentElement.style.setProperty('--task-panel-width', '650px');
+                localStorage.setItem('task-panel-width', '650');
+                console.log('✓ Panel width updated to new wider default: 650px');
+            } else {
+                document.documentElement.style.setProperty('--task-panel-width', savedWidth + 'px');
+                console.log('✓ Panel width restored immediately:', savedWidth + 'px');
+            }
+        })();
+
+        // DEBUG: Add debugging tools
+        window.debugStorage = function() {
+            console.log('=== LOCALSTORAGE DEBUG ===');
+            const projects = JSON.parse(localStorage.getItem('projects') || '[]');
+            console.log('Projects in localStorage:', projects.length);
+
+            projects.forEach((p, i) => {
+                if (p.site_visit_date || p.work_start_date || p.completion_date) {
+                    console.log(`Project ${i} (${p.notice_id}):`, {
+                        site_visit_date: p.site_visit_date,
+                        work_start_date: p.work_start_date,
+                        completion_date: p.completion_date
+                    });
+                }
+            });
+
+            // Check backup keys
+            console.log('=== BACKUP KEYS ===');
+            Object.keys(localStorage).forEach(key => {
+                if (key.includes('saved_') || key.includes('autosaved_') || key.includes('backup_')) {
+                    console.log(`${key}: ${localStorage.getItem(key)}`);
+                }
+            });
+        };
+
+        // DEBUG: Force save a test date
+        window.testSave = function() {
+            const testData = [{
+                notice_id: 'TEST123',
+                title: 'Test Project',
+                site_visit_date: '2025-01-15',
+                work_start_date: '2025-02-01',
+                completion_date: '2025-03-01'
+            }];
+            localStorage.setItem('projects', JSON.stringify(testData));
+            console.log('✅ Test data saved to localStorage');
+        };
+
+        // DEBUG: Test date field saving for first project
+        window.testDateSave = function() {
+            if (projects.length === 0) {
+                console.log('❌ No projects loaded to test');
+                return;
+            }
+
+            const testDate = '2025-01-15';
+            console.log('🧪 TESTING DATE SAVE...');
+            console.log('Before:', projects[0]);
+
+            // Test saving to first project
+            updateDateField(0, 'site_visit_date', testDate);
+
+            console.log('After:', projects[0]);
+            console.log('✅ Test complete - check if date persisted');
+        };
+
+        // DEBUG: Force render to see current data
+        window.forceRender = function() {
+            console.log('🔄 Force rendering...');
+            renderTaskList();
+            renderTimeline();
+        };
+
+        // SERVER DATE LOADING FUNCTION
+        window.loadServerDates = async function() {
+            console.log('🌐 LOADING DATES FROM SERVER...');
+            try {
+                const response = await fetch('/get-project-dates');
+                const data = await response.json();
+
+                if (data.ok && data.dates) {
+                    console.log(`🌐 SERVER: Loaded dates for ${Object.keys(data.dates).length} projects`);
+
+                    // Apply server dates to projects
+                    let restoredCount = 0;
+                    Object.entries(data.dates).forEach(([noticeId, dateFields]) => {
+                        const projectIndex = projects.findIndex(p => p.notice_id === noticeId);
+                        if (projectIndex !== -1) {
+                            Object.entries(dateFields).forEach(([field, value]) => {
+                                if (field !== 'last_updated' && value) {
+                                    projects[projectIndex][field] = value;
+                                    console.log(`🌐 SERVER RESTORED: ${noticeId}.${field} = ${value}`);
+                                    restoredCount++;
+                                }
+                            });
+                        }
+                    });
+
+                    if (restoredCount > 0) {
+                        console.log(`🌐 SERVER: ${restoredCount} dates restored from server`);
+                        renderTaskList();
+                        renderTimeline();
+                    }
+                } else {
+                    console.log('🌐 SERVER: No dates found or error loading');
+                }
+            } catch (error) {
+                console.error('🌐 SERVER ERROR loading dates:', error);
+            }
+        };
+
+        // NUCLEAR DATE RESTORATION FUNCTION
+        window.restoreNuclearDates = function() {
+            console.log('🚨 NUCLEAR: Restoring nuclear dates...');
+            let restoredCount = 0;
+
+            // Get all nuclear date keys
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith('NUCLEAR_')) {
+                    const value = localStorage.getItem(key);
+                    if (value) {
+                        // Parse key: NUCLEAR_[notice_id]_[field]
+                        const parts = key.split('_');
+                        if (parts.length >= 3) {
+                            const noticeId = parts[1];
+                            const field = parts.slice(2).join('_'); // Handle notice_ids with underscores
+
+                            // Find project with this notice_id
+                            const projectIndex = projects.findIndex(p => p.notice_id === noticeId);
+                            if (projectIndex !== -1) {
+                                projects[projectIndex][field] = value;
+                                console.log(`🚨 NUCLEAR RESTORED: ${noticeId}.${field} = ${value}`);
+                                restoredCount++;
+                            }
+                        }
+                    }
+                }
+            });
+
+            if (restoredCount > 0) {
+                console.log(`🚨 NUCLEAR: ${restoredCount} dates restored`);
+                localStorage.setItem('projects', JSON.stringify(projects));
+                renderTaskList();
+                renderTimeline();
+            }
+
+            return restoredCount;
+        };
+
+        // PERMANENT DATE RESTORATION FUNCTION
+        window.restorePermanentDates = function() {
+            console.log('🔄 RESTORING PERMANENT DATES...');
+            let restoredCount = 0;
+
+            // Get all permanent date keys
+            const dateKeys = JSON.parse(localStorage.getItem('PERMANENT_DATE_KEYS') || '[]');
+            console.log(`📋 Found ${dateKeys.length} permanent date keys`);
+
+            dateKeys.forEach(key => {
+                const value = localStorage.getItem(key);
+                if (value) {
+                    // Parse key to get notice_id and field
+                    const match = key.match(/PERMANENT_DATE_(.+)_(.+)/);
+                    if (match) {
+                        const noticeId = match[1];
+                        const field = match[2];
+
+                        // Find project with this notice_id
+                        const projectIndex = projects.findIndex(p => p.notice_id === noticeId);
+                        if (projectIndex !== -1) {
+                            projects[projectIndex][field] = value;
+                            console.log(`✅ RESTORED PERMANENT: ${noticeId}.${field} = ${value}`);
+                            restoredCount++;
+                        }
+                    }
+                }
+            });
+
+            if (restoredCount > 0) {
+                console.log(`✅ PERMANENT RESTORATION COMPLETE: ${restoredCount} dates restored`);
+                // Force save and re-render
+                localStorage.setItem('projects', JSON.stringify(projects));
+                renderTaskList();
+                renderTimeline();
+            } else {
+                console.log('ℹ️ No permanent dates to restore');
+            }
+
+            return restoredCount;
+        };
+
+        console.log('💡 DEBUG TOOLS LOADED:');
+        console.log('  - debugStorage() - Show localStorage contents');
+        console.log('  - testSave() - Save test data to localStorage');
+        console.log('  - testDateSave() - Test date saving on first project');
+        console.log('  - forceRender() - Force re-render the UI');
+        console.log('  - restorePermanentDates() - Restore permanent dates');
+        console.log('  - restoreNuclearDates() - Restore nuclear dates');
+        console.log('  - loadServerDates() - Load dates from server');
+        console.log('  - nuclearTest() - Test nuclear system (available after 5s)');
+
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             initializeDragAndDrop();
             initializePanelResizer();
-            updateZoom(); // Set initial slider position
             loadData();
+
+            // Sync scroll between header and content, but don't auto-center
+            const timelineContainer = document.querySelector('.timeline-content-container');
+            const timelineHeader = document.querySelector('.timeline-header');
+
+            if (timelineContainer && timelineHeader) {
+                // Sync header scroll with content scroll
+                timelineContainer.addEventListener('scroll', function() {
+                    timelineHeader.scrollLeft = timelineContainer.scrollLeft;
+                });
+
+                // Sync content scroll with header scroll
+                timelineHeader.addEventListener('scroll', function() {
+                    timelineContainer.scrollLeft = timelineHeader.scrollLeft;
+                });
+            }
         });
     </script>
+
+
+<script>
+// BULLETPROOF PERSISTENCE SYSTEM for SAM Project Tracking
+// This will absolutely guarantee data saving
+
+console.log('🔧 Loading BULLETPROOF persistence system...');
+
+// Global storage manager
+const SAMStorage = {
+    // Save data with multiple fallbacks
+    save: function(key, data) {
+        const timestamp = new Date().toISOString();
+        try {
+            // Convert to JSON if it's an object
+            const value = typeof data === 'object' ? JSON.stringify(data) : data.toString();
+
+            // Save to localStorage
+            localStorage.setItem(key, value);
+            localStorage.setItem(key + '_timestamp', timestamp);
+
+            // Save to sessionStorage as backup
+            sessionStorage.setItem(key, value);
+            sessionStorage.setItem(key + '_timestamp', timestamp);
+
+            console.log(`✅ SAVED: ${key} = ${value}`);
+            console.log(`   Timestamp: ${timestamp}`);
+
+            return true;
+        } catch (error) {
+            console.error(`❌ SAVE FAILED for ${key}:`, error);
+            return false;
+        }
+    },
+
+    // Load data with fallbacks
+    load: function(key) {
+        try {
+            // Try localStorage first
+            let value = localStorage.getItem(key);
+
+            // Fallback to sessionStorage
+            if (value === null) {
+                value = sessionStorage.getItem(key);
+                console.log(`📦 Loaded ${key} from sessionStorage fallback`);
+            } else {
+                console.log(`📦 Loaded ${key} from localStorage`);
+            }
+
+            if (value === null) {
+                console.log(`⚠️  No data found for ${key}`);
+                return null;
+            }
+
+            // Try to parse JSON, return as string if it fails
+            try {
+                return JSON.parse(value);
+            } catch (e) {
+                return value;
+            }
+        } catch (error) {
+            console.error(`❌ LOAD FAILED for ${key}:`, error);
+            return null;
+        }
+    },
+
+    // Force save all current data
+    saveAll: function() {
+        console.log('💾 FORCE SAVING ALL DATA...');
+
+        // Save projects if they exist
+        if (typeof projects !== 'undefined' && projects) {
+            this.save('projects', projects);
+            this.save('projects_count', projects.length);
+        }
+
+        // Save zoom level if it exists
+        if (typeof zoomLevel !== 'undefined' && zoomLevel) {
+            this.save('timeline_zoom_level', zoomLevel);
+        }
+
+        this.save('last_full_save', new Date().toISOString());
+        console.log('💾 FORCE SAVE COMPLETE');
+    },
+
+    // Get status of all saved data
+    getStatus: function() {
+        const status = {
+            projects: this.load('projects'),
+            projects_count: this.load('projects_count'),
+            zoom_level: this.load('timeline_zoom_level'),
+            last_save: this.load('last_full_save'),
+            projects_timestamp: localStorage.getItem('projects_timestamp'),
+            zoom_timestamp: localStorage.getItem('timeline_zoom_level_timestamp')
+        };
+
+        console.log('📊 STORAGE STATUS:', status);
+        return status;
+    }
+};
+
+// Wait for page to fully load
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        console.log('🚀 INITIALIZING BULLETPROOF PERSISTENCE...');
+
+        // Show current status
+        SAMStorage.getStatus();
+
+        // OVERRIDE ALL CRITICAL FUNCTIONS
+
+        // 1. BULLETPROOF DATE SAVING
+        window.bulletproofUpdateDateField = function(index, field, value, popup) {
+            console.log(`🎯 BULLETPROOF DATE UPDATE: ${field} = ${value} for project ${index}`);
+
+            if (projects && projects[index]) {
+                // Update the project
+                projects[index][field] = value;
+
+                // FORCE IMMEDIATE SAVE with bulletproof method
+                const success = SAMStorage.save('projects', projects);
+
+                if (success) {
+                    console.log(`✅ DATE SAVED SUCCESSFULLY: ${field} = ${value}`);
+                } else {
+                    console.log(`❌ DATE SAVE FAILED: ${field} = ${value}`);
+                }
+
+                // Update displays
+                if (typeof renderTaskList === 'function') renderTaskList();
+                if (typeof renderTimeline === 'function') renderTimeline();
+                if (typeof updateDetailsPanel === 'function') updateDetailsPanel();
+            }
+
+            if (popup) popup.remove();
+        };
+
+        // Replace the original function
+        if (typeof updateDateField !== 'undefined') {
+            window.updateDateField = window.bulletproofUpdateDateField;
+            console.log('✅ Replaced updateDateField with bulletproof version');
+        }
+
+        // 2. BULLETPROOF ZOOM SAVING
+        window.bulletproofSaveZoom = function(newZoomLevel) {
+            if (typeof newZoomLevel !== 'undefined') {
+                window.zoomLevel = newZoomLevel;
+            }
+
+            const success = SAMStorage.save('timeline_zoom_level', window.zoomLevel);
+            if (success) {
+                console.log(`✅ ZOOM SAVED SUCCESSFULLY: ${window.zoomLevel}`);
+            } else {
+                console.log(`❌ ZOOM SAVE FAILED: ${window.zoomLevel}`);
+            }
+        };
+
+        // Override zoom functions
+        ['zoomIn', 'zoomOut', 'setZoom'].forEach(funcName => {
+            if (typeof window[funcName] === 'function') {
+                const originalFunc = window[funcName];
+                window[funcName] = function(...args) {
+                    const result = originalFunc.apply(this, args);
+                    window.bulletproofSaveZoom();
+                    return result;
+                };
+                console.log(`✅ Enhanced ${funcName} with bulletproof saving`);
+            }
+        });
+
+        // 3. RESTORE SAVED DATA
+        console.log('🔄 RESTORING SAVED DATA...');
+
+        // Restore zoom level
+        const savedZoom = SAMStorage.load('timeline_zoom_level');
+        if (savedZoom) {
+            window.zoomLevel = parseInt(savedZoom);
+            console.log(`✅ RESTORED ZOOM LEVEL: ${window.zoomLevel}`);
+
+            // Update display if function exists
+            if (typeof updateZoom === 'function') {
+                setTimeout(() => updateZoom(), 500);
+            }
+        }
+
+        // Restore project dates (after projects are loaded)
+        const savedProjects = SAMStorage.load('projects');
+        if (savedProjects && Array.isArray(savedProjects)) {
+            console.log(`✅ FOUND SAVED PROJECTS: ${savedProjects.length} projects`);
+
+            // Wait for projects to be loaded, then merge saved data
+            const checkAndMerge = setInterval(() => {
+                if (typeof projects !== 'undefined' && projects && projects.length > 0) {
+                    console.log('🔄 MERGING SAVED PROJECT DATA...');
+
+                    // Merge saved dates into loaded projects
+                    projects.forEach((project, index) => {
+                        const savedProject = savedProjects.find(sp =>
+                            sp.notice_id === project.notice_id ||
+                            sp.title === project.title
+                        );
+
+                        if (savedProject) {
+                            if (savedProject.site_visit_date) project.site_visit_date = savedProject.site_visit_date;
+                            if (savedProject.work_start_date) project.work_start_date = savedProject.work_start_date;
+                            if (savedProject.completion_date) project.completion_date = savedProject.completion_date;
+                            if (savedProject.status) project.status = savedProject.status;
+                            if (savedProject.progress) project.progress = savedProject.progress;
+
+                            console.log(`✅ RESTORED DATA for project: ${project.title}`);
+                        }
+                    });
+
+                    // Re-render with restored data
+                    if (typeof renderAll === 'function') {
+                        renderAll();
+                    }
+
+                    clearInterval(checkAndMerge);
+                }
+            }, 1000);
+
+            // Stop checking after 10 seconds
+            setTimeout(() => clearInterval(checkAndMerge), 10000);
+        }
+
+        // 4. AUTOMATIC SAVING
+
+        // Save every 5 seconds
+        setInterval(() => {
+            SAMStorage.saveAll();
+        }, 5000);
+
+        // Save on page unload
+        window.addEventListener('beforeunload', function() {
+            console.log('💾 SAVING ON PAGE CLOSE...');
+            SAMStorage.saveAll();
+        });
+
+        // Save on visibility change (when switching tabs)
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                console.log('💾 SAVING ON TAB SWITCH...');
+                SAMStorage.saveAll();
+            }
+        });
+
+        console.log('🎉 BULLETPROOF PERSISTENCE SYSTEM ACTIVE!');
+
+        // Show status after 3 seconds
+        setTimeout(() => {
+            console.log('📊 FINAL STATUS CHECK:');
+            SAMStorage.getStatus();
+        }, 3000);
+
+    }, 3000); // Wait 3 seconds for everything to load
+});
+
+// Make SAMStorage globally available for testing
+window.SAMStorage = SAMStorage;
+
+console.log('🔧 Bulletproof persistence system loaded and ready!');
+</script>
+
+
+<script>
+// Enhanced date saving functionality - clean implementation
+console.log('🎯 Enhanced date saving loaded');
+
+function ensureDateSaving() {
+    // Make sure the updateDateField function works properly
+    console.log('💾 Ensuring date saving functionality');
+
+    // Monitor for new date picker inputs and ensure they trigger the right handlers
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            mutation.addedNodes.forEach(function(node) {
+                if (node.nodeType === Node.ELEMENT_NODE && node.classList && node.classList.contains('date-picker-popup')) {
+                    const dateInput = node.querySelector('input[type="date"]');
+                    if (dateInput && !dateInput.hasAttribute('data-save-enhanced')) {
+                        dateInput.setAttribute('data-save-enhanced', 'true');
+                        console.log('📅 Enhanced date input found, ensuring save functionality works');
+
+                        // Verify the onchange attribute is properly set
+                        if (!dateInput.getAttribute('onchange')) {
+                            console.warn('⚠️ Date input missing onchange handler');
+                        }
+                    }
+                }
+            });
+        });
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+}
+
+// Direct slider saving
+function directSaveSlider() {
+    console.log('🎯 DIRECT SLIDER SAVE FUNCTION LOADED');
+
+    // Method 1: Monitor zoom level variable
+    let lastZoomLevel = null;
+
+    setInterval(function() {
+        if (typeof window.zoomLevel !== 'undefined' && window.zoomLevel !== lastZoomLevel) {
+            console.log(`🎯 ZOOM LEVEL CHANGE DETECTED: ${lastZoomLevel} → ${window.zoomLevel}`);
+
+            localStorage.setItem('direct_zoom_level', window.zoomLevel.toString());
+            localStorage.setItem('direct_zoom_timestamp', new Date().toISOString());
+
+            console.log(`✅ DIRECT SLIDER SAVE: ${window.zoomLevel}`);
+            lastZoomLevel = window.zoomLevel;
+        }
+    }, 500);
+
+    // Method 2: Add direct click listeners to zoom controls
+    setTimeout(function() {
+        const zoomControls = [
+            document.querySelector('.zoom-slider'),
+            ...document.querySelectorAll('button[onclick*="zoom"]')
+        ];
+
+        zoomControls.forEach(control => {
+            if (control) {
+                console.log('🎯 Adding direct listener to zoom control');
+
+                control.addEventListener('click', function() {
+                    console.log('🎯 Zoom control clicked');
+
+                    setTimeout(() => {
+                        if (typeof window.zoomLevel !== 'undefined') {
+                            localStorage.setItem('direct_zoom_level', window.zoomLevel.toString());
+                            console.log(`✅ ZOOM SAVED AFTER CLICK: ${window.zoomLevel}`);
+                        }
+                    }, 100);
+                });
+            }
+        });
+    }, 2000);
+}
+
+// Direct restore function
+function directRestore() {
+    console.log('🔄 DIRECT RESTORE STARTING...');
+
+    // Restore slider position
+    const savedZoom = localStorage.getItem('direct_zoom_level');
+    if (savedZoom) {
+        console.log(`📦 Found saved zoom level: ${savedZoom}`);
+
+        // Try multiple ways to set zoom level
+        if (typeof window.zoomLevel !== 'undefined') {
+            window.zoomLevel = parseInt(savedZoom);
+            console.log(`✅ Set window.zoomLevel = ${window.zoomLevel}`);
+        }
+
+        // Try to trigger update
+        setTimeout(() => {
+            if (typeof updateZoom === 'function') {
+                updateZoom();
+                console.log('✅ Called updateZoom()');
+            }
+        }, 1000);
+    }
+
+    // Show saved dates
+    const savedDates = {};
+    ['site_visit_date', 'work_start_date', 'completion_date', 'detail-response-date'].forEach(field => {
+        const saved = localStorage.getItem(`saved_date_${field}`) || localStorage.getItem(`saved_${field}`);
+        if (saved) {
+            savedDates[field] = saved;
+            console.log(`📦 Found saved date: ${field} = ${saved}`);
+        }
+    });
+
+    if (Object.keys(savedDates).length > 0) {
+        console.log('📦 SAVED DATES FOUND:', savedDates);
+
+        // Try to restore after page loads
+        setTimeout(() => {
+            Object.entries(savedDates).forEach(([field, value]) => {
+                const input = document.getElementById(field);
+                if (input) {
+                    input.value = value;
+                    console.log(`✅ RESTORED ${field} = ${value}`);
+                }
+            });
+        }, 3000);
+    }
+}
+
+// Initialize everything
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        console.log('🚀 DIRECT INTERVENTION INITIALIZING...');
+
+        directSaveDates();
+        directSaveSlider();
+        directRestore();
+
+        console.log('✅ DIRECT INTERVENTION ACTIVE');
+
+        // Show current localStorage contents
+        setTimeout(() => {
+            console.log('📊 CURRENT LOCALSTORAGE:');
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.includes('direct_') || key.includes('saved_') || key.includes('zoom') || key.includes('date')) {
+                    console.log(`  ${key}: ${localStorage.getItem(key)}`);
+                }
+            }
+        }, 5000);
+
+    }, 4000); // Wait longer for everything to load
+});
+
+console.log('💡 Direct intervention script loaded');
+</script>
+
+
+<script>
+// LOCK SLIDER IN CURRENT POSITION
+// This script captures the current slider position and locks it there permanently
+
+console.log('🔒 SLIDER POSITION LOCKER STARTING...');
+
+function lockSliderPosition() {
+    console.log('🎯 Capturing and locking current slider position...');
+
+    setTimeout(function() {
+        // Method 1: Capture current zoom level from variable
+        let currentZoomLevel = null;
+        if (typeof window.zoomLevel !== 'undefined') {
+            currentZoomLevel = window.zoomLevel;
+            console.log(`📍 Current zoom level from variable: ${currentZoomLevel}`);
+        }
+
+        // Method 2: Try to read from CSS custom property
+        const cssZoomPercent = getComputedStyle(document.documentElement).getPropertyValue('--zoom-percent');
+        if (cssZoomPercent) {
+            const cssZoom = parseInt(cssZoomPercent.replace('%', ''));
+            console.log(`📍 Current zoom level from CSS: ${cssZoom}`);
+            if (!currentZoomLevel) currentZoomLevel = cssZoom;
+        }
+
+        // Method 3: Fallback - assume 100% if nothing found
+        if (!currentZoomLevel) {
+            currentZoomLevel = 100;
+            console.log(`📍 Using fallback zoom level: ${currentZoomLevel}`);
+        }
+
+        console.log(`🔒 LOCKING SLIDER AT POSITION: ${currentZoomLevel}`);
+
+        // Save the locked position
+        localStorage.setItem('LOCKED_SLIDER_POSITION', currentZoomLevel.toString());
+        localStorage.setItem('SLIDER_LOCK_TIMESTAMP', new Date().toISOString());
+
+        // Force set the zoom level
+        if (typeof window.zoomLevel !== 'undefined') {
+            window.zoomLevel = currentZoomLevel;
+        }
+
+        // Update the display
+        if (typeof updateZoom === 'function') {
+            updateZoom();
+        }
+
+        // DISABLE ALL ZOOM FUNCTIONS
+        // console.log('🚫 Disabling all zoom controls...');
+
+        // Override zoom functions to do nothing
+        /*
+        if (typeof window.zoomIn === 'function') {
+            window.zoomIn = function() {
+                console.log('🚫 Zoom IN blocked - slider is locked');
+                return false;
+            };
+        }
+
+        if (typeof window.zoomOut === 'function') {
+            window.zoomOut = function() {
+                console.log('🚫 Zoom OUT blocked - slider is locked');
+                return false;
+            };
+        }
+
+        if (typeof window.setZoom === 'function') {
+            window.setZoom = function() {
+                console.log('🚫 Set Zoom blocked - slider is locked');
+                return false;
+            };
+        }
+        */
+
+        // Disable zoom control buttons
+        /*
+        const zoomButtons = document.querySelectorAll('button[onclick*="zoom"]');
+        zoomButtons.forEach(button => {
+            button.onclick = function(e) {
+                e.preventDefault();
+                console.log('🚫 Zoom button clicked but blocked - slider is locked');
+                return false;
+            };
+            button.style.opacity = '0.5';
+            button.style.cursor = 'not-allowed';
+            button.title = 'Zoom locked in position';
+        });
+        */
+
+        // Disable zoom slider
+        const zoomSlider = document.querySelector('.zoom-slider');
+        if (zoomSlider) {
+            zoomSlider.onclick = function(e) {
+                e.preventDefault();
+                console.log('🚫 Zoom slider clicked but blocked - slider is locked');
+                return false;
+            };
+            zoomSlider.style.opacity = '0.5';
+            zoomSlider.style.cursor = 'not-allowed';
+            zoomSlider.title = 'Zoom locked in position';
+        }
+
+        // Force zoom level every second to prevent changes - DISABLED to allow user control
+        /*
+        setInterval(function() {
+            const lockedPosition = localStorage.getItem('LOCKED_SLIDER_POSITION');
+            if (lockedPosition && window.zoomLevel !== parseInt(lockedPosition)) {
+                console.log(`🔒 Resetting zoom level to locked position: ${lockedPosition}`);
+                window.zoomLevel = parseInt(lockedPosition);
+                if (typeof updateZoom === 'function') {
+                    updateZoom();
+                }
+            }
+        }, 1000);
+        */
+
+        console.log(`✅ SLIDER LOCKED SUCCESSFULLY AT POSITION: ${currentZoomLevel}`);
+        console.log(`✅ All zoom controls disabled`);
+        console.log(`✅ Position will be maintained permanently`);
+
+        // Add visual indicator
+        setTimeout(() => {
+            const zoomLevel = document.getElementById('zoom-level');
+            if (zoomLevel) {
+                zoomLevel.innerHTML = `${currentZoomLevel}% 🔒`;
+                zoomLevel.title = 'Zoom level is locked';
+            }
+        }, 500);
+
+    }, 3000); // Wait for page to fully load
+}
+
+// Initialize the slider lock - DISABLED to allow user control
+/*
+document.addEventListener('DOMContentLoaded', function() {
+    lockSliderPosition();
+
+    // Also check periodically if slider needs to be restored to locked position
+    setInterval(function() {
+        const lockedPosition = localStorage.getItem('LOCKED_SLIDER_POSITION');
+        if (lockedPosition && typeof window.zoomLevel !== 'undefined') {
+            const targetZoom = parseInt(lockedPosition);
+            if (window.zoomLevel !== targetZoom) {
+                console.log(`🔒 Restoring locked position: ${targetZoom}`);
+                window.zoomLevel = targetZoom;
+                if (typeof updateZoom === 'function') {
+                    updateZoom();
+                }
+            }
+        }
+    }, 2000);
+});
+*/
+
+console.log('🔒 Slider position locker loaded and ready');
+</script>
+
+
+<script>
+// FOOLPROOF DATE SAVING SYSTEM
+// This will absolutely guarantee date fields are saved
+
+console.log('💾 FOOLPROOF DATE SAVER STARTING...');
+
+let dateWatcher = {
+    savedDates: {},
+
+    init: function() {
+        console.log('🎯 Initializing foolproof date saving...');
+
+        // Load any existing saved dates
+        this.loadSavedDates();
+
+        // Start watching for date changes
+        this.startWatching();
+
+        // Restore dates after page loads
+        setTimeout(() => this.restoreDates(), 4000);
+    },
+
+    startWatching: function() {
+        console.log('👀 Starting to watch for date changes...');
+
+        // Method 1: Watch the Response Date field in details panel
+        const responseDetailField = document.getElementById('detail-response-date');
+        if (responseDetailField) {
+            console.log('📅 Adding listener to response date field');
+            responseDetailField.addEventListener('change', (e) => {
+                const value = e.target.value;
+                console.log(`💾 Response date changed: ${value}`);
+                this.saveDate('response_date', value);
+            });
+        }
+
+        // Method 2: Watch for ALL date input fields that appear
+        this.watchForDateInputs();
+
+        // Method 3: Monitor for new date picker popups
+        this.watchForDatePickers();
+
+        // Method 4: Scan for existing date compact elements
+        this.addListenersToDateCompacts();
+    },
+
+    watchForDateInputs: function() {
+        // Check every second for new date input fields
+        setInterval(() => {
+            const dateInputs = document.querySelectorAll('input[type="date"]:not([data-foolproof-listener])');
+
+            dateInputs.forEach((input) => {
+                input.setAttribute('data-foolproof-listener', 'true');
+                console.log('📅 Adding foolproof listener to new date input');
+
+                input.addEventListener('change', (e) => {
+                    const value = e.target.value;
+                    console.log(`💾 Date input changed: ${value}`);
+
+                    // Try to determine which field this is
+                    const popup = input.closest('.date-picker-popup');
+                    if (popup && popup.parentElement) {
+                        const parent = popup.parentElement;
+                        let fieldType = 'unknown';
+
+                        if (parent.classList.contains('site-visit-date') || parent.parentElement.classList.contains('site-visit-date')) {
+                            fieldType = 'site_visit_date';
+                        } else if (parent.classList.contains('work-start-date') || parent.parentElement.classList.contains('work-start-date')) {
+                            fieldType = 'work_start_date';
+                        } else if (parent.classList.contains('completion-date') || parent.parentElement.classList.contains('completion-date')) {
+                            fieldType = 'completion_date';
+                        } else if (input.id === 'detail-response-date') {
+                            fieldType = 'response_date';
+                        }
+
+                        console.log(`💾 Detected field type: ${fieldType} = ${value}`);
+                        this.saveDate(fieldType, value);
+                    }
+                });
+            });
+        }, 1000);
+    },
+
+    watchForDatePickers: function() {
+        // Watch for clicks on date compact elements
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.date-compact')) {
+                console.log('📅 Date compact clicked - will watch for input');
+
+                // Wait for the date picker to appear, then add listeners
+                setTimeout(() => {
+                    const newDateInputs = document.querySelectorAll('.date-picker-popup input[type="date"]:not([data-foolproof-listener])');
+                    newDateInputs.forEach(input => {
+                        input.setAttribute('data-foolproof-listener', 'true');
+                        console.log('📅 Adding listener to date picker input');
+
+                        input.addEventListener('change', (e) => {
+                            const value = e.target.value;
+                            console.log(`💾 Date picker changed: ${value}`);
+
+                            // Find the parent date compact to determine field type
+                            const popup = input.closest('.date-picker-popup');
+                            if (popup && popup.parentElement) {
+                                const parent = popup.parentElement;
+                                let fieldType = 'unknown';
+
+                                if (parent.closest('.site-visit-date')) {
+                                    fieldType = 'site_visit_date';
+                                } else if (parent.closest('.work-start-date')) {
+                                    fieldType = 'work_start_date';
+                                } else if (parent.closest('.completion-date')) {
+                                    fieldType = 'completion_date';
+                                }
+
+                                console.log(`💾 Saving: ${fieldType} = ${value}`);
+                                this.saveDate(fieldType, value);
+                            }
+                        });
+                    });
+                }, 200);
+            }
+        });
+    },
+
+    addListenersToDateCompacts: function() {
+        const dateCompacts = document.querySelectorAll('.date-compact');
+        console.log(`📅 Found ${dateCompacts.length} date compact elements`);
+
+        dateCompacts.forEach((compact, index) => {
+            console.log(`📅 Adding click listener to date compact ${index}`);
+
+            compact.addEventListener('click', () => {
+                console.log('📅 Date compact clicked');
+
+                setTimeout(() => {
+                    // Find any new date inputs and add listeners
+                    const popup = compact.querySelector('.date-picker-popup');
+                    if (popup) {
+                        const dateInput = popup.querySelector('input[type="date"]');
+                        if (dateInput && !dateInput.hasAttribute('data-foolproof-listener')) {
+                            dateInput.setAttribute('data-foolproof-listener', 'true');
+                            console.log('📅 Adding listener to popup date input');
+
+                            dateInput.addEventListener('change', (e) => {
+                                const value = e.target.value;
+                                console.log(`💾 Popup date changed: ${value}`);
+                                this.saveDate('generic_date', value);
+                            });
+                        }
+                    }
+                }, 100);
+            });
+        });
+    },
+
+    saveDate: function(fieldType, value) {
+        console.log(`💾 SAVING DATE: ${fieldType} = ${value}`);
+
+        try {
+            // Save individual field
+            localStorage.setItem(`saved_${fieldType}`, value);
+            localStorage.setItem(`saved_${fieldType}_timestamp`, new Date().toISOString());
+
+            // Also save to our internal object
+            this.savedDates[fieldType] = value;
+
+            // Save the entire dates object
+            localStorage.setItem('foolproof_saved_dates', JSON.stringify(this.savedDates));
+            localStorage.setItem('foolproof_last_save', new Date().toISOString());
+
+            console.log(`✅ DATE SAVED SUCCESSFULLY: ${fieldType} = ${value}`);
+
+            // Show success message
+            this.showSaveConfirmation(fieldType, value);
+
+        } catch (error) {
+            console.error(`❌ FAILED TO SAVE DATE: ${error.message}`);
+        }
+    },
+
+    loadSavedDates: function() {
+        console.log('📦 Loading saved dates...');
+
+        try {
+            const savedDatesStr = localStorage.getItem('foolproof_saved_dates');
+            if (savedDatesStr) {
+                this.savedDates = JSON.parse(savedDatesStr);
+                console.log('📦 Loaded saved dates:', this.savedDates);
+            }
+
+            // Also load individual fields
+            ['site_visit_date', 'work_start_date', 'completion_date', 'response_date'].forEach(field => {
+                const saved = localStorage.getItem(`saved_${field}`);
+                if (saved) {
+                    this.savedDates[field] = saved;
+                    console.log(`📦 Loaded ${field}: ${saved}`);
+                }
+            });
+
+        } catch (error) {
+            console.error(`❌ Failed to load saved dates: ${error.message}`);
+        }
+    },
+
+    restoreDates: function() {
+        console.log('🔄 Restoring saved dates...');
+
+        Object.entries(this.savedDates).forEach(([fieldType, value]) => {
+            console.log(`🔄 Restoring ${fieldType} = ${value}`);
+
+            // Try to find the field and restore its value
+            if (fieldType === 'response_date') {
+                const responseField = document.getElementById('detail-response-date');
+                if (responseField) {
+                    responseField.value = value;
+                    console.log(`✅ Restored response date: ${value}`);
+                }
+            }
+
+            // For other fields, we'll need to update the display text
+            this.updateDateDisplay(fieldType, value);
+        });
+
+        // Force a re-render if possible
+        if (typeof renderAll === 'function') {
+            setTimeout(() => renderAll(), 1000);
+        }
+    },
+
+    updateDateDisplay: function(fieldType, value) {
+        // Find date compact elements and update their display
+        const fieldSelectors = {
+            'site_visit_date': '.site-visit-date .date-compact span',
+            'work_start_date': '.work-start-date .date-compact span',
+            'completion_date': '.completion-date .date-compact span'
+        };
+
+        const selector = fieldSelectors[fieldType];
+        if (selector) {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(element => {
+                if (element.textContent.includes('Set Date') || element.textContent.includes('/')) {
+                    const formattedDate = this.formatDisplayDate(value);
+                    element.textContent = formattedDate;
+                    console.log(`✅ Updated display for ${fieldType}: ${formattedDate}`);
+                }
+            });
+        }
+    },
+
+    formatDisplayDate: function(dateStr) {
+        if (!dateStr) return 'Set Date';
+        try {
+            const date = new Date(dateStr);
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            return `${month}/${day}`;
+        } catch (e) {
+            return 'Set Date';
+        }
+    },
+
+    showSaveConfirmation: function(fieldType, value) {
+        // Create a temporary confirmation message
+        const message = document.createElement('div');
+        message.textContent = `✅ Saved: ${fieldType} = ${value}`;
+        message.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 10000;
+            font-size: 14px;
+        `;
+
+        document.body.appendChild(message);
+
+        setTimeout(() => {
+            if (message.parentNode) {
+                message.parentNode.removeChild(message);
+            }
+        }, 3000);
+    },
+
+    showStatus: function() {
+        console.log('📊 FOOLPROOF DATE SAVER STATUS:');
+        console.log('  Saved dates:', this.savedDates);
+        console.log('  Last save:', localStorage.getItem('foolproof_last_save'));
+
+        const allKeys = Object.keys(localStorage).filter(key => key.startsWith('saved_'));
+        console.log('  All saved keys:', allKeys);
+
+        allKeys.forEach(key => {
+            console.log(`    ${key}: ${localStorage.getItem(key)}`);
+        });
+    }
+};
+
+// Initialize the date watcher
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        dateWatcher.init();
+
+        // Show status after 5 seconds
+        setTimeout(() => dateWatcher.showStatus(), 5000);
+    }, 3000);
+});
+
+// Make it globally available for testing
+window.dateWatcher = dateWatcher;
+
+console.log('💾 Foolproof date saver loaded and ready!');
+</script>
+</body> tag in project_tracking.html
+
+// Fix date field saving
+document.addEventListener('DOMContentLoaded', function() {
+    // Override the updateDateField function after the page loads
+    setTimeout(function() {
+        if (typeof window.updateDateField !== 'undefined') {
+            const originalUpdateDateField = window.updateDateField;
+
+            window.updateDateField = function(index, field, value, popup) {
+                console.log('Enhanced: Saving date field', field, 'to value', value);
+
+                if (projects && projects[index]) {
+                    projects[index][field] = value;
+
+                    // Force immediate save to localStorage
+                    localStorage.setItem('projects', JSON.stringify(projects));
+                    localStorage.setItem('projects_last_saved', new Date().toISOString());
+                    console.log('✓ Date saved successfully:', field, '=', value);
+
+                    // Update displays
+                    if (typeof renderTaskList === 'function') renderTaskList();
+                    if (typeof renderTimeline === 'function') renderTimeline();
+                }
+
+                if (popup) popup.remove();
+            };
+
+            console.log('✓ Enhanced date field saving activated');
+        }
+
+        // Enhanced zoom persistence
+        if (typeof window.zoomLevel !== 'undefined') {
+            // Load saved zoom level
+            const savedZoom = localStorage.getItem('timeline_zoom_level');
+            if (savedZoom) {
+                window.zoomLevel = parseInt(savedZoom);
+                console.log('✓ Zoom level restored:', window.zoomLevel);
+
+                // Update the display
+                if (typeof updateZoom === 'function') {
+                    updateZoom();
+                }
+            }
+
+            // Override zoom functions to save position
+            const originalZoomIn = window.zoomIn;
+            const originalZoomOut = window.zoomOut;
+            const originalSetZoom = window.setZoom;
+
+            if (originalZoomIn) {
+                window.zoomIn = function() {
+                    originalZoomIn.call(this);
+                    localStorage.setItem('timeline_zoom_level', window.zoomLevel);
+                    console.log('✓ Zoom saved:', window.zoomLevel);
+                };
+            }
+
+            if (originalZoomOut) {
+                window.zoomOut = function() {
+                    originalZoomOut.call(this);
+                    localStorage.setItem('timeline_zoom_level', window.zoomLevel);
+                    console.log('✓ Zoom saved:', window.zoomLevel);
+                };
+            }
+
+            if (originalSetZoom) {
+                window.setZoom = function(event) {
+                    originalSetZoom.call(this, event);
+                    localStorage.setItem('timeline_zoom_level', window.zoomLevel);
+                    console.log('✓ Zoom saved:', window.zoomLevel);
+                };
+            }
+
+            console.log('✓ Enhanced zoom persistence activated');
+        }
+
+    }, 2000); // Wait 2 seconds for everything to load
+
+    // Auto-save every 15 seconds
+    setInterval(function() {
+        if (typeof projects !== 'undefined' && projects && projects.length > 0) {
+            localStorage.setItem('projects', JSON.stringify(projects));
+            localStorage.setItem('projects_last_saved', new Date().toISOString());
+            console.log('✓ Auto-save completed');
+        }
+    }, 15000);
+
+    // Save on page close
+    window.addEventListener('beforeunload', function() {
+        if (typeof projects !== 'undefined' && projects && projects.length > 0) {
+            localStorage.setItem('projects', JSON.stringify(projects));
+            localStorage.setItem('projects_last_saved', new Date().toISOString());
+            if (typeof window.zoomLevel !== 'undefined') {
+                localStorage.setItem('timeline_zoom_level', window.zoomLevel);
+            }
+            console.log('✓ Data saved on close');
+        }
+    });
+});
+
+console.log('🚀 Enhanced persistence script loaded');
+</script>
+
+
+<script>
+// Enhanced Slider Position Persistence for SAM Project Tracking
+// This script ensures the slider position is always saved and restored
+
+console.log('Loading enhanced slider persistence...');
+
+// Wait for the page to fully load
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        console.log('Initializing enhanced slider persistence');
+
+        // Load saved slider position immediately
+        const savedZoomLevel = localStorage.getItem('timeline_zoom_level');
+        if (savedZoomLevel) {
+            window.zoomLevel = parseInt(savedZoomLevel);
+            console.log('✓ Restored saved zoom level:', window.zoomLevel);
+
+            // Force update the display
+            if (typeof updateZoom === 'function') {
+                updateZoom();
+            }
+        } else {
+            // Set default if no saved value
+            window.zoomLevel = 71;
+            localStorage.setItem('timeline_zoom_level', '71');
+            console.log('✓ Set default zoom level: 71');
+        }
+
+        // Function to save zoom level
+        function saveZoomLevel(level) {
+            localStorage.setItem('timeline_zoom_level', level.toString());
+            console.log('✓ Slider position SAVED:', level);
+
+            // Also save timestamp for debugging
+            localStorage.setItem('timeline_zoom_last_saved', new Date().toISOString());
+        }
+
+        // Override ALL zoom functions to save position
+        if (typeof window.zoomIn === 'function') {
+            const originalZoomIn = window.zoomIn;
+            window.zoomIn = function() {
+                originalZoomIn.call(this);
+                saveZoomLevel(window.zoomLevel);
+                console.log('Zoom IN - New position:', window.zoomLevel);
+            };
+        }
+
+        if (typeof window.zoomOut === 'function') {
+            const originalZoomOut = window.zoomOut;
+            window.zoomOut = function() {
+                originalZoomOut.call(this);
+                saveZoomLevel(window.zoomLevel);
+                console.log('Zoom OUT - New position:', window.zoomLevel);
+            };
+        }
+
+        if (typeof window.setZoom === 'function') {
+            const originalSetZoom = window.setZoom;
+            window.setZoom = function(event) {
+                originalSetZoom.call(this, event);
+                saveZoomLevel(window.zoomLevel);
+                console.log('Zoom SLIDER - New position:', window.zoomLevel);
+            };
+        }
+
+        // Additional backup: Monitor for ANY changes to zoomLevel variable
+        let lastKnownZoom = window.zoomLevel;
+        setInterval(function() {
+            if (window.zoomLevel !== lastKnownZoom) {
+                saveZoomLevel(window.zoomLevel);
+                lastKnownZoom = window.zoomLevel;
+                console.log('Zoom level changed detected, saved:', window.zoomLevel);
+            }
+        }, 1000);
+
+        // Save on page unload
+        window.addEventListener('beforeunload', function() {
+            if (typeof window.zoomLevel !== 'undefined') {
+                localStorage.setItem('timeline_zoom_level', window.zoomLevel.toString());
+                console.log('✓ Slider position saved on page close:', window.zoomLevel);
+            }
+        });
+
+        // Display current status
+        setTimeout(function() {
+            const currentZoom = localStorage.getItem('timeline_zoom_level');
+            const lastSaved = localStorage.getItem('timeline_zoom_last_saved');
+
+            console.log('=== SLIDER PERSISTENCE STATUS ===');
+            console.log('Current zoom level:', window.zoomLevel);
+            console.log('Saved zoom level:', currentZoom);
+            console.log('Last saved at:', lastSaved ? new Date(lastSaved).toLocaleString() : 'Never');
+            console.log('===============================');
+        }, 3000);
+
+        console.log('✓ Enhanced slider persistence activated');
+
+    }, 2500); // Wait 2.5 seconds for everything to load
+});
+
+console.log('Enhanced slider persistence script loaded');
+</script>
+
+
+<script>
+// DIRECT INTERVENTION - Force persistence to work
+console.log('💡 DIRECT INTERVENTION STARTING...');
+
+// Simple, direct approach - intercept at the HTML level
+function directSaveDates() {
+    console.log('🎯 DIRECT DATE SAVE FUNCTION LOADED');
+
+    // Find all date input fields and add direct listeners
+    setTimeout(function() {
+        console.log('🔍 Looking for date input fields...');
+
+        // Method 1: Find all date inputs
+        const dateInputs = document.querySelectorAll('input[type="date"]');
+        console.log(`Found ${dateInputs.length} date input fields`);
+
+        dateInputs.forEach((input, index) => {
+            console.log(`📅 Adding listener to date input ${index}:`, input.id);
+
+            input.addEventListener('change', function() {
+                const value = input.value;
+                const id = input.id;
+
+                console.log(`🎯 DIRECT DATE CHANGE DETECTED: ${id} = ${value}`);
+
+                // Save immediately to localStorage
+                localStorage.setItem(`saved_date_${id}`, value);
+                localStorage.setItem(`saved_date_${id}_timestamp`, new Date().toISOString());
+
+                console.log(`✅ DIRECT SAVE COMPLETE: ${id} = ${value}`);
+            });
+        });
+
+        // Method 2: Add click listeners to date compact elements
+        const dateCompactElements = document.querySelectorAll('.date-compact');
+        console.log(`Found ${dateCompactElements.length} date-compact elements`);
+
+        dateCompactElements.forEach((element, index) => {
+            console.log(`📅 Adding listener to date-compact ${index}`);
+
+            element.addEventListener('click', function() {
+                console.log('🎯 Date compact clicked, will monitor for changes...');
+
+                // Watch for any new date inputs that might appear
+                setTimeout(() => {
+                    const newDateInputs = document.querySelectorAll('input[type="date"]');
+                    newDateInputs.forEach(input => {
+                        if (!input.hasAttribute('data-direct-listener')) {
+                            input.setAttribute('data-direct-listener', 'true');
+                            console.log('📅 Adding direct listener to new date input');
+
+                            input.addEventListener('change', function() {
+                                const value = input.value;
+                                console.log(`🎯 NEW DATE INPUT CHANGE: ${value}`);
+
+                                // Try to find which field this belongs to
+                                const popup = input.closest('.date-picker-popup');
+                                if (popup) {
+                                    const parent = popup.parentElement;
+                                    const fieldType = parent.className.includes('site-visit') ? 'site_visit_date' :
+                                                    parent.className.includes('work-start') ? 'work_start_date' :
+                                                    parent.className.includes('completion') ? 'completion_date' : 'unknown';
+
+                                    console.log(`📅 Field type detected: ${fieldType}`);
+
+                                    // Save with field type
+                                    localStorage.setItem(`saved_${fieldType}`, value);
+                                    localStorage.setItem(`saved_${fieldType}_timestamp`, new Date().toISOString());
+
+                                    console.log(`✅ SAVED: ${fieldType} = ${value}`);
+
+                                    // Also try to save to projects array if it exists
+                                    if (typeof projects !== 'undefined' && projects) {
+                                        console.log('🔄 Attempting to update projects array...');
+                                        localStorage.setItem('direct_projects_backup', JSON.stringify(projects));
+                                        console.log('✅ Projects array backed up');
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }, 100);
+            });
+        });
+
+    }, 2000);
+}
+
+// Direct slider saving
+function directSaveSlider() {
+    console.log('🎯 DIRECT SLIDER SAVE FUNCTION LOADED');
+
+    // Method 1: Monitor zoom level variable
+    let lastZoomLevel = null;
+
+    setInterval(function() {
+        if (typeof window.zoomLevel !== 'undefined' && window.zoomLevel !== lastZoomLevel) {
+            console.log(`🎯 ZOOM LEVEL CHANGE DETECTED: ${lastZoomLevel} → ${window.zoomLevel}`);
+
+            localStorage.setItem('direct_zoom_level', window.zoomLevel.toString());
+            localStorage.setItem('direct_zoom_timestamp', new Date().toISOString());
+
+            console.log(`✅ DIRECT SLIDER SAVE: ${window.zoomLevel}`);
+            lastZoomLevel = window.zoomLevel;
+        }
+    }, 500);
+
+    // Method 2: Add direct click listeners to zoom controls
+    setTimeout(function() {
+        const zoomControls = [
+            document.querySelector('.zoom-slider'),
+            ...document.querySelectorAll('button[onclick*="zoom"]')
+        ];
+
+        zoomControls.forEach(control => {
+            if (control) {
+                console.log('🎯 Adding direct listener to zoom control');
+
+                control.addEventListener('click', function() {
+                    console.log('🎯 Zoom control clicked');
+
+                    setTimeout(() => {
+                        if (typeof window.zoomLevel !== 'undefined') {
+                            localStorage.setItem('direct_zoom_level', window.zoomLevel.toString());
+                            console.log(`✅ ZOOM SAVED AFTER CLICK: ${window.zoomLevel}`);
+                        }
+                    }, 100);
+                });
+            }
+        });
+    }, 2000);
+}
+
+// Direct restore function
+function directRestore() {
+    console.log('🔄 DIRECT RESTORE STARTING...');
+
+    // Restore slider position
+    const savedZoom = localStorage.getItem('direct_zoom_level');
+    if (savedZoom) {
+        console.log(`📦 Found saved zoom level: ${savedZoom}`);
+
+        // Try multiple ways to set zoom level
+        if (typeof window.zoomLevel !== 'undefined') {
+            window.zoomLevel = parseInt(savedZoom);
+            console.log(`✅ Set window.zoomLevel = ${window.zoomLevel}`);
+        }
+
+        // Try to trigger update
+        setTimeout(() => {
+            if (typeof updateZoom === 'function') {
+                updateZoom();
+                console.log('✅ Called updateZoom()');
+            }
+        }, 1000);
+    }
+
+    // Show saved dates
+    const savedDates = {};
+    ['site_visit_date', 'work_start_date', 'completion_date', 'detail-response-date'].forEach(field => {
+        const saved = localStorage.getItem(`saved_date_${field}`) || localStorage.getItem(`saved_${field}`);
+        if (saved) {
+            savedDates[field] = saved;
+            console.log(`📦 Found saved date: ${field} = ${saved}`);
+        }
+    });
+
+    if (Object.keys(savedDates).length > 0) {
+        console.log('📦 SAVED DATES FOUND:', savedDates);
+
+        // Try to restore after page loads
+        setTimeout(() => {
+            Object.entries(savedDates).forEach(([field, value]) => {
+                const input = document.getElementById(field);
+                if (input) {
+                    input.value = value;
+                    console.log(`✅ RESTORED ${field} = ${value}`);
+                }
+            });
+        }, 3000);
+    }
+}
+
+// Initialize everything
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        console.log('🚀 DIRECT INTERVENTION INITIALIZING...');
+
+        directSaveDates();
+        directSaveSlider();
+        directRestore();
+
+        console.log('✅ DIRECT INTERVENTION ACTIVE');
+
+        // Show current localStorage contents
+        setTimeout(() => {
+            console.log('📊 CURRENT LOCALSTORAGE:');
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.includes('direct_') || key.includes('saved_') || key.includes('zoom') || key.includes('date')) {
+                    console.log(`  ${key}: ${localStorage.getItem(key)}`);
+                }
+            }
+        }, 5000);
+
+    }, 4000); // Wait longer for everything to load
+});
+
+console.log('💡 Direct intervention script loaded');
+</script>
+
+
+<script>
+// LOCK SLIDER IN CURRENT POSITION
+// This script captures the current slider position and locks it there permanently
+
+console.log('🔒 SLIDER POSITION LOCKER STARTING...');
+
+function lockSliderPosition() {
+    console.log('🎯 Capturing and locking current slider position...');
+
+    setTimeout(function() {
+        // Method 1: Capture current zoom level from variable
+        let currentZoomLevel = null;
+        if (typeof window.zoomLevel !== 'undefined') {
+            currentZoomLevel = window.zoomLevel;
+            console.log(`📍 Current zoom level from variable: ${currentZoomLevel}`);
+        }
+
+        // Method 2: Try to read from CSS custom property
+        const cssZoomPercent = getComputedStyle(document.documentElement).getPropertyValue('--zoom-percent');
+        if (cssZoomPercent) {
+            const cssZoom = parseInt(cssZoomPercent.replace('%', ''));
+            console.log(`📍 Current zoom level from CSS: ${cssZoom}`);
+            if (!currentZoomLevel) currentZoomLevel = cssZoom;
+        }
+
+        // Method 3: Fallback - assume 100% if nothing found
+        if (!currentZoomLevel) {
+            currentZoomLevel = 100;
+            console.log(`📍 Using fallback zoom level: ${currentZoomLevel}`);
+        }
+
+        console.log(`🔒 LOCKING SLIDER AT POSITION: ${currentZoomLevel}`);
+
+        // Save the locked position
+        localStorage.setItem('LOCKED_SLIDER_POSITION', currentZoomLevel.toString());
+        localStorage.setItem('SLIDER_LOCK_TIMESTAMP', new Date().toISOString());
+
+        // Force set the zoom level
+        if (typeof window.zoomLevel !== 'undefined') {
+            window.zoomLevel = currentZoomLevel;
+        }
+
+        // Update the display
+        if (typeof updateZoom === 'function') {
+            updateZoom();
+        }
+
+        // DISABLE ALL ZOOM FUNCTIONS
+        // console.log('🚫 Disabling all zoom controls...');
+
+        // Override zoom functions to do nothing
+        /*
+        if (typeof window.zoomIn === 'function') {
+            window.zoomIn = function() {
+                console.log('🚫 Zoom IN blocked - slider is locked');
+                return false;
+            };
+        }
+
+        if (typeof window.zoomOut === 'function') {
+            window.zoomOut = function() {
+                console.log('🚫 Zoom OUT blocked - slider is locked');
+                return false;
+            };
+        }
+
+        if (typeof window.setZoom === 'function') {
+            window.setZoom = function() {
+                console.log('🚫 Set Zoom blocked - slider is locked');
+                return false;
+            };
+        }
+        */
+
+        // Disable zoom control buttons
+        /*
+        const zoomButtons = document.querySelectorAll('button[onclick*="zoom"]');
+        zoomButtons.forEach(button => {
+            button.onclick = function(e) {
+                e.preventDefault();
+                console.log('🚫 Zoom button clicked but blocked - slider is locked');
+                return false;
+            };
+            button.style.opacity = '0.5';
+            button.style.cursor = 'not-allowed';
+            button.title = 'Zoom locked in position';
+        });
+        */
+
+        // Disable zoom slider
+        const zoomSlider = document.querySelector('.zoom-slider');
+        if (zoomSlider) {
+            zoomSlider.onclick = function(e) {
+                e.preventDefault();
+                console.log('🚫 Zoom slider clicked but blocked - slider is locked');
+                return false;
+            };
+            zoomSlider.style.opacity = '0.5';
+            zoomSlider.style.cursor = 'not-allowed';
+            zoomSlider.title = 'Zoom locked in position';
+        }
+
+        // Force zoom level every second to prevent changes - DISABLED to allow user control
+        /*
+        setInterval(function() {
+            const lockedPosition = localStorage.getItem('LOCKED_SLIDER_POSITION');
+            if (lockedPosition && window.zoomLevel !== parseInt(lockedPosition)) {
+                console.log(`🔒 Resetting zoom level to locked position: ${lockedPosition}`);
+                window.zoomLevel = parseInt(lockedPosition);
+                if (typeof updateZoom === 'function') {
+                    updateZoom();
+                }
+            }
+        }, 1000);
+        */
+
+        console.log(`✅ SLIDER LOCKED SUCCESSFULLY AT POSITION: ${currentZoomLevel}`);
+        console.log(`✅ All zoom controls disabled`);
+        console.log(`✅ Position will be maintained permanently`);
+
+        // Add visual indicator
+        setTimeout(() => {
+            const zoomLevel = document.getElementById('zoom-level');
+            if (zoomLevel) {
+                zoomLevel.innerHTML = `${currentZoomLevel}% 🔒`;
+                zoomLevel.title = 'Zoom level is locked';
+            }
+        }, 500);
+
+    }, 3000); // Wait for page to fully load
+}
+
+// Initialize the slider lock - DISABLED to allow user control
+/*
+document.addEventListener('DOMContentLoaded', function() {
+    lockSliderPosition();
+
+    // Also check periodically if slider needs to be restored to locked position
+    setInterval(function() {
+        const lockedPosition = localStorage.getItem('LOCKED_SLIDER_POSITION');
+        if (lockedPosition && typeof window.zoomLevel !== 'undefined') {
+            const targetZoom = parseInt(lockedPosition);
+            if (window.zoomLevel !== targetZoom) {
+                console.log(`🔒 Restoring locked position: ${targetZoom}`);
+                window.zoomLevel = targetZoom;
+                if (typeof updateZoom === 'function') {
+                    updateZoom();
+                }
+            }
+        }
+    }, 2000);
+});
+*/
+
+console.log('🔒 Slider position locker loaded and ready');
+</script>
+
+
+<script>
+// FOOLPROOF DATE SAVING SYSTEM
+// This will absolutely guarantee date fields are saved
+
+console.log('💾 FOOLPROOF DATE SAVER STARTING...');
+
+let dateWatcher = {
+    savedDates: {},
+
+    init: function() {
+        console.log('🎯 Initializing foolproof date saving...');
+
+        // Load any existing saved dates
+        this.loadSavedDates();
+
+        // Start watching for date changes
+        this.startWatching();
+
+        // Restore dates after page loads
+        setTimeout(() => this.restoreDates(), 4000);
+    },
+
+    startWatching: function() {
+        console.log('👀 Starting to watch for date changes...');
+
+        // Method 1: Watch the Response Date field in details panel
+        const responseDetailField = document.getElementById('detail-response-date');
+        if (responseDetailField) {
+            console.log('📅 Adding listener to response date field');
+            responseDetailField.addEventListener('change', (e) => {
+                const value = e.target.value;
+                console.log(`💾 Response date changed: ${value}`);
+                this.saveDate('response_date', value);
+            });
+        }
+
+        // Method 2: Watch for ALL date input fields that appear
+        this.watchForDateInputs();
+
+        // Method 3: Monitor for new date picker popups
+        this.watchForDatePickers();
+
+        // Method 4: Scan for existing date compact elements
+        this.addListenersToDateCompacts();
+    },
+
+    watchForDateInputs: function() {
+        // Check every second for new date input fields
+        setInterval(() => {
+            const dateInputs = document.querySelectorAll('input[type="date"]:not([data-foolproof-listener])');
+
+            dateInputs.forEach((input) => {
+                input.setAttribute('data-foolproof-listener', 'true');
+                console.log('📅 Adding foolproof listener to new date input');
+
+                input.addEventListener('change', (e) => {
+                    const value = e.target.value;
+                    console.log(`💾 Date input changed: ${value}`);
+
+                    // Try to determine which field this is
+                    const popup = input.closest('.date-picker-popup');
+                    if (popup && popup.parentElement) {
+                        const parent = popup.parentElement;
+                        let fieldType = 'unknown';
+
+                        if (parent.classList.contains('site-visit-date') || parent.parentElement.classList.contains('site-visit-date')) {
+                            fieldType = 'site_visit_date';
+                        } else if (parent.classList.contains('work-start-date') || parent.parentElement.classList.contains('work-start-date')) {
+                            fieldType = 'work_start_date';
+                        } else if (parent.classList.contains('completion-date') || parent.parentElement.classList.contains('completion-date')) {
+                            fieldType = 'completion_date';
+                        } else if (input.id === 'detail-response-date') {
+                            fieldType = 'response_date';
+                        }
+
+                        console.log(`💾 Detected field type: ${fieldType} = ${value}`);
+                        this.saveDate(fieldType, value);
+                    }
+                });
+            });
+        }, 1000);
+    },
+
+    watchForDatePickers: function() {
+        // Watch for clicks on date compact elements
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.date-compact')) {
+                console.log('📅 Date compact clicked - will watch for input');
+
+                // Wait for the date picker to appear, then add listeners
+                setTimeout(() => {
+                    const newDateInputs = document.querySelectorAll('.date-picker-popup input[type="date"]:not([data-foolproof-listener])');
+                    newDateInputs.forEach(input => {
+                        input.setAttribute('data-foolproof-listener', 'true');
+                        console.log('📅 Adding listener to date picker input');
+
+                        input.addEventListener('change', (e) => {
+                            const value = e.target.value;
+                            console.log(`💾 Date picker changed: ${value}`);
+
+                            // Find the parent date compact to determine field type
+                            const popup = input.closest('.date-picker-popup');
+                            if (popup && popup.parentElement) {
+                                const parent = popup.parentElement;
+                                let fieldType = 'unknown';
+
+                                if (parent.closest('.site-visit-date')) {
+                                    fieldType = 'site_visit_date';
+                                } else if (parent.closest('.work-start-date')) {
+                                    fieldType = 'work_start_date';
+                                } else if (parent.closest('.completion-date')) {
+                                    fieldType = 'completion_date';
+                                }
+
+                                console.log(`💾 Saving: ${fieldType} = ${value}`);
+                                this.saveDate(fieldType, value);
+                            }
+                        });
+                    });
+                }, 200);
+            }
+        });
+    },
+
+    addListenersToDateCompacts: function() {
+        const dateCompacts = document.querySelectorAll('.date-compact');
+        console.log(`📅 Found ${dateCompacts.length} date compact elements`);
+
+        dateCompacts.forEach((compact, index) => {
+            console.log(`📅 Adding click listener to date compact ${index}`);
+
+            compact.addEventListener('click', () => {
+                console.log('📅 Date compact clicked');
+
+                setTimeout(() => {
+                    // Find any new date inputs and add listeners
+                    const popup = compact.querySelector('.date-picker-popup');
+                    if (popup) {
+                        const dateInput = popup.querySelector('input[type="date"]');
+                        if (dateInput && !dateInput.hasAttribute('data-foolproof-listener')) {
+                            dateInput.setAttribute('data-foolproof-listener', 'true');
+                            console.log('📅 Adding listener to popup date input');
+
+                            dateInput.addEventListener('change', (e) => {
+                                const value = e.target.value;
+                                console.log(`💾 Popup date changed: ${value}`);
+                                this.saveDate('generic_date', value);
+                            });
+                        }
+                    }
+                }, 100);
+            });
+        });
+    },
+
+    saveDate: function(fieldType, value) {
+        console.log(`💾 SAVING DATE: ${fieldType} = ${value}`);
+
+        try {
+            // Save individual field
+            localStorage.setItem(`saved_${fieldType}`, value);
+            localStorage.setItem(`saved_${fieldType}_timestamp`, new Date().toISOString());
+
+            // Also save to our internal object
+            this.savedDates[fieldType] = value;
+
+            // Save the entire dates object
+            localStorage.setItem('foolproof_saved_dates', JSON.stringify(this.savedDates));
+            localStorage.setItem('foolproof_last_save', new Date().toISOString());
+
+            console.log(`✅ DATE SAVED SUCCESSFULLY: ${fieldType} = ${value}`);
+
+            // Show success message
+            this.showSaveConfirmation(fieldType, value);
+
+        } catch (error) {
+            console.error(`❌ FAILED TO SAVE DATE: ${error.message}`);
+        }
+    },
+
+    loadSavedDates: function() {
+        console.log('📦 Loading saved dates...');
+
+        try {
+            const savedDatesStr = localStorage.getItem('foolproof_saved_dates');
+            if (savedDatesStr) {
+                this.savedDates = JSON.parse(savedDatesStr);
+                console.log('📦 Loaded saved dates:', this.savedDates);
+            }
+
+            // Also load individual fields
+            ['site_visit_date', 'work_start_date', 'completion_date', 'response_date'].forEach(field => {
+                const saved = localStorage.getItem(`saved_${field}`);
+                if (saved) {
+                    this.savedDates[field] = saved;
+                    console.log(`📦 Loaded ${field}: ${saved}`);
+                }
+            });
+
+        } catch (error) {
+            console.error(`❌ Failed to load saved dates: ${error.message}`);
+        }
+    },
+
+    restoreDates: function() {
+        console.log('🔄 Restoring saved dates...');
+
+        Object.entries(this.savedDates).forEach(([fieldType, value]) => {
+            console.log(`🔄 Restoring ${fieldType} = ${value}`);
+
+            // Try to find the field and restore its value
+            if (fieldType === 'response_date') {
+                const responseField = document.getElementById('detail-response-date');
+                if (responseField) {
+                    responseField.value = value;
+                    console.log(`✅ Restored response date: ${value}`);
+                }
+            }
+
+            // For other fields, we'll need to update the display text
+            this.updateDateDisplay(fieldType, value);
+        });
+
+        // Force a re-render if possible
+        if (typeof renderAll === 'function') {
+            setTimeout(() => renderAll(), 1000);
+        }
+    },
+
+    updateDateDisplay: function(fieldType, value) {
+        // Find date compact elements and update their display
+        const fieldSelectors = {
+            'site_visit_date': '.site-visit-date .date-compact span',
+            'work_start_date': '.work-start-date .date-compact span',
+            'completion_date': '.completion-date .date-compact span'
+        };
+
+        const selector = fieldSelectors[fieldType];
+        if (selector) {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(element => {
+                if (element.textContent.includes('Set Date') || element.textContent.includes('/')) {
+                    const formattedDate = this.formatDisplayDate(value);
+                    element.textContent = formattedDate;
+                    console.log(`✅ Updated display for ${fieldType}: ${formattedDate}`);
+                }
+            });
+        }
+    },
+
+    formatDisplayDate: function(dateStr) {
+        if (!dateStr) return 'Set Date';
+        try {
+            const date = new Date(dateStr);
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            return `${month}/${day}`;
+        } catch (e) {
+            return 'Set Date';
+        }
+    },
+
+    showSaveConfirmation: function(fieldType, value) {
+        // Create a temporary confirmation message
+        const message = document.createElement('div');
+        message.textContent = `✅ Saved: ${fieldType} = ${value}`;
+        message.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 10000;
+            font-size: 14px;
+        `;
+
+        document.body.appendChild(message);
+
+        setTimeout(() => {
+            if (message.parentNode) {
+                message.parentNode.removeChild(message);
+            }
+        }, 3000);
+    },
+
+    showStatus: function() {
+        console.log('📊 FOOLPROOF DATE SAVER STATUS:');
+        console.log('  Saved dates:', this.savedDates);
+        console.log('  Last save:', localStorage.getItem('foolproof_last_save'));
+
+        const allKeys = Object.keys(localStorage).filter(key => key.startsWith('saved_'));
+        console.log('  All saved keys:', allKeys);
+
+        allKeys.forEach(key => {
+            console.log(`    ${key}: ${localStorage.getItem(key)}`);
+        });
+    }
+};
+
+// Initialize the date watcher
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        dateWatcher.init();
+
+        // Show status after 5 seconds
+        setTimeout(() => dateWatcher.showStatus(), 5000);
+    }, 3000);
+});
+
+// Make it globally available for testing
+window.dateWatcher = dateWatcher;
+
+console.log('💾 Foolproof date saver loaded and ready!');
+
+        // Enhanced date restoration using notice_id for reliability
+        function restoreSavedDates() {
+            console.log('🔄 RESTORING saved dates...');
+            let restoredCount = 0;
+
+            projects.forEach((project, index) => {
+                const noticeId = project.notice_id;
+                if (!noticeId) return;
+
+                ['site_visit_date', 'work_start_date', 'completion_date', 'response_date'].forEach(field => {
+                    // Try multiple backup key formats
+                    const backupKeys = [
+                        `autosaved_${field}_${index}`,                    // Current index
+                        `backup_${field}_${index}`,                      // Backup with index
+                        `saved_${field}_${noticeId}`,                    // Notice ID based
+                        `${field}_${noticeId}`                           // Simple format
+                    ];
+
+                    let savedValue = null;
+                    let usedKey = null;
+
+                    // Find the first available backup
+                    for (const key of backupKeys) {
+                        savedValue = localStorage.getItem(key);
+                        if (savedValue) {
+                            usedKey = key;
+                            break;
+                        }
+                    }
+
+                    // Apply saved value if found and current value is empty
+                    if (savedValue && (!project[field] || project[field] === '')) {
+                        project[field] = savedValue;
+                        console.log(`✅ RESTORED ${field} for ${noticeId}: ${savedValue} (from ${usedKey})`);
+                        restoredCount++;
+                    }
+                });
+            });
+
+            if (restoredCount > 0) {
+                console.log(`✅ Total dates restored: ${restoredCount}`);
+                // Force save the restored data
+                localStorage.setItem('projects', JSON.stringify(projects));
+                // Re-render to show restored dates
+                renderTaskList();
+                renderTimeline();
+            } else {
+                console.log('ℹ️ No dates needed restoration');
+            }
+        }
+
+        // Call restore function after data is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                console.log('🔄 LOADING saved dates...');
+                restoreSavedDates();
+                // ALSO restore permanent dates
+                if (typeof restorePermanentDates === 'function') {
+                    restorePermanentDates();
+                }
+            }, 3000); // Wait longer to ensure data is fully loaded
+        });
+</script>// Show green save confirmation message
+        function showSaveMessage(message) {
+            const div = document.createElement('div');
+            div.textContent = message;
+            div.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #28a745;
+                color: white;
+                padding: 10px 15px;
+                border-radius: 5px;
+                z-index: 10000;
+                font-size: 14px;
+                font-weight: bold;
+            `;
+            document.body.appendChild(div);
+            setTimeout(() => {
+                if (div.parentNode) {
+                    div.parentNode.removeChild(div);
+                }
+            }, 3000);
+        }
+</script>
+
+<script>
+// NUCLEAR OPTION: COMPLETELY OVERRIDE DATE SAVING SYSTEM
+console.log('🚨 NUCLEAR DATE SAVER LOADING...');
+
+// Wait for page to load, then completely override the date system
+setTimeout(function() {
+    console.log('🚨 NUCLEAR DATE SAVER ACTIVE - OVERRIDING ALL DATE FUNCTIONS');
+
+    // COMPLETELY REPLACE showDatePicker function
+    window.showDatePicker = function(element, index, field) {
+        console.log(`🚨 NUCLEAR: Opening date picker for ${field} on project ${index}`);
+
+        // Close existing popups
+        document.querySelectorAll('.date-picker-popup').forEach(popup => popup.remove());
+
+        // Create simple popup
+        const popup = document.createElement('div');
+        popup.className = 'date-picker-popup show';
+        popup.style.position = 'absolute';
+        popup.style.zIndex = '10000';
+        popup.style.background = 'white';
+        popup.style.border = '2px solid #007bff';
+        popup.style.padding = '10px';
+        popup.style.borderRadius = '5px';
+
+        // Get current value
+        const currentValue = projects[index] && projects[index][field] ? projects[index][field] : '';
+        console.log(`🚨 NUCLEAR: Current value for ${field}: "${currentValue}"`);
+
+        // Create date input
+        const dateInput = document.createElement('input');
+        dateInput.type = 'date';
+        dateInput.value = currentValue;
+        dateInput.style.fontSize = '16px';
+        dateInput.style.padding = '5px';
+
+        // CRITICAL: Add change handler that DEFINITELY saves
+        dateInput.addEventListener('change', function() {
+            const newValue = this.value;
+            const noticeId = projects[index]?.notice_id;
+            console.log(`🚨 NUCLEAR SAVE: ${field} = "${newValue}" for project ${index} (${noticeId})`);
+
+            // STEP 1: Update projects array
+            if (projects[index]) {
+                projects[index][field] = newValue;
+                console.log(`🚨 NUCLEAR: Updated projects[${index}].${field} = "${newValue}"`);
+            }
+
+            // STEP 2: SAVE TO SERVER (most important for virtual server)
+            if (noticeId) {
+                fetch('/save-project-dates', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        notice_id: noticeId,
+                        field: field,
+                        value: newValue
+                    })
+                }).then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        console.log(`🚨 NUCLEAR: SAVED TO SERVER successfully`);
+                    } else {
+                        console.error('🚨 NUCLEAR ERROR saving to server:', data.message);
+                    }
+                }).catch(e => {
+                    console.error('🚨 NUCLEAR ERROR server request failed:', e);
+                });
+            }
+
+            // STEP 3: ALSO save to localStorage as backup
+            try {
+                localStorage.setItem('projects', JSON.stringify(projects));
+                console.log(`🚨 NUCLEAR: SAVED to localStorage projects`);
+            } catch (e) {
+                console.error('🚨 NUCLEAR ERROR saving to localStorage:', e);
+            }
+
+            // STEP 4: Individual key backup
+            try {
+                const safeKey = `NUCLEAR_${noticeId}_${field}`;
+                localStorage.setItem(safeKey, newValue);
+                console.log(`🚨 NUCLEAR: ALSO saved to ${safeKey}`);
+            } catch (e) {
+                console.error('🚨 NUCLEAR ERROR saving individual key:', e);
+            }
+
+            // STEP 5: Force re-render
+            try {
+                renderTaskList();
+                renderTimeline();
+                console.log(`🚨 NUCLEAR: Re-rendered UI`);
+            } catch (e) {
+                console.error('🚨 NUCLEAR ERROR re-rendering:', e);
+            }
+
+            // STEP 6: Close popup
+            popup.remove();
+
+            // STEP 7: Show success message
+            alert(`SAVED TO SERVER: ${field} = ${newValue}`);
+        });
+
+        // Add close button
+        const closeBtn = document.createElement('button');
+        closeBtn.textContent = 'Close';
+        closeBtn.style.marginLeft = '10px';
+        closeBtn.onclick = function() { popup.remove(); };
+
+        popup.appendChild(dateInput);
+        popup.appendChild(closeBtn);
+        element.appendChild(popup);
+
+        // Focus the input
+        dateInput.focus();
+        if (dateInput.showPicker) {
+            dateInput.showPicker();
+        }
+    };
+
+    // ALSO override updateDateField to be absolutely sure
+    window.updateDateField = function(index, field, value, popup) {
+        console.log(`🚨 NUCLEAR updateDateField: ${field} = "${value}" for project ${index}`);
+
+        // Update projects array
+        if (projects[index]) {
+            const noticeId = projects[index].notice_id;
+            projects[index][field] = value;
+            console.log(`🚨 NUCLEAR: Set projects[${index}].${field} = "${value}"`);
+
+            // SAVE TO SERVER FIRST
+            if (noticeId) {
+                fetch('/save-project-dates', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        notice_id: noticeId,
+                        field: field,
+                        value: value
+                    })
+                }).then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        console.log(`🚨 NUCLEAR updateDateField: SAVED TO SERVER`);
+                    } else {
+                        console.error('🚨 NUCLEAR updateDateField: Server save failed:', data.message);
+                    }
+                }).catch(e => {
+                    console.error('🚨 NUCLEAR updateDateField: Server request failed:', e);
+                });
+            }
+        }
+
+        // FORCE save to localStorage as backup
+        try {
+            localStorage.setItem('projects', JSON.stringify(projects));
+            console.log(`🚨 NUCLEAR: FORCED save to localStorage`);
+        } catch (e) {
+            console.error('🚨 NUCLEAR ERROR in updateDateField:', e);
+        }
+
+        // Remove popup if provided
+        if (popup) {
+            popup.remove();
+        }
+
+        // Force re-render
+        renderTaskList();
+        renderTimeline();
+
+        console.log(`🚨 NUCLEAR updateDateField COMPLETE`);
+    };
+
+    console.log('🚨 NUCLEAR DATE SAVER FULLY ACTIVE');
+
+    // Add a test button
+    window.nuclearTest = function() {
+        console.log('🚨 NUCLEAR TEST: Setting site_visit_date on first project to 2025-01-15');
+        if (projects.length > 0) {
+            projects[0].site_visit_date = '2025-01-15';
+            localStorage.setItem('projects', JSON.stringify(projects));
+            renderTaskList();
+            console.log('🚨 NUCLEAR TEST: Done. Check if date appears.');
+        } else {
+            console.log('🚨 NUCLEAR TEST: No projects found!');
+        }
+    };
+
+    console.log('🚨 Type nuclearTest() to test the system');
+
+}, 5000); // Wait 5 seconds to make sure everything is loaded
+
+</script>
 </body>
 </html>

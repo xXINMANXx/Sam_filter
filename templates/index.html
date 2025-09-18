@@ -34,7 +34,7 @@
 
     .app-header { margin: 0; padding: 0; }
     .flag-banner {
-      width: 100%; height: 220px;
+      width: 100%; height: 120px;
       background-image: url("{{ url_for('static', filename='flag.png') }}");
       background-size: 110% auto; background-position: center; background-repeat: no-repeat;
       animation: flagWave 7.5s ease-in-out infinite alternate;
@@ -49,7 +49,7 @@
       grid-template-columns: 1fr auto 1fr;
       align-items: center;
       gap: 12px;
-      padding: 10px 12px;
+      padding: 5px 12px;
       background: var(--bg);
     }
     .app-title{
@@ -62,20 +62,21 @@
       grid-column: 3; display:flex; align-items:center; gap:10px; justify-content:flex-end;
     }
     .toplink-btn{
-      display:inline-block; padding:8px 12px; border-radius:10px; border:1px solid var(--grid-blue);
+      display:inline-flex; align-items:center; justify-content:center; padding:12px 16px; border-radius:10px; border:1px solid var(--grid-blue);
       background: var(--chip-bg); color: var(--mysol-btn-fg-light); font-weight:800; text-decoration:none;
+      height:50px; box-sizing:border-box; font-size:18px;
     }
     #toMySolBtn { color: var(--mysol-btn-fg-light); }
     body[data-theme="dark"] #toMySolBtn { color: var(--mysol-btn-fg-dark); }
 
     #themeToggle{
       border:1px solid var(--grid-blue); background: var(--chip-bg); color: var(--chip-fg);
-      border-radius:10px; height:36px; padding:0 10px; cursor:pointer; font-weight:700;
+      border-radius:10px; height:50px; padding:0 14px; cursor:pointer; font-weight:700; font-size:18px;
     }
 
     /* Project Tracker Button Styles */
     .project-tracker-cta {
-      margin: 1.5rem 0;
+      margin: 0.5rem 0;
       display: flex;
       justify-content: center;
     }
@@ -176,14 +177,14 @@
       }
     }
 
-    .controls-wrap { max-width: 100%; margin: 0 auto; padding: 4px 10px 0; }
+    .controls-wrap { flex: 1; margin: 0; padding: 0; }
     .controls {
       position: relative;
       display: grid; width: 100%;
-      grid-template-columns: auto auto auto minmax(0, 3.6fr) auto auto auto;
-      align-items: center; gap: 10px;
+      grid-template-columns: auto auto auto minmax(0, 2.5fr) auto auto auto;
+      align-items: center; gap: 8px;
       background: var(--chip-bg); border: 1px solid var(--grid-blue); border-radius: 12px;
-      padding: 10px; box-shadow: 0 2px 10px rgba(16,24,40,0.06);
+      padding: 8px; box-shadow: 0 2px 10px rgba(16,24,40,0.06);
       color: var(--chip-fg);
     }
     .controls input, .controls select, .controls button { font-size: 14px; }
@@ -215,13 +216,78 @@
       display:inline-flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--grid-blue);
       border-radius:10px; padding:10px 12px; font-weight:700; cursor:pointer; white-space:nowrap;
     }
-    .date-summary{ font-size:12px; font-weight:600; opacity:.8; }
+    .date-summary{ font-size:12px; font-weight:600; opacity:.8; margin-left:4px; }
+
+    /* Excel-style pivot table dropdown */
+    .date-panel{
+      position:absolute; top:calc(100% + 4px); left:0; width:350px; max-height:500px;
+      background:#fff; border:1px solid #a6a6a6; border-radius:0; box-shadow:0 4px 12px rgba(0,0,0,0.15);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      font-size:14px; z-index:100; display:none;
+    }
+    .date-panel.open{ display:block; }
+
+    .date-panel-header{
+      padding:8px; border-bottom:1px solid #d4d4d4; background:#f8f9fa;
+    }
+    .search-box input{
+      width:100%; padding:4px 6px; border:1px solid #adadad; border-radius:2px;
+      font-size:13px; outline:none;
+    }
+    .search-box input:focus{ border-color:#0078d4; }
+
+    .select-all-section{
+      margin-top:6px; padding:4px 8px; border-bottom:1px solid #d4d4d4;
+    }
+    .select-all-label{
+      cursor:pointer; font-weight:600; font-size:16px; color:#333;
+      display:flex; align-items:center;
+    }
+    .select-all-label input[type="checkbox"]{
+      margin-right:6px; cursor:pointer;
+    }
+    .select-all-label span{
+      line-height:1;
+    }
+
+    .date-list{
+      max-height:350px; overflow-y:auto; background:#fff;
+    }
+    .date-item{
+      padding:4px 8px; cursor:pointer; font-size:16px; border-bottom:1px solid #f0f0f0;
+      display:flex; align-items:center; width:100%;
+    }
+    .date-item:hover{ background:#e3f2fd; }
+    .date-item input[type="checkbox"]{
+      margin-right:6px; cursor:pointer;
+    }
+    .date-item span{
+      line-height:1;
+    }
+    .date-item.hidden{ display:none; }
+
+    .date-panel-footer{
+      padding:6px 8px; border-top:1px solid #d4d4d4; background:#f8f9fa;
+      display:flex; justify-content:flex-end; gap:6px;
+    }
+    .panel-btn{
+      padding:4px 12px; border:1px solid #adadad; background:#fff; cursor:pointer;
+      font-size:13px; border-radius:2px;
+    }
+    .panel-btn:hover{ background:#f0f0f0; }
+    .panel-btn.primary{ background:#0078d4; color:#fff; border-color:#0078d4; }
+    .panel-btn.primary:hover{ background:#106ebe; }
+
     .start-btn{ display:inline-flex; align-items:center; gap:8px; }
     .start-btn svg{ width:30px; height:30px; }
 
     .visually-hidden{ position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }
 
-    .count { text-align: right; padding: 6px 20px 8px; font-weight: bold; color: var(--navy); }
+    .count { white-space: nowrap; padding: 6px 20px 8px; font-weight: bold; color: var(--navy); font-size: 28px; }
+    body[data-theme="dark"] .count { color: white; }
+    body[data-theme="dark"] .app-title { color: white; }
+    body[data-theme="dark"] .toplink-btn { color: white !important; }
+    body[data-theme="dark"] #toMySolBtn { color: white !important; }
 
     .table-scroll{
       height: calc(100vh - (220px + 10px + 52px + 14px + var(--bottom-bar-h)));
@@ -271,18 +337,6 @@
     }
     .bottom-hscroll .spacer{ height:1px; width:1px; }
 
-    .date-panel{
-      position:absolute; top:calc(100% + 8px); left:10px; width:340px; max-height:340px;
-      background:#fff; border:1px solid var(--grid-blue); border-radius:12px;
-      box-shadow:0 8px 24px rgba(16,24,40,0.12); padding:8px; overflow:auto; z-index:80; display:none;
-    }
-    .date-panel.open{ display:block; }
-    .tree{ list-style:none; margin:0; padding:0; }
-    .tree details{ border:1px solid var(--grid-blue); border-radius:8px; padding:4px 6px; margin:6px 0; }
-    .tree summary{ cursor:pointer; font-weight:700; }
-    .tree .node{ margin:4px 0 4px 14px; }
-    .tree .node input[type="checkbox"]{ margin-right:6px; }
-    .tree .path{ font-size:12px; opacity:.75; margin-left:8px; }
 
     body[data-theme="dark"] #keyword{ background:#fff !important; color:#0a0a0a !important; border-color:#9bb0ff !important; }
     body[data-theme="dark"] #applyBtn{ background:#fff !important; color:#0a0a0a !important; border-color:#9bb0ff !important; }
@@ -295,13 +349,13 @@
       <div class="title-row">
         <h1 class="app-title">SAM.gov Filter Tool</h1>
         <div class="title-actions">
-          <a href="/my-solicitations" id="toMySolBtn" class="toplink-btn">Go to My Solicitations Page</a>
+          <a href="/my-solicitations" id="toMySolBtn" class="toplink-btn" target="_blank">Open My Solicitations Page</a>
           <button id="themeToggle" type="button" title="Toggle theme">🌓</button>
         </div>
       </div>
     </header>
 
-    <!-- PROJECT TRACKER BUTTON -->
+    <!-- PROJECT TRACKER & AI SUMMARY BUTTONS -->
     <div class="project-tracker-cta">
       <a href="/project_tracking" class="btn-project-tracker" target="_blank" rel="noopener">
         <div class="btn-content">
@@ -317,54 +371,78 @@
           </div>
         </div>
       </a>
-    </div>
-
-    <div class="controls-wrap">
-      <div class="controls" id="controls">
-        <button id="uploadBtn" class="star-btn" type="button" title="Upload Excel/CSV File into data/">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M12 3l2.94 5.95 6.56.95-4.75 4.64 1.12 6.53L12 18.9 6.13 21.07l1.12-6.53L2.5 9.9l6.56-.95L12 3z"
-                  stroke="currentColor" stroke-width="1.2" fill="currentColor"/>
-          </svg>
-          Upload Excel/CSV File
-        </button>
-        <input id="uploadInput" class="visually-hidden" type="file" accept=".csv,.xlsx,.xls" />
-
-        <button id="lockColsBtn" class="lock-btn" type="button" aria-pressed="false" title="Lock column widths">🔓 Columns Unlocked</button>
-
-        <div style="position:relative;">
-          <button id="dateBtn" class="date-btn" type="button" aria-expanded="false" aria-controls="datePanel">
-            📅 Response Date Search
-            <span class="date-summary" id="dateSummary">(All dates)</span>
-          </button>
-          <div id="datePanel" class="date-panel" role="dialog" aria-label="Response Date Search">
-            <div class="panel-actions" style="justify-content:space-between; align-items:center; display:flex; gap:8px; margin-bottom:6px;">
-              <strong>Select date ranges (multi-select)</strong>
-              <div>
-                <button id="clearDateBtn" type="button">Clear</button>
-                <button id="applyDateBtn" type="button">Apply</button>
-              </div>
-            </div>
-            <ul id="dateTree" class="tree" aria-live="polite"></ul>
+      <button id="generateAISummaryBtn" class="btn-project-tracker" style="margin-left: 1rem; background: linear-gradient(135deg, #0066cc, #0052a3);">
+        <div class="btn-content">
+          <div class="btn-icon">
+            🤖
+          </div>
+          <div class="btn-text">
+            <div class="btn-title">Generate AI Summary</div>
+            <div class="btn-subtitle">Create summaries for all rows</div>
+          </div>
+          <div class="btn-arrow">
+            ⚡
           </div>
         </div>
-
-        <input id="keyword" type="text" placeholder="Keyword in Title/Description" />
-
-        <button id="downloadBtn" class="start-btn" type="button" title="Download current filtered rows as Excel">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M12 3v10m0 0l4-4m-4 4l-4-4M4 20h16"
-                  stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Download Updated File
-        </button>
-
-        <button id="applyBtn" type="button" title="Apply filters">Apply</button>
-        <button id="resetBtn" type="button" title="Clear filters">Reset</button>
-      </div>
+      </button>
     </div>
 
-    <div class="count">Total Solicitations: <span id="total-count">{{ total_count }}</span></div>
+    <div style="display: flex; align-items: flex-end; gap: 15px; padding: 4px 50px 12px; justify-content: center;">
+      <div class="controls-wrap">
+        <div class="controls" id="controls">
+          <button id="uploadBtn" class="star-btn" type="button" title="Upload Excel/CSV File into data/">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 3l2.94 5.95 6.56.95-4.75 4.64 1.12 6.53L12 18.9 6.13 21.07l1.12-6.53L2.5 9.9l6.56-.95L12 3z"
+                    stroke="currentColor" stroke-width="1.2" fill="currentColor"/>
+            </svg>
+            Upload Excel/CSV File
+          </button>
+          <input id="uploadInput" class="visually-hidden" type="file" accept=".csv,.xlsx,.xls" />
+
+          <button id="lockColsBtn" class="lock-btn" type="button" aria-pressed="false" title="Lock column widths">🔓 Columns Unlocked</button>
+
+          <div style="position:relative;">
+            <button id="dateBtn" class="date-btn" type="button" aria-expanded="false" aria-controls="datePanel">
+              📅 Date Filter
+              <span class="date-summary" id="dateSummary">(All dates)</span>
+            </button>
+            <div id="datePanel" class="date-panel" role="dialog" aria-label="Date Filter">
+              <div class="date-panel-header">
+                <div class="search-box">
+                  <input type="text" id="dateSearch" placeholder="Search dates..." />
+                </div>
+                <div class="select-all-section">
+                  <label class="select-all-label">
+                    <input type="checkbox" id="selectAllDates" />
+                    <span>(Select All)</span>
+                  </label>
+                </div>
+              </div>
+              <div id="dateList" class="date-list"></div>
+              <div class="date-panel-footer">
+                <button id="clearDateBtn" type="button" class="panel-btn">Clear</button>
+                <button id="applyDateBtn" type="button" class="panel-btn primary">OK</button>
+              </div>
+            </div>
+          </div>
+
+          <input id="keyword" type="text" placeholder="Keyword in Title/Description" />
+
+          <button id="downloadBtn" class="start-btn" type="button" title="Download current filtered rows as Excel">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 3v10m0 0l4-4m-4 4l-4-4M4 20h16"
+                    stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Download Updated File
+          </button>
+
+          <button id="applyBtn" type="button" title="Apply filters">Apply</button>
+          <button id="resetBtn" type="button" title="Clear filters">Reset</button>
+        </div>
+      </div>
+
+      <div class="count">Total Solicitations: <span id="total-count">{{ total_count }}</span></div>
+    </div>
   </div>
 
   <section class="table-scroll" id="scrollArea">
@@ -390,7 +468,22 @@
           <tr>
             {% for col in columns %}
               {% set lc = col|lower %}
-              {% if 'summary' in lc %}
+              {% if col == 'Highlight Summary' %}
+                <td data-col="{{ col }}" class="highlight-summary" style="padding: 8px; max-width: 350px;">
+                  <div class="ai-summary" style="background: #f0f8ff; border: 1px solid #ddd; border-radius: 4px; padding: 6px; margin-bottom: 8px; white-space: pre-line;">
+                    <div style="font-weight: bold; color: #0066cc; margin-bottom: 4px;">🤖 AI Summary:</div>
+                    <div class="ai-summary-content" data-notice-id="{{ s.get('Notice ID', '') }}">
+                      {% if s.get(col, '') %}
+                        {{ s.get(col, '') }}
+                      {% else %}
+                        <span style="font-style: italic; color: #666;">Click "Generate AI Summary" button above to generate summaries for all rows</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <input type="text" value="{{ s.get(col, '') }}" placeholder="Add your highlights..."
+                         style="width: 100%; border: 1px solid #ccc; background: white; padding: 4px; border-radius: 3px;" />
+                </td>
+              {% elif 'summary' in lc %}
                 <td data-col="{{ col }}" class="summary">{{ s.get(col, '')|safe }}</td>
               {% elif 'desc' in lc %}
                 <td data-col="{{ col }}" class="desc">{{ s.get(col, '') }}</td>
@@ -450,6 +543,234 @@
     })();
 
     var COLUMNS = {{ columns|tojson|safe }};
+
+    /* ---------- Excel-style Date Filter ---------- */
+    var selectedDates = new Set();
+    var allDates = [];
+
+    function findCurrentResponseDateColumn() {
+      var ths = qa('thead th');
+      for (var i = 0; i < ths.length; i++) {
+        var colName = (ths[i].getAttribute('data-col') || ths[i].textContent || '').trim().toLowerCase();
+        if (colName === 'current response date' ||
+            (colName.includes('response') && colName.includes('date'))) {
+          return i;
+        }
+      }
+      return -1;
+    }
+
+    function parseDate(dateStr) {
+      if (!dateStr || dateStr.trim() === '') return null;
+      var d = new Date(dateStr);
+      if (!isNaN(d.getTime())) return d;
+
+      // Try MM/DD/YYYY format
+      var match = dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+      if (match) {
+        var month = parseInt(match[1]);
+        var day = parseInt(match[2]);
+        var year = parseInt(match[3]);
+        if (year < 100) year += 2000;
+        var parsed = new Date(year, month - 1, day);
+        if (!isNaN(parsed.getTime())) return parsed;
+      }
+      return null;
+    }
+
+    function formatDateForDisplay(date) {
+      var month = (date.getMonth() + 1).toString().padStart(2, '0');
+      var day = date.getDate().toString().padStart(2, '0');
+      var year = date.getFullYear();
+      return month + '/' + day + '/' + year;
+    }
+
+    function gatherDatesFromCurrentData() {
+      var dateColIndex = findCurrentResponseDateColumn();
+      if (dateColIndex === -1) return [];
+
+      var rows = qa('#solicitation-body tr');
+      var dates = [];
+      var uniqueDates = new Set();
+
+      for (var i = 0; i < rows.length; i++) {
+        var cell = rows[i].children[dateColIndex];
+        if (!cell) continue;
+
+        var dateText = cell.textContent.trim();
+        var parsedDate = parseDate(dateText);
+
+        if (parsedDate) {
+          var formatted = formatDateForDisplay(parsedDate);
+          if (!uniqueDates.has(formatted)) {
+            uniqueDates.add(formatted);
+            dates.push({
+              original: dateText,
+              formatted: formatted,
+              date: parsedDate
+            });
+          }
+        }
+      }
+
+      // Sort dates chronologically
+      dates.sort(function(a, b) {
+        return a.date.getTime() - b.date.getTime();
+      });
+
+      return dates;
+    }
+
+    function buildDateList() {
+      allDates = gatherDatesFromCurrentData();
+      var dateList = byId('dateList');
+      var selectAllCheckbox = byId('selectAllDates');
+
+      if (allDates.length === 0) {
+        dateList.innerHTML = '<div style="padding: 12px; text-align: center; color: #666;">No dates found in Current Response Date column</div>';
+        return;
+      }
+
+      // If no dates are currently selected, select all by default (initial state)
+      if (selectedDates.size === 0) {
+        allDates.forEach(function(dateInfo) {
+          selectedDates.add(dateInfo.formatted);
+        });
+      }
+
+      dateList.innerHTML = '';
+
+      allDates.forEach(function(dateInfo) {
+        var item = document.createElement('div');
+        item.className = 'date-item';
+        item.setAttribute('data-date', dateInfo.formatted);
+
+        var checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = selectedDates.has(dateInfo.formatted);
+
+        var label = document.createElement('span');
+        label.textContent = dateInfo.formatted;
+
+        item.appendChild(checkbox);
+        item.appendChild(label);
+
+        // Click handlers
+        item.addEventListener('click', function(e) {
+          if (e.target !== checkbox) {
+            checkbox.checked = !checkbox.checked;
+          }
+          toggleDateSelection(dateInfo.formatted, checkbox.checked);
+          updateSelectAllState();
+        });
+
+        checkbox.addEventListener('change', function() {
+          toggleDateSelection(dateInfo.formatted, this.checked);
+          updateSelectAllState();
+        });
+
+        dateList.appendChild(item);
+      });
+
+      updateSelectAllState();
+      updateDateSummary();
+    }
+
+    function toggleDateSelection(dateStr, isSelected) {
+      if (isSelected) {
+        selectedDates.add(dateStr);
+      } else {
+        selectedDates.delete(dateStr);
+      }
+      updateSelectAllState();
+      updateDateSummary();
+    }
+
+    function updateSelectAllState() {
+      var selectAllCheckbox = byId('selectAllDates');
+      if (!selectAllCheckbox || allDates.length === 0) return;
+
+      var allChecked = selectedDates.size === allDates.length;
+      var noneChecked = selectedDates.size === 0;
+
+      if (allChecked) {
+        selectAllCheckbox.checked = true;
+        selectAllCheckbox.indeterminate = false;
+      } else if (noneChecked) {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = false;
+      } else {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = true;
+      }
+    }
+
+    function updateDateSummary() {
+      var summary = byId('dateSummary');
+      if (selectedDates.size === 0 || selectedDates.size === allDates.length) {
+        summary.textContent = '(All dates)';
+      } else {
+        summary.textContent = '(' + selectedDates.size + ' selected)';
+      }
+    }
+
+    function filterDateItems(searchTerm) {
+      var items = qa('.date-item');
+      var term = searchTerm.toLowerCase();
+
+      items.forEach(function(item) {
+        var text = item.textContent.toLowerCase();
+        if (text.includes(term)) {
+          item.classList.remove('hidden');
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+    }
+
+    function clearDateFilter() {
+      selectedDates.clear();
+      var checkboxes = qa('#dateList input[type="checkbox"]');
+      checkboxes.forEach(function(cb) { cb.checked = false; });
+
+      // Update select all checkbox
+      var selectAllCheckbox = byId('selectAllDates');
+      if (selectAllCheckbox) {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = false;
+      }
+
+      updateDateSummary();
+    }
+
+    function toggleAllDates(shouldSelect) {
+      var checkboxes = qa('#dateList input[type="checkbox"]');
+
+      if (shouldSelect) {
+        // Select all dates
+        selectedDates.clear();
+        allDates.forEach(function(dateInfo) {
+          selectedDates.add(dateInfo.formatted);
+        });
+        // Update all individual checkboxes to checked
+        checkboxes.forEach(function(cb) {
+          cb.checked = true;
+        });
+      } else {
+        // Unselect all dates
+        selectedDates.clear();
+        // Update all individual checkboxes to unchecked
+        checkboxes.forEach(function(cb) {
+          cb.checked = false;
+        });
+      }
+
+      updateDateSummary();
+    }
+
+    function getSelectedDatesArray() {
+      return Array.from(selectedDates);
+    }
 
     /* ---------- Width limits ---------- */
     var WIDTH_LIMITS = [
@@ -524,147 +845,14 @@
     }
     function isLocked(){ return localStorage.getItem(LS_LOCKED) === 'true'; }
 
-    /* ---------- Date tree filter ---------- */
-    var MONTHS=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
-    var WEEKS=[[1,7],[8,14],[15,21],[22,28],[29,31]];
-    var dateSelected=[];
 
-    function setDateSummary(){
-      if(!dateSelected.length){ byId('dateSummary').textContent="(All dates)"; return; }
-      var parts = dateSelected.map(function(b){
-        var y=b.year;
-        if(b.day!=null) return y+"/"+MONTHS[b.month-1]+"/"+String(b.day).padStart(2,'0');
-        if(b.week_start!=null && b.week_end!=null) return y+"/"+MONTHS[b.month-1]+"/"+b.week_start+"-"+b.week_end;
-        if(b.month!=null) return y+"/"+MONTHS[b.month-1];
-        return ""+y;
-      });
-      byId('dateSummary').textContent = parts.join(" • ");
-    }
-    function clearDateFilter(){ dateSelected=[]; setDateSummary(); }
-    function parseDateSafe(s){
-      var d=new Date(s); if(!isNaN(d.getTime())) return d;
-      var m=String(s).match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
-      if(m){
-        var mm=m[1], dd=m[2], yyyy=m[3];
-        if(yyyy.length===2) yyyy='20'+yyyy;
-        var d2=new Date(Number(yyyy), Number(mm)-1, Number(dd));
-        if(!isNaN(d2.getTime())) return d2;
-      }
-      return null;
-    }
-    function findResponseDateColIndex(){
-      var ths = qa('thead th');
-      var idx = -1;
-      for (var i=0;i<ths.length;i++){
-        var t = (ths[i].getAttribute('data-col') || ths[i].textContent || '').trim().toLowerCase();
-        if (t === 'current response date'){ idx = i; break; }
-      }
-      if (idx === -1){
-        for (var j=0;j<ths.length;j++){
-          var tt=(ths[j].getAttribute('data-col') || ths[j].textContent || '').trim().toLowerCase();
-          if (tt.indexOf('response')!==-1 && tt.indexOf('date')!==-1){ idx=j; break; }
-        }
-      }
-      return idx;
-    }
-    function gatherDatesFromTable(){
-      var idx=findResponseDateColIndex(); if(idx===-1) return [];
-      var rows=qa('#solicitation-body tr'); var dates=[];
-      for (var i=0;i<rows.length;i++){
-        var cell=rows[i].children[idx]; if(!cell) continue;
-        var text=cell.textContent.trim(); var d=parseDateSafe(text); if(d) dates.push(d);
-      }
-      return dates;
-    }
-    function buildDateTree(){
-      var treeEl=byId('dateTree'); treeEl.innerHTML="";
-      var dates=gatherDatesFromTable();
-      if(!dates.length){ treeEl.innerHTML='<li style="padding:6px 8px;">No dates found in "Current Response Date".</li>'; return; }
-      var map=new Map();
-      dates.forEach(function(d){
-        var y=d.getFullYear(), m=d.getMonth()+1, day=d.getDate();
-        if(!map.has(y)) map.set(y, new Map());
-        var mm=map.get(y);
-        if(!mm.has(m)) mm.set(m,new Set());
-        mm.get(m).add(day);
-      });
-      function addCheck(label,bucket,container){
-        var id='chk_'+Math.random().toString(36).slice(2);
-        var wrap=document.createElement('div'); wrap.className='node';
-        var cb=document.createElement('input'); cb.type='checkbox'; cb.id=id;
-        cb.checked = dateSelected.some(function(b){
-          return b.year===bucket.year &&
-                 (bucket.month==null?null:bucket.month)===(b.month==null?null:b.month) &&
-                 (bucket.week_start==null?null:bucket.week_start)===(b.week_start==null?null:b.week_start) &&
-                 (bucket.week_end==null?null:bucket.week_end)===(b.week_end==null?null:b.week_end) &&
-                 (bucket.day==null?null:bucket.day)===(b.day==null?null:b.day);
-        });
-        cb.addEventListener('change', function(){
-          var idx = -1;
-          for (var k=0;k<dateSelected.length;k++){
-            var b=dateSelected[k];
-            if (b.year===bucket.year &&
-                (bucket.month==null?null:bucket.month)===(b.month==null?null:b.month) &&
-                (bucket.week_start==null?null:bucket.week_start)===(b.week_start==null?null:b.week_start) &&
-                (bucket.week_end==null?null:bucket.week_end)===(b.week_end==null?null:b.week_end) &&
-                (bucket.day==null?null:bucket.day)===(b.day==null?null:b.day)) { idx=k; break; }
-          }
-          if (cb.checked && idx===-1) dateSelected.push(bucket);
-          if (!cb.checked && idx!==-1) dateSelected.splice(idx,1);
-          setDateSummary();
-        });
-        var lbl=document.createElement('label'); lbl.setAttribute('for',id); lbl.textContent=label;
-        wrap.appendChild(cb); wrap.appendChild(lbl); container.appendChild(wrap);
-      }
-      Array.from(map.keys()).sort(function(a,b){return b-a;}).forEach(function(year){
-        var yDetails=document.createElement('details'); yDetails.open=true;
-        yDetails.innerHTML='<summary>'+year+' <span class="path">(Year)</span></summary>';
-        var yNode=document.createElement('div'); yNode.className='node';
-        addCheck('Filter '+year, {year:year}, yNode);
-        yDetails.appendChild(yNode);
-
-        var monthsDiv=document.createElement('div'); monthsDiv.className='node';
-        var months=map.get(year);
-        Array.from(months.keys()).sort(function(a,b){return a-b;}).forEach(function(month){
-          var mDetails=document.createElement('details');
-          mDetails.innerHTML='<summary>'+MONTHS[month-1]+' <span class="path">(Month)</span></summary>';
-          var mNode=document.createElement('div'); mNode.className='node';
-          addCheck('Filter '+year+'/'+MONTHS[month-1], {year:year, month:month}, mNode);
-          mDetails.appendChild(mNode);
-
-          var daysSet=months.get(month);
-          var maxDay=Math.max.apply(null, Array.from(daysSet));
-          var weekDiv=document.createElement('div'); weekDiv.className='node';
-          WEEKS.forEach(function(pair){
-            var s=pair[0], e=pair[1];
-            if(s>maxDay) return;
-            var ee=Math.min(e,maxDay);
-            var hasAny=false; for (var d=s; d<=ee; d++){ if(daysSet.has(d)){ hasAny=true; break; } }
-            if(!hasAny) return;
-            var wDetails=document.createElement('details');
-            wDetails.innerHTML='<summary>'+s+'-'+ee+' <span class="path">(Week)</span></summary>';
-            var wNode=document.createElement('div'); wNode.className='node';
-            addCheck('Filter '+year+'/'+MONTHS[month-1]+'/'+s+'-'+ee, {year:year, month:month, week_start:s, week_end:ee}, wNode);
-            var daysWrap=document.createElement('div'); daysWrap.className='node';
-            for (var d=s; d<=ee; d++){ if(!daysSet.has(d)) continue; addCheck('Day '+d, {year:year, month:month, day:d}, daysWrap); }
-            wNode.appendChild(daysWrap);
-            wDetails.appendChild(wNode);
-            weekDiv.appendChild(wDetails);
-          });
-          mDetails.appendChild(weekDiv);
-          monthsDiv.appendChild(mDetails);
-        });
-        yDetails.appendChild(monthsDiv);
-        treeEl.appendChild(yDetails);
-      });
-      setDateSummary();
-    }
 
     /* ---------- Filters / rendering ---------- */
     async function applyFilters(){
       var keyword = byId("keyword").value;
+      var dateFilter = getSelectedDatesArray();
 
-      var payload = { keyword: keyword, date_filter: dateSelected };
+      var payload = { keyword: keyword, date_filter: dateFilter };
 
       var res = await fetch("/filter",{
         method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload)
@@ -682,7 +870,20 @@
         tr.innerHTML = cols.map(function(col){
           var val = (row[col] != null ? row[col] : "");
           var lc = String(col).toLowerCase();
-          if (lc.indexOf("summary")!==-1) {
+          if (col === "Highlight Summary") {
+            var noticeId = row['Notice ID'] || '';
+            var summaryContent = val || '<span style="font-style: italic; color: #666;">Click "Generate AI Summary" button above to generate summaries for all rows</span>';
+            return '<td data-col="'+col+'\" class="highlight-summary" style="padding: 8px; max-width: 350px;">'+
+                     '<div class="ai-summary" style="background: #f0f8ff; border: 1px solid #ddd; border-radius: 4px; padding: 6px; margin-bottom: 8px; white-space: pre-line;">'+
+                       '<div style="font-weight: bold; color: #0066cc; margin-bottom: 4px;">🤖 AI Summary:</div>'+
+                       '<div class="ai-summary-content" data-notice-id="'+noticeId+'">'+
+                         summaryContent +
+                       '</div>'+
+                     '</div>'+
+                     '<input type="text" value="" placeholder="Add your highlights..." '+
+                     'style="width: 100%; border: 1px solid #ccc; background: white; padding: 4px; border-radius: 3px;" />'+
+                   '</td>';
+          } else if (lc.indexOf("summary")!==-1) {
             return '<td data-col="'+col+'\" class="summary">'+val+'</td>';
           } else if (lc.indexOf("desc")!==-1) {
             return '<td data-col="'+col+'\" class="desc">'+val+'</td>';
@@ -713,31 +914,81 @@
       applyStoredWidths();
       updateBottomBarWidth();
 
-      if (q('#datePanel').classList.contains('open')) buildDateTree();
+      // Rebuild date list after filtering to show current available dates
+      if (datePanel.classList.contains('open')) {
+        buildDateList();
+      }
     }
 
-    function resetFilters(){ byId("keyword").value = ""; clearDateFilter(); applyFilters(); }
+    function resetFilters(){
+      byId("keyword").value = "";
+      selectedDates.clear();
+      updateDateSummary();
+      applyFilters();
+    }
 
     byId("applyBtn").addEventListener("click", applyFilters);
     byId("resetBtn").addEventListener("click", resetFilters);
     byId("keyword").addEventListener("keydown", function(e){ if(e.key==="Enter") applyFilters(); });
 
+    /* ---------- Date dropdown event handlers ---------- */
     var dateBtn = byId('dateBtn');
     var datePanel = byId('datePanel');
-    byId('applyDateBtn').addEventListener('click', function(){ datePanel.classList.remove('open'); dateBtn.setAttribute('aria-expanded','false'); applyFilters(); });
-    byId('clearDateBtn').addEventListener('click', function(){ clearDateFilter(); setDateSummary(); });
-    dateBtn.addEventListener('click', function(){
-      var open = !datePanel.classList.contains('open');
-      if (open) datePanel.classList.add('open'); else datePanel.classList.remove('open');
-      dateBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      if (open) buildDateTree();
-    });
-    document.addEventListener('click', function(e){
-      if (!datePanel.contains(e.target) && !dateBtn.contains(e.target)) {
+    var dateSearch = byId('dateSearch');
+    var selectAllDates = byId('selectAllDates');
+    var clearDateBtn = byId('clearDateBtn');
+    var applyDateBtn = byId('applyDateBtn');
+
+    // Toggle date panel
+    dateBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var isOpen = datePanel.classList.contains('open');
+      if (isOpen) {
         datePanel.classList.remove('open');
-        dateBtn.setAttribute('aria-expanded','false');
+        dateBtn.setAttribute('aria-expanded', 'false');
+      } else {
+        datePanel.classList.add('open');
+        dateBtn.setAttribute('aria-expanded', 'true');
+        buildDateList();
+        dateSearch.value = '';
       }
     });
+
+    // Close panel when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!datePanel.contains(e.target) && !dateBtn.contains(e.target)) {
+        datePanel.classList.remove('open');
+        dateBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Search functionality
+    dateSearch.addEventListener('input', function() {
+      filterDateItems(this.value);
+    });
+
+    // Select All functionality
+    selectAllDates.addEventListener('change', function() {
+      var isChecked = this.checked;
+      toggleAllDates(isChecked);
+
+      // Manually set the select all state to match what we just did
+      this.checked = isChecked;
+      this.indeterminate = false;
+    });
+
+    // Clear button
+    clearDateBtn.addEventListener('click', function() {
+      clearDateFilter();
+    });
+
+    // Apply button
+    applyDateBtn.addEventListener('click', function() {
+      datePanel.classList.remove('open');
+      dateBtn.setAttribute('aria-expanded', 'false');
+      applyFilters();
+    });
+
 
     /* ---------- Upload handling ---------- */
     var uploadBtn = byId('uploadBtn');
@@ -761,7 +1012,8 @@
     async function downloadFiltered(){
       try{
         var keyword = byId("keyword").value;
-        var payload = { keyword: keyword, date_filter: dateSelected };
+        var dateFilter = getSelectedDatesArray();
+        var payload = { keyword: keyword, date_filter: dateFilter };
         var res = await fetch("/export",{ method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload) });
         if(!res.ok){ alert("Export failed."); return; }
         var blob = await res.blob();
@@ -978,6 +1230,150 @@
       });
     }
 
+    /* ---------- AI Summary Generation ---------- */
+    function initAISummaryButton() {
+      var generateBtn = byId('generateAISummaryBtn');
+      if (generateBtn) {
+        generateBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          generateAllAISummaries();
+        });
+      }
+    }
+
+    async function generateAllAISummaries() {
+      var generateBtn = byId('generateAISummaryBtn');
+      var table = byId('result-table');
+      if (!table) {
+        alert('No table found');
+        return;
+      }
+
+      // Get all rows with data
+      var rows = qa('tbody tr', table);
+      if (rows.length === 0) {
+        alert('No data rows found');
+        return;
+      }
+
+      // First check if API key is configured by testing with a simple request
+      try {
+        var testResponse = await fetch('/generate-ai-summary', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ description: 'test' })
+        });
+
+        if (testResponse.status === 500) {
+          var testData = await testResponse.json();
+          if (testData.message && testData.message.includes('OpenAI API key not configured')) {
+            alert('⚠️ OpenAI API key is not configured!\n\nTo enable AI summaries, please set the OPENAI_API_KEY environment variable and restart the application.\n\nWithout the API key, AI summary generation is disabled.');
+            return;
+          }
+        }
+      } catch (error) {
+        console.error('Error checking API key status:', error);
+      }
+
+      // Show loading state
+      generateBtn.disabled = true;
+      var originalContent = generateBtn.innerHTML;
+      generateBtn.innerHTML = '<div class="btn-content"><div class="btn-icon">⏳</div><div class="btn-text"><div class="btn-title">Generating...</div><div class="btn-subtitle">Processing all rows</div></div></div>';
+
+      var processed = 0;
+      var successful = 0;
+      var apiKeyError = false;
+
+      try {
+        for (var i = 0; i < rows.length; i++) {
+          var row = rows[i];
+
+          // Find description column
+          var descCell = row.querySelector('td[data-col*="escription"], td[data-col*="esc"]');
+          if (!descCell) {
+            processed++;
+            continue;
+          }
+
+          var description = descCell.textContent.trim();
+          if (!description || description.length < 50) {
+            processed++;
+            continue;
+          }
+
+          // Find AI summary content area
+          var summaryContent = row.querySelector('.ai-summary-content');
+          if (!summaryContent) {
+            processed++;
+            continue;
+          }
+
+          // Get Notice ID for this row
+          var noticeId = summaryContent.getAttribute('data-notice-id') || '';
+
+          try {
+            // Show processing for this row
+            summaryContent.innerHTML = '<span style="color: #0066cc;">Processing...</span>';
+
+            var response = await fetch('/generate-ai-summary', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                description: description,
+                notice_id: noticeId
+              })
+            });
+
+            var data = await response.json();
+
+            if (data.ok && data.summary) {
+              summaryContent.innerHTML = data.summary;
+              successful++;
+            } else {
+              summaryContent.innerHTML = '<span style="color: #ff6600;">Error: ' + (data.message || 'Failed to generate') + '</span>';
+              if (data.message && data.message.includes('OpenAI API key not configured')) {
+                apiKeyError = true;
+              }
+            }
+
+            processed++;
+
+            // Update button with progress
+            generateBtn.innerHTML = '<div class="btn-content"><div class="btn-icon">⏳</div><div class="btn-text"><div class="btn-title">Processing...</div><div class="btn-subtitle">' + processed + '/' + rows.length + ' completed</div></div></div>';
+
+            // Small delay to prevent overwhelming the API
+            await new Promise(resolve => setTimeout(resolve, 200));
+
+          } catch (error) {
+            console.error('Error processing row ' + i + ':', error);
+            summaryContent.innerHTML = '<span style="color: #ff0000;">Error: ' + error.message + '</span>';
+            processed++;
+          }
+        }
+
+        // Show completion message
+        var message = 'AI Summary generation completed!\n\nProcessed: ' + processed + ' rows\nSuccessful: ' + successful + ' summaries';
+
+        if (apiKeyError && successful === 0) {
+          message += '\n\n⚠️ All summaries failed because OpenAI API key is not configured.\n\nTo enable AI summaries:\n1. Set OPENAI_API_KEY environment variable\n2. Restart the application\n3. Try generating summaries again';
+        } else if (successful === 0) {
+          message += '\n\n⚠️ No summaries were generated successfully.\nThis may be due to API issues or configuration problems.';
+        } else if (successful < processed) {
+          message += '\n\nSome rows failed to generate summaries. Check individual row error messages for details.';
+        }
+
+        alert(message);
+
+      } catch (error) {
+        console.error('Bulk AI Summary Error:', error);
+        alert('Error during bulk generation: ' + error.message);
+      } finally {
+        // Reset button
+        generateBtn.disabled = false;
+        generateBtn.innerHTML = originalContent;
+      }
+    }
+
     /* ---------- Init ---------- */
     byId("downloadBtn").addEventListener("click", downloadFiltered);
     byId("lockColsBtn").addEventListener("click", toggleLock);
@@ -991,6 +1387,7 @@
       enforceWidthLimits(true);
       applyStoredWidths();
       updateBottomBarWidth();
+      initAISummaryButton();
     });
   </script>
 </body>

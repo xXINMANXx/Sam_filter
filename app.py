@@ -5,11 +5,13 @@ Enhanced with project tracking, SAM.gov automation, and persistent browser sessi
 """
 
 import os
+import secrets
 from io import BytesIO
 from datetime import datetime, timedelta
 import pandas as pd
 from flask import Flask, render_template, request, jsonify, send_file, session, flash, redirect, url_for
 from werkzeug.utils import secure_filename
+from werkzeug.security import safe_join
 import requests
 import shutil
 import logging
@@ -18,6 +20,7 @@ import time
 import re as _re
 from pathlib import Path as _Path
 from urllib.parse import urljoin, urlparse
+import openai
 
 # Selenium imports with error handling
 try:
@@ -53,14 +56,36 @@ app = Flask(
     template_folder="templates"
 )
 
+# Production/Debug mode detection
+PRODUCTION_MODE = os.environ.get('PRODUCTION_MODE', 'false').lower() == 'true'
+
+# Generate secure secret key if not provided in environment
+def get_secret_key():
+    secret_key = os.environ.get('SECRET_KEY')
+    if not secret_key:
+        # Generate a secure random key and warn user to set environment variable
+        secret_key = secrets.token_hex(32)
+        print("[SECURITY WARNING] No SECRET_KEY environment variable found.")
+        print("[SECURITY WARNING] Generated temporary key. Set SECRET_KEY environment variable for production!")
+    return secret_key
+
 app.config.update(
-    SECRET_KEY=os.environ.get('SECRET_KEY', 'gov-contracting-secret-key-change-in-production'),
+    SECRET_KEY=get_secret_key(),
     MAX_CONTENT_LENGTH=250 * 1024 * 1024,  # 250MB
     UPLOAD_FOLDER='uploads',
-    SESSION_COOKIE_SECURE=False,
+    SESSION_COOKIE_SECURE=False,  # Set to True when using HTTPS
     SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE='Strict',
     PERMANENT_SESSION_LIFETIME=timedelta(days=7)
 )
+
+# OpenAI configuration
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
+if OPENAI_API_KEY:
+    openai.api_key = OPENAI_API_KEY
+    print("[AI] OpenAI API key configured")
+else:
+    print("[AI] WARNING: OPENAI_API_KEY environment variable not set. AI summary features will be disabled.")
 
 # Directory configuration
 DATA_DIR = "data"
@@ -70,6 +95,7 @@ ACTIVE_MARKER = os.path.join(DATA_DIR, ".active_path.txt")
 ALLOWED_EXTS = {".csv", ".xlsx", ".xls"}
 MY_FILE = os.path.join(DATA_DIR, "my_solicitations.xlsx")
 BACKUP_DIR = os.path.join(DATA_DIR, "backups")
+AI_SUMMARIES_FILE = os.path.join(DATA_DIR, "ai_summaries.json")
 
 # Ensure directories exist
 for directory in [DATA_DIR, UPLOAD_DIR, CONTRACTS_BASE, BACKUP_DIR]:
@@ -79,6 +105,7 @@ for directory in [DATA_DIR, UPLOAD_DIR, CONTRACTS_BASE, BACKUP_DIR]:
 _persistent_driver = None
 _session_start_time = None
 _session_timeout = 3600  # 1 hour timeout
+_max_session_age = 14400  # 4 hours maximum session age for security
 
 
 # ====================== FILE MANAGEMENT ======================
@@ -224,6 +251,156 @@ def detect_current_response_date_col(df: pd.DataFrame) -> str | None:
     return _find_col(df, DATE_CANDS)
 
 
+def add_highlight_summary_column(df: pd.DataFrame) -> pd.DataFrame:
+    """Add a 'Highlight Summary' column after Description."""
+    if df.empty:
+        return df
+
+    # Make a copy to avoid modifying the original
+    df_copy = df.copy()
+
+    # Find the description column
+    desc_col = _find_col(df_copy, DESC_CANDS)
+
+    # Get current column order
+    columns = list(df_copy.columns)
+
+    # If description column exists, insert after it
+    if desc_col and desc_col in columns:
+        insert_idx = columns.index(desc_col) + 1
+    else:
+        # If no description column, insert at the end
+        insert_idx = len(columns)
+
+    # Insert the new column with empty values initially
+    df_copy.insert(insert_idx, "Highlight Summary", "")
+
+    # Populate existing AI summaries if we have a Notice ID column
+    notice_col = _find_notice_col(df_copy)
+    if notice_col:
+        # Load existing AI summaries
+        ai_summaries = load_ai_summaries()
+
+        # Populate the Highlight Summary column with existing AI summaries
+        for idx, row in df_copy.iterrows():
+            notice_id = str(row.get(notice_col, "")).strip()
+            if notice_id and notice_id in ai_summaries:
+                existing_summary = ai_summaries[notice_id].get("summary", "")
+                if existing_summary:
+                    df_copy.at[idx, "Highlight Summary"] = existing_summary
+                    print(f"[AI] Loaded existing summary for Notice ID: {notice_id}")
+
+    return df_copy
+
+
+def generate_ai_summary(description_text: str) -> str:
+    """Generate a 5-bullet point AI summary of the description text using OpenAI."""
+    if not OPENAI_API_KEY or not description_text or not description_text.strip():
+        return ""
+
+    try:
+        # Clean and prepare the description text
+        clean_description = description_text.strip()
+        if len(clean_description) < 50:  # Too short to summarize meaningfully
+            return ""
+
+        # Create the OpenAI client
+        client = openai.OpenAI(api_key=OPENAI_API_KEY)
+
+        # Prepare the prompt for summarization
+        prompt = f"""Please analyze the following government contract opportunity description and create exactly 5 key bullet points that summarize the most important aspects. Focus on:
+1. What the contract is for (main purpose/objective)
+2. Key requirements or specifications
+3. Important deliverables or outcomes
+4. Relevant technical details or constraints
+5. Any unique or notable aspects
+
+Format your response as exactly 5 bullet points, each starting with "• " and ending with a period.
+
+Description to analyze:
+{clean_description}"""
+
+        # Make the API call
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are an expert at analyzing government contract opportunities and creating concise, informative summaries for procurement professionals."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=300,
+            temperature=0.3,
+            top_p=0.9
+        )
+
+        # Extract and clean the response
+        summary = response.choices[0].message.content.strip()
+
+        # Ensure we have proper bullet points
+        if summary and not summary.startswith("•"):
+            # If response doesn't start with bullets, try to format it
+            lines = [line.strip() for line in summary.split('\n') if line.strip()]
+            if lines:
+                summary = '\n'.join([f"• {line}" if not line.startswith('•') else line for line in lines[:5]])
+
+        return summary
+
+    except Exception as e:
+        print(f"[AI] Error generating summary: {str(e)}")
+        return ""
+
+
+# ====================== AI SUMMARIES PERSISTENCE ======================
+def load_ai_summaries() -> dict:
+    """Load AI summaries from JSON file."""
+    if not os.path.exists(AI_SUMMARIES_FILE):
+        return {}
+
+    try:
+        with open(AI_SUMMARIES_FILE, 'r', encoding='utf-8') as f:
+            summaries = json.load(f)
+        print(f"[AI] Loaded {len(summaries)} AI summaries from {AI_SUMMARIES_FILE}")
+        return summaries
+    except Exception as e:
+        print(f"[AI] Error loading AI summaries: {str(e)}")
+        return {}
+
+
+def save_ai_summaries(summaries: dict):
+    """Save AI summaries to JSON file."""
+    try:
+        # Ensure data directory exists
+        os.makedirs(DATA_DIR, exist_ok=True)
+
+        with open(AI_SUMMARIES_FILE, 'w', encoding='utf-8') as f:
+            json.dump(summaries, f, indent=2, ensure_ascii=False)
+        print(f"[AI] Saved {len(summaries)} AI summaries to {AI_SUMMARIES_FILE}")
+    except Exception as e:
+        print(f"[AI] Error saving AI summaries: {str(e)}")
+
+
+def save_ai_summary_for_notice(notice_id: str, summary: str):
+    """Save a single AI summary for a specific Notice ID."""
+    if not notice_id or not summary:
+        return
+
+    summaries = load_ai_summaries()
+    summaries[notice_id] = {
+        "summary": summary,
+        "timestamp": datetime.now().isoformat()
+    }
+    save_ai_summaries(summaries)
+
+
+def get_ai_summary_for_notice(notice_id: str) -> str:
+    """Get AI summary for a specific Notice ID."""
+    if not notice_id:
+        return ""
+
+    summaries = load_ai_summaries()
+    summary_data = summaries.get(notice_id, {})
+    return summary_data.get("summary", "")
+
+
 # ====================== MY SOLICITATIONS HELPERS ======================
 def load_my_data(columns_fallback=None) -> pd.DataFrame:
     """Load My Solicitations; if missing, return empty (optionally with fallback columns)."""
@@ -352,7 +529,8 @@ def _get_persistent_edge_driver(download_dir: str):
     needs_new_session = (
         _persistent_driver is None or
         _session_start_time is None or
-        (current_time - _session_start_time) > _session_timeout
+        (current_time - _session_start_time) > _session_timeout or
+        (current_time - _session_start_time) > _max_session_age  # Force refresh for security
     )
     
     # Try to check if existing driver is still alive
@@ -405,12 +583,11 @@ def _get_persistent_edge_driver(download_dir: str):
             options.add_argument("--window-size=1200,800")
             options.add_argument("--window-position=200,100")
             
-            # Essential options for stability
-            options.add_argument("--no-sandbox")
+            # Essential options for stability and security
             options.add_argument("--disable-dev-shm-usage")
             options.add_argument("--disable-blink-features=AutomationControlled")
-            options.add_argument("--disable-web-security")
-            options.add_argument("--allow-running-insecure-content")
+            # Removed --disable-web-security and --allow-running-insecure-content for security
+            # Removed --no-sandbox - use proper sandboxing for security
             
             # Configure downloads
             prefs = {
@@ -1044,6 +1221,8 @@ def _cleanup_persistent_session():
 def index():
     """Main index page."""
     df = load_data()
+    if not df.empty:
+        df = add_highlight_summary_column(df)
     columns = list(df.columns) if not df.empty else []
     return render_template(
         "index.html",
@@ -1060,9 +1239,12 @@ def filter_data():
     if df.empty:
         return jsonify({"count": 0, "columns": [], "solicitations": []})
 
+    # Add the Highlight Summary column
+    df = add_highlight_summary_column(df)
+
     payload = request.get_json(silent=True) or {}
     keyword = (payload.get("keyword") or "").strip()
-    date_filter = payload.get("date_filter") or []  # list of bucket dicts
+    date_filter = payload.get("date_filter") or []  # list of date strings
 
     title_col = _find_col(df, TITLE_CANDS)
     desc_col  = _find_col(df, DESC_CANDS)
@@ -1079,33 +1261,32 @@ def filter_data():
             mask = mask | filtered[desc_col].astype(str).str.contains(keyword, case=False, na=False)
         filtered = filtered[mask]
 
-    # Multi-bucket date filter on "Current Response Date" (if present)
-    if resp_date_col and date_filter:
-        dates = pd.to_datetime(filtered[resp_date_col], errors="coerce", utc=False)
-        overall = pd.Series([False] * len(filtered), index=filtered.index)
-        buckets = date_filter if isinstance(date_filter, list) else [date_filter]
-        for bf in buckets:
-            if not isinstance(bf, dict):
-                continue
-            year = bf.get("year")
-            month = bf.get("month")  # 1-12
-            week_start = bf.get("week_start")
-            week_end   = bf.get("week_end")
-            day = bf.get("day")
+    # Date filter on "Current Response Date" (if present and dates selected)
+    if resp_date_col and date_filter and len(date_filter) > 0:
+        # Parse dates from the filtered data
+        def parse_date_for_comparison(date_str):
+            """Parse date and return it in MM/DD/YYYY format for comparison."""
+            if not date_str or pd.isna(date_str):
+                return None
 
-            local = pd.Series([True] * len(filtered), index=filtered.index)
-            if year is not None:
-                local &= (dates.dt.year == int(year))
-            if month is not None:
-                local &= (dates.dt.month == int(month))
-            if week_start is not None and week_end is not None:
-                d = dates.dt.day
-                local &= d.between(int(week_start), int(week_end), inclusive="both")
-            if day is not None:
-                local &= (dates.dt.day == int(day))
+            try:
+                # Try parsing with pandas
+                parsed = pd.to_datetime(str(date_str), errors='coerce')
+                if pd.isna(parsed):
+                    return None
+                return parsed.strftime('%m/%d/%Y')
+            except:
+                return None
 
-            overall |= local
-        filtered = filtered[overall]
+        # Convert all dates in the column to MM/DD/YYYY format for comparison
+        filtered['_temp_date_formatted'] = filtered[resp_date_col].apply(parse_date_for_comparison)
+
+        # Filter by selected dates
+        date_mask = filtered['_temp_date_formatted'].isin(date_filter)
+        filtered = filtered[date_mask]
+
+        # Remove the temporary column
+        filtered = filtered.drop('_temp_date_formatted', axis=1)
 
     return jsonify({
         "count": int(len(filtered)),
@@ -1118,15 +1299,29 @@ def filter_data():
 def upload_data():
     """Upload a CSV/XLSX into /data and set it as the active dataset."""
     ensure_data_dir()
+
+    # Input validation
     if "file" not in request.files:
         return jsonify({"ok": False, "message": "No file part"}), 400
+
     file = request.files["file"]
     if file.filename == "":
         return jsonify({"ok": False, "message": "No file selected"}), 400
 
+    # Validate file size (limit to 50MB for security)
+    if file.content_length and file.content_length > 50 * 1024 * 1024:
+        return jsonify({"ok": False, "message": "File too large (max 50MB)"}), 400
+
     fname = secure_filename(file.filename)
+    if not fname:  # secure_filename can return empty string for malicious names
+        return jsonify({"ok": False, "message": "Invalid filename"}), 400
+
     if not is_allowed(fname):
         return jsonify({"ok": False, "message": "Unsupported file type"}), 400
+
+    # Additional filename validation
+    if len(fname) > 255:
+        return jsonify({"ok": False, "message": "Filename too long"}), 400
 
     save_path = os.path.join(DATA_DIR, fname)
     if os.path.exists(save_path):
@@ -1135,12 +1330,22 @@ def upload_data():
         fname = f"{stem}_{ts}{ext}"
         save_path = os.path.join(DATA_DIR, fname)
 
-    file.save(save_path)
-    write_active_marker(os.path.abspath(save_path))
-    session['active_file'] = save_path
+    try:
+        file.save(save_path)
+        write_active_marker(os.path.abspath(save_path))
+        session['active_file'] = save_path
 
-    df = load_data()
-    return jsonify({"ok": True, "saved_as": fname, "rows": int(len(df))})
+        df = load_data()
+        return jsonify({"ok": True, "saved_as": fname, "rows": int(len(df))})
+    except Exception as e:
+        logger.error(f"File upload error: {e}")
+        # Clean up partial file if it exists
+        if os.path.exists(save_path):
+            try:
+                os.remove(save_path)
+            except:
+                pass
+        return jsonify({"ok": False, "message": "File upload failed"}), 500
 
 
 @app.route("/export", methods=["POST"])
@@ -1149,6 +1354,9 @@ def export_filtered():
     df = load_data()
     if df.empty:
         return "No data to export", 400
+
+    # Add the Highlight Summary column
+    df = add_highlight_summary_column(df)
 
     payload = request.get_json(silent=True) or {}
     keyword = (payload.get("keyword") or "").strip()
@@ -1168,31 +1376,31 @@ def export_filtered():
             mask = mask | filtered[desc_col].astype(str).str.contains(keyword, case=False, na=False)
         filtered = filtered[mask]
 
-    if resp_date_col and date_filter:
-        dates = pd.to_datetime(filtered[resp_date_col], errors="coerce", utc=False)
-        overall = pd.Series([False] * len(filtered), index=filtered.index)
-        buckets = date_filter if isinstance(date_filter, list) else [date_filter]
-        for bf in buckets:
-            if not isinstance(bf, dict):
-                continue
-            year = bf.get("year")
-            month = bf.get("month")
-            week_start = bf.get("week_start")
-            week_end   = bf.get("week_end")
-            day = bf.get("day")
+    # Date filter on "Current Response Date" (if present and dates selected)
+    if resp_date_col and date_filter and len(date_filter) > 0:
+        def parse_date_for_comparison(date_str):
+            """Parse date and return it in MM/DD/YYYY format for comparison."""
+            if not date_str or pd.isna(date_str):
+                return None
 
-            local = pd.Series([True] * len(filtered), index=filtered.index)
-            if year is not None:
-                local &= (dates.dt.year == int(year))
-            if month is not None:
-                local &= (dates.dt.month == int(month))
-            if week_start is not None and week_end is not None:
-                d = dates.dt.day
-                local &= d.between(int(week_start), int(week_end), inclusive="both")
-            if day is not None:
-                local &= (dates.dt.day == int(day))
-            overall |= local
-        filtered = filtered[overall]
+            try:
+                # Try parsing with pandas
+                parsed = pd.to_datetime(str(date_str), errors='coerce')
+                if pd.isna(parsed):
+                    return None
+                return parsed.strftime('%m/%d/%Y')
+            except:
+                return None
+
+        # Convert all dates in the column to MM/DD/YYYY format for comparison
+        filtered['_temp_date_formatted'] = filtered[resp_date_col].apply(parse_date_for_comparison)
+
+        # Filter by selected dates
+        date_mask = filtered['_temp_date_formatted'].isin(date_filter)
+        filtered = filtered[date_mask]
+
+        # Remove the temporary column
+        filtered = filtered.drop('_temp_date_formatted', axis=1)
 
     bio = BytesIO()
     with pd.ExcelWriter(bio, engine="openpyxl") as writer:
@@ -1212,6 +1420,8 @@ def my_solicitations():
     """Render the My Solicitations page."""
     base_cols = list(load_data().columns)  # fallback to current dataset's columns
     df = load_my_data(columns_fallback=base_cols)
+    if not df.empty:
+        df = add_highlight_summary_column(df)
     return render_template(
         "my_solicitations.html",
         columns=list(df.columns),
@@ -1359,26 +1569,88 @@ def delete_solicitation():
 
 @app.route("/my-filter", methods=["POST"])
 def my_filter():
-    """Filter only the My Solicitations dataset (keyword across Title/Description)."""
+    """Filter only the My Solicitations dataset (keyword search across ALL columns)."""
     base_cols = list(load_data().columns)  # fallback if file empty
     df = load_my_data(columns_fallback=base_cols)
     if df.empty:
         return jsonify({"count": 0, "columns": list(df.columns), "solicitations": []})
 
+    # Add the Highlight Summary column
+    df = add_highlight_summary_column(df)
+
     payload = request.get_json(silent=True) or {}
     keyword = (payload.get("keyword") or "").strip()
 
-    title_col = _find_col(df, ["title", "opportunity title", "notice title", "name"])
-    desc_col  = _find_col(df, ["description", "details", "summary"])
+    print(f"[MY-SEARCH] Available columns: {list(df.columns)}")
+    print(f"[MY-SEARCH] Keyword: '{keyword}'")
 
     filtered = df
-    if keyword and (title_col or desc_col):
-        mask = False
-        if title_col:
-            mask = filtered[title_col].astype(str).str.contains(keyword, case=False, na=False)
-        if desc_col:
-            mask = mask | filtered[desc_col].astype(str).str.contains(keyword, case=False, na=False)
-        filtered = filtered[mask]
+
+    # Search ALL columns in the entire spreadsheet including Highlight Summary content
+    if keyword:
+        print(f"[MY-SEARCH] Searching ALL columns for keyword: '{keyword}'")
+        mask = pd.Series([False] * len(df), index=df.index)
+        matches_by_column = {}
+
+        # Load saved highlights for searching
+        highlights_data = {}
+        try:
+            if os.path.exists(HIGHLIGHTS_FILE):
+                with open(HIGHLIGHTS_FILE, 'r', encoding='utf-8') as f:
+                    highlights_data = json.load(f)
+        except Exception as e:
+            print(f"[MY-SEARCH] Could not load highlights: {e}")
+
+        # Load AI summaries for searching
+        ai_summaries = load_ai_summaries()
+
+        for col in df.columns:
+            try:
+                if col == "Highlight Summary":
+                    # Special handling for Highlight Summary column - search AI summaries and saved highlights
+                    notice_col = _find_notice_col(df)
+                    if notice_col:
+                        highlight_mask = pd.Series([False] * len(df), index=df.index)
+
+                        for idx, row in df.iterrows():
+                            notice_id = str(row.get(notice_col, "")).strip()
+                            found_match = False
+
+                            # Search in AI summary
+                            if notice_id in ai_summaries:
+                                summary_text = ai_summaries[notice_id].get("summary", "")
+                                if keyword.lower() in summary_text.lower():
+                                    found_match = True
+
+                            # Search in saved highlights
+                            if notice_id in highlights_data:
+                                highlights_text = highlights_data.get(notice_id, "")
+                                if keyword.lower() in highlights_text.lower():
+                                    found_match = True
+
+                            if found_match:
+                                highlight_mask.iloc[idx] = True
+
+                        matches_count = highlight_mask.sum()
+                        if matches_count > 0:
+                            matches_by_column[col] = matches_count
+                            mask = mask | highlight_mask
+                else:
+                    # Regular column search
+                    col_mask = df[col].astype(str).str.contains(keyword, case=False, na=False, regex=False)
+                    matches_count = col_mask.sum()
+                    if matches_count > 0:
+                        matches_by_column[col] = matches_count
+                        mask = mask | col_mask
+            except Exception as e:
+                print(f"[MY-SEARCH] Could not search column '{col}': {e}")
+                continue
+
+        filtered = df[mask]
+        print(f"[MY-SEARCH] Total rows with matches: {len(filtered)} out of {len(df)}")
+        print(f"[MY-SEARCH] Matches by column: {matches_by_column}")
+    else:
+        print(f"[MY-SEARCH] No keyword provided, returning all data")
 
     return jsonify({
         "count": int(len(filtered)),
@@ -1394,6 +1666,9 @@ def my_export():
     df = load_my_data(columns_fallback=base_cols)
     if df.empty:
         return "No data to export", 400
+
+    # Add the Highlight Summary column
+    df = add_highlight_summary_column(df)
 
     payload = request.get_json(silent=True) or {}
     keyword = (payload.get("keyword") or "").strip()
@@ -1428,6 +1703,133 @@ def my_export():
 def project_tracking():
     """Display the project timeline page."""
     return render_template('project_tracking.html')
+
+
+# ====================== PROJECT DATE PERSISTENCE ======================
+PROJECT_DATES_FILE = os.path.join(DATA_DIR, "project_dates.json")
+
+@app.route('/save-project-dates', methods=['POST'])
+def save_project_dates():
+    """Save project date changes to server storage."""
+    try:
+        payload = request.get_json() or {}
+        notice_id = payload.get('notice_id')
+        field = payload.get('field')
+        value = payload.get('value')
+
+        if not notice_id or not field:
+            return jsonify({"ok": False, "message": "Missing notice_id or field"}), 400
+
+        # Load existing dates
+        dates_data = {}
+        if os.path.exists(PROJECT_DATES_FILE):
+            try:
+                with open(PROJECT_DATES_FILE, 'r') as f:
+                    dates_data = json.load(f)
+            except Exception as e:
+                print(f"[DATES] Error reading dates file: {e}")
+
+        # Update dates
+        if notice_id not in dates_data:
+            dates_data[notice_id] = {}
+        dates_data[notice_id][field] = value
+        dates_data[notice_id]['last_updated'] = datetime.now().isoformat()
+
+        # Save dates
+        with open(PROJECT_DATES_FILE, 'w') as f:
+            json.dump(dates_data, f, indent=2)
+
+        print(f"[DATES] Saved {field} = {value} for {notice_id}")
+
+        return jsonify({"ok": True, "saved": f"{field} = {value}"})
+
+    except Exception as e:
+        print(f"[DATES] Save error: {e}")
+        return jsonify({"ok": False, "message": str(e)}), 500
+
+
+@app.route('/get-project-dates', methods=['GET'])
+def get_project_dates():
+    """Get saved project dates from server storage."""
+    try:
+        if not os.path.exists(PROJECT_DATES_FILE):
+            return jsonify({"ok": True, "dates": {}})
+
+        with open(PROJECT_DATES_FILE, 'r') as f:
+            dates_data = json.load(f)
+
+        return jsonify({"ok": True, "dates": dates_data})
+
+    except Exception as e:
+        print(f"[DATES] Load error: {e}")
+        return jsonify({"ok": False, "message": str(e)}), 500
+
+
+# ====================== HIGHLIGHTS PERSISTENCE ======================
+HIGHLIGHTS_FILE = os.path.join(DATA_DIR, "solicitation_highlights.json")
+
+@app.route('/save-highlights', methods=['POST'])
+def save_highlights():
+    """Save solicitation highlights to server storage."""
+    try:
+        payload = request.get_json() or {}
+        notice_id = payload.get('notice_id')
+        highlights = payload.get('highlights', '')
+
+        if not notice_id:
+            return jsonify({"ok": False, "message": "Missing notice_id"}), 400
+
+        # Load existing highlights
+        highlights_data = {}
+        if os.path.exists(HIGHLIGHTS_FILE):
+            try:
+                with open(HIGHLIGHTS_FILE, 'r', encoding='utf-8') as f:
+                    highlights_data = json.load(f)
+            except Exception as e:
+                print(f"[HIGHLIGHTS] Error reading highlights file: {e}")
+
+        # Update highlights
+        highlights_data[notice_id] = highlights
+        highlights_data['last_updated'] = datetime.now().isoformat()
+
+        # Save highlights
+        os.makedirs(DATA_DIR, exist_ok=True)
+        with open(HIGHLIGHTS_FILE, 'w', encoding='utf-8') as f:
+            json.dump(highlights_data, f, indent=2, ensure_ascii=False)
+
+        print(f"[HIGHLIGHTS] Saved highlights for {notice_id}: {highlights[:50]}...")
+
+        return jsonify({"ok": True, "saved": True})
+
+    except Exception as e:
+        print(f"[HIGHLIGHTS] Save error: {e}")
+        return jsonify({"ok": False, "message": str(e)}), 500
+
+
+@app.route('/load-highlights', methods=['POST'])
+def load_highlights():
+    """Load solicitation highlights from server storage."""
+    try:
+        payload = request.get_json() or {}
+        notice_id = payload.get('notice_id')
+
+        if not notice_id:
+            return jsonify({"ok": False, "message": "Missing notice_id"}), 400
+
+        if not os.path.exists(HIGHLIGHTS_FILE):
+            return jsonify({"ok": True, "highlights": ""})
+
+        with open(HIGHLIGHTS_FILE, 'r', encoding='utf-8') as f:
+            highlights_data = json.load(f)
+
+        highlights = highlights_data.get(notice_id, "")
+        print(f"[HIGHLIGHTS] Loaded highlights for {notice_id}: {highlights[:50]}...")
+
+        return jsonify({"ok": True, "highlights": highlights})
+
+    except Exception as e:
+        print(f"[HIGHLIGHTS] Load error: {e}")
+        return jsonify({"ok": False, "message": str(e)}), 500
 
 
 # ====================== OPPORTUNITY VIEWING ROUTES ======================
@@ -1528,61 +1930,309 @@ def sam_cleanup():
         return jsonify({"ok": False, "message": str(e)}), 500
 
 
-# ====================== DIAGNOSTIC ROUTES ======================
-@app.route("/diag/opportunity/<notice_id>")
-def diag_opportunity(notice_id):
-    """Diagnostic information for an opportunity."""
-    df = load_data()
-    my_df = load_my_data(columns_fallback=list(df.columns) if not df.empty else None)
-    row_df = _match_row_by_notice(df, notice_id)
-    row_my = _match_row_by_notice(my_df, notice_id)
-    return {
-        "notice_id": notice_id,
-        "cols_df": list(df.columns) if df is not None and not df.empty else [],
-        "cols_my": list(my_df.columns) if my_df is not None and not my_df.empty else [],
-        "found_in": "df" if row_df else ("my" if row_my else None),
-        "row": row_df or row_my or {}
-    }
-
-
-@app.route("/diag/selenium")
-def diag_selenium():
-    """Diagnostic check for Selenium functionality."""
-    if not _SELENIUM_AVAILABLE:
-        return {"ok": False, "message": "Selenium is not installed in this environment."}, 500
+@app.route('/create-opportunity-folder', methods=['POST'])
+def create_opportunity_folder():
+    """Create a folder for an opportunity in the Contracts directory"""
     try:
-        tmp_dir = os.path.join(os.getcwd(), "downloads_test")
-        os.makedirs(tmp_dir, exist_ok=True)
-        drv = _get_persistent_edge_driver(tmp_dir)
+        payload = request.get_json() or {}
+        notice_id = payload.get('notice_id', '').strip()
+        title = payload.get('title', '').strip()
+
+        if not title:
+            return jsonify({"ok": False, "message": "No title provided for folder creation"}), 400
+
+        # Sanitize the title for use as a folder name
+        sanitized_title = _sanitize_folder_name(title)
+
+        # Create the full path to the Contracts directory
+        contracts_dir = os.path.join(os.path.dirname(__file__), "Contracts")
+        folder_path = os.path.join(contracts_dir, sanitized_title)
+
+        # Create the folder
         try:
-            drv.get("https://example.com/")
-            title = drv.title
-        finally:
-            # Don't quit the persistent driver in diagnostic mode
-            pass
-        return {"ok": True, "title": title}
+            os.makedirs(folder_path, exist_ok=True)
+            logger.info(f"Created opportunity folder: {folder_path}")
+
+            return jsonify({
+                "ok": True,
+                "folder_path": folder_path,
+                "title": sanitized_title,
+                "message": f"Folder created successfully: {sanitized_title}"
+            })
+
+        except Exception as e:
+            logger.error(f"Failed to create folder: {e}")
+            return jsonify({
+                "ok": False,
+                "message": f"Failed to create folder: {str(e)}"
+            }), 500
+
     except Exception as e:
-        return {"ok": False, "message": str(e)}, 500
+        logger.error(f"Error in create_opportunity_folder: {e}")
+        return jsonify({"ok": False, "message": "Internal server error"}), 500
 
 
-@app.route("/reload-info")
-def reload_info():
-    """Get information about the currently loaded data."""
-    df = load_data()
-    f = find_data_file()
-    return {
-        "rows": int(len(df)),
-        "active_file": os.path.basename(f) if f else None,
-        "columns": list(df.columns),
-        "sample": df.head(3).to_dict(orient="records")
-    }
+@app.route('/get-folder-files', methods=['POST'])
+def get_folder_files():
+    """Get list of files in an opportunity folder"""
+    try:
+        payload = request.get_json() or {}
+        title = payload.get('title', '').strip()
+
+        if not title:
+            return jsonify({"ok": False, "files": []})
+
+        # Sanitize the title for use as a folder name
+        sanitized_title = _sanitize_folder_name(title)
+
+        # Create the full path to the Contracts directory
+        contracts_dir = os.path.join(os.path.dirname(__file__), "Contracts")
+        folder_path = os.path.join(contracts_dir, sanitized_title)
+
+        files = []
+        if os.path.exists(folder_path) and os.path.isdir(folder_path):
+            try:
+                for filename in os.listdir(folder_path):
+                    file_path = os.path.join(folder_path, filename)
+                    if os.path.isfile(file_path):
+                        # Get file size for display
+                        file_size = os.path.getsize(file_path)
+                        size_str = ""
+                        if file_size < 1024:
+                            size_str = f"{file_size} B"
+                        elif file_size < 1024 * 1024:
+                            size_str = f"{file_size / 1024:.1f} KB"
+                        else:
+                            size_str = f"{file_size / (1024 * 1024):.1f} MB"
+
+                        # Create relative path from Contracts directory with forward slashes for web URLs
+                        relative_path = f"{sanitized_title}/{filename}"
+
+                        files.append({
+                            "name": filename,
+                            "size": size_str,
+                            "path": relative_path
+                        })
+
+                # Sort files by name
+                files.sort(key=lambda x: x['name'].lower())
+
+            except Exception as e:
+                logger.error(f"Error reading folder contents: {e}")
+
+        return jsonify({
+            "ok": True,
+            "files": files,
+            "folder_path": folder_path,
+            "folder_exists": os.path.exists(folder_path)
+        })
+
+    except Exception as e:
+        logger.error(f"Error in get_folder_files: {e}")
+        return jsonify({"ok": False, "files": []})
 
 
-@app.route("/diag/routes")
-def diag_routes():
-    """List all available routes."""
-    lines = [f"{r.rule:40s} -> {r.endpoint}" for r in app.url_map.iter_rules()]
-    return "<pre>" + "\n".join(sorted(lines)) + "</pre>"
+@app.route('/open-file/<path:file_path>')
+def open_file(file_path):
+    """Serve files from the Contracts directory"""
+    try:
+        # Secure file serving with proper path validation
+        contracts_dir = os.path.join(os.path.dirname(__file__), "Contracts")
+
+        # Convert forward slashes to OS-appropriate path separators
+        normalized_file_path = file_path.replace('/', os.sep)
+
+        # Security check: ensure no path traversal attempts
+        if '..' in normalized_file_path or os.path.isabs(normalized_file_path):
+            return "Access denied - path traversal detected", 403
+
+        # Construct the full file path
+        full_file_path = os.path.join(contracts_dir, normalized_file_path)
+
+        # Use realpath for additional security and path normalization
+        abs_contracts_dir = os.path.realpath(contracts_dir)
+        abs_file_path = os.path.realpath(full_file_path)
+
+        # Double-check the path is within the contracts directory
+        if not abs_file_path.startswith(abs_contracts_dir + os.sep):
+            return "Access denied", 403
+
+        if not os.path.exists(abs_file_path) or not os.path.isfile(abs_file_path):
+            return "File not found", 404
+
+        # Validate file extension against allowed types
+        allowed_extensions = {'.pdf', '.doc', '.docx', '.xlsx', '.xls', '.txt', '.zip'}
+        file_ext = os.path.splitext(abs_file_path)[1].lower()
+        if file_ext not in allowed_extensions:
+            return "File type not allowed", 403
+
+        return send_file(abs_file_path)
+
+    except Exception as e:
+        logger.error(f"Error serving file: {e}")
+        return "Internal server error", 500
+
+
+# ====================== AI SUMMARY ROUTES ======================
+@app.route("/generate-ai-summary", methods=["POST"])
+def generate_ai_summary_endpoint():
+    """Generate AI summary for a given description text."""
+    try:
+        # Input validation
+        if not request.is_json:
+            return jsonify({"ok": False, "message": "Content-Type must be application/json"}), 400
+
+        payload = request.get_json() or {}
+        description = payload.get("description", "").strip()
+        notice_id = payload.get("notice_id", "").strip()
+
+        # Validate description input
+        if not description:
+            return jsonify({"ok": False, "message": "No description provided"}), 400
+
+        # Prevent excessively long descriptions (DoS protection)
+        if len(description) > 50000:  # 50K characters limit
+            return jsonify({"ok": False, "message": "Description too long"}), 400
+
+        # Validate notice_id format if provided
+        if notice_id and (len(notice_id) > 100 or not notice_id.replace('-', '').replace('_', '').isalnum()):
+            return jsonify({"ok": False, "message": "Invalid notice ID format"}), 400
+
+        if not OPENAI_API_KEY:
+            return jsonify({"ok": False, "message": "OpenAI API key not configured"}), 500
+
+        # Check if we already have a summary for this Notice ID
+        if notice_id:
+            existing_summary = get_ai_summary_for_notice(notice_id)
+            if existing_summary:
+                print(f"[AI] Using existing summary for Notice ID: {notice_id}")
+                return jsonify({"ok": True, "summary": existing_summary})
+
+        # Generate the AI summary
+        summary = generate_ai_summary(description)
+
+        if summary:
+            # Save the summary if we have a notice_id
+            if notice_id:
+                save_ai_summary_for_notice(notice_id, summary)
+                print(f"[AI] Saved new summary for Notice ID: {notice_id}")
+
+            return jsonify({"ok": True, "summary": summary})
+        else:
+            return jsonify({"ok": False, "message": "Failed to generate summary"}), 500
+
+    except Exception as e:
+        logger.error(f"AI summary endpoint error: {str(e)}")
+        return jsonify({"ok": False, "message": "Internal server error"}), 500
+
+
+# ====================== DIAGNOSTIC ROUTES (Development Only) ======================
+if not PRODUCTION_MODE:
+    @app.route("/diag/opportunity/<notice_id>")
+    def diag_opportunity(notice_id):
+        """Diagnostic information for an opportunity."""
+        df = load_data()
+        my_df = load_my_data(columns_fallback=list(df.columns) if not df.empty else None)
+        row_df = _match_row_by_notice(df, notice_id)
+        row_my = _match_row_by_notice(my_df, notice_id)
+        return {
+            "notice_id": notice_id,
+            "cols_df": list(df.columns) if df is not None and not df.empty else [],
+            "cols_my": list(my_df.columns) if my_df is not None and not my_df.empty else [],
+            "found_in": "df" if row_df else ("my" if row_my else None),
+            "row": row_df or row_my or {}
+        }
+
+    @app.route("/diag/selenium")
+    def diag_selenium():
+        """Diagnostic check for Selenium functionality."""
+        if not _SELENIUM_AVAILABLE:
+            return {"ok": False, "message": "Selenium is not installed in this environment."}, 500
+        try:
+            tmp_dir = os.path.join(os.getcwd(), "downloads_test")
+            os.makedirs(tmp_dir, exist_ok=True)
+            drv = _get_persistent_edge_driver(tmp_dir)
+            try:
+                drv.get("https://example.com/")
+                title = drv.title
+            finally:
+                # Don't quit the persistent driver in diagnostic mode
+                pass
+            return {"ok": True, "title": title}
+        except Exception as e:
+            return {"ok": False, "message": str(e)}, 500
+
+    @app.route("/reload-info")
+    def reload_info():
+        """Get information about the currently loaded data."""
+        df = load_data()
+        f = find_data_file()
+        return {
+            "rows": int(len(df)),
+            "active_file": os.path.basename(f) if f else None,
+            "columns": list(df.columns),
+            "sample": df.head(3).to_dict(orient="records")
+        }
+
+    @app.route("/diag/routes")
+    def diag_routes():
+        """List all available routes."""
+        lines = [f"{r.rule:40s} -> {r.endpoint}" for r in app.url_map.iter_rules()]
+        return "<pre>" + "\n".join(sorted(lines)) + "</pre>"
+else:
+    # In production mode, diagnostic endpoints return 404
+    @app.route("/diag/<path:path>")
+    def diag_disabled(path):
+        """Diagnostic endpoints disabled in production."""
+        return "Not found", 404
+
+    @app.route("/reload-info")
+    def reload_info_disabled():
+        """Reload info disabled in production."""
+        return "Not found", 404
+
+
+# ====================== SECURITY HEADERS ======================
+@app.after_request
+def security_headers(response):
+    """Add security headers to all responses"""
+    # Prevent MIME type sniffing
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+
+    # Prevent clickjacking
+    response.headers['X-Frame-Options'] = 'DENY'
+
+    # XSS Protection (legacy browsers)
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+
+    # Content Security Policy
+    response.headers['Content-Security-Policy'] = (
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; "
+        "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; "
+        "img-src 'self' data: https:; "
+        "font-src 'self' https://cdnjs.cloudflare.com; "
+        "connect-src 'self'; "
+        "frame-ancestors 'none'; "
+        "base-uri 'self'; "
+        "form-action 'self'"
+    )
+
+    # HSTS (only add if using HTTPS)
+    if request.is_secure:
+        response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+
+    # Referrer Policy
+    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+
+    # Feature Policy / Permissions Policy
+    response.headers['Permissions-Policy'] = (
+        "accelerometer=(), camera=(), geolocation=(), "
+        "gyroscope=(), magnetometer=(), microphone=(), "
+        "payment=(), usb=()"
+    )
+
+    return response
 
 
 # ====================== ERROR HANDLERS ======================

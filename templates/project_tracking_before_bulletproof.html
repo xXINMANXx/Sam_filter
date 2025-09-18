@@ -1,0 +1,2260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Project Timeline - SAM.gov Filter Tool</title>
+    <style>
+        :root {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-tertiary: #3a3a3a;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --text-muted: #888;
+            --accent-blue: #4a9eff;
+            --accent-green: #28a745;
+            --accent-yellow: #ffc107;
+            --accent-orange: #fd7e14;
+            --accent-red: #dc3545;
+            --accent-purple: #6f42c1;
+            --border-color: #555;
+            --hover-bg: rgba(74, 158, 255, 0.1);
+            --drag-bg: rgba(74, 158, 255, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            overflow: hidden;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .toolbar {
+            background: var(--bg-tertiary);
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .toolbar-left, .toolbar-right {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 0.375rem 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            background: #3a8ae6;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: #4a4a4a;
+        }
+
+        .btn-small {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.7rem;
+        }
+
+        .zoom-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .zoom-slider {
+            width: 100px;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .zoom-slider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: var(--zoom-slider-percent, 50%);
+            background: var(--accent-blue);
+            border-radius: 2px;
+            max-width: 100%;
+        }
+
+        .timeline-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .task-panel {
+            width: var(--task-panel-width, 350px);
+            min-width: 250px;
+            max-width: 600px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .task-header {
+            display: grid;
+            grid-template-columns: 30px 3fr 70px 80px 60px 60px 60px 30px;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            align-items: center;
+            height: 60px;
+            box-sizing: border-box;
+        }
+
+        .task-header > div:first-child {
+            text-align: center; /* checkbox column */
+        }
+
+        .task-header > div:nth-child(2) {
+            text-align: left; /* task name column */
+        }
+
+        .task-header > div:nth-child(3),
+        .task-header > div:nth-child(4),
+        .task-header > div:nth-child(5),
+        .task-header > div:nth-child(6),
+        .task-header > div:nth-child(7) {
+            text-align: center; /* duration, date columns */
+        }
+
+        .task-header > div:last-child {
+            text-align: center; /* menu column */
+        }
+
+        .task-list-container {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .task-list {
+            list-style: none;
+        }
+
+        .task-item {
+            display: grid;
+            grid-template-columns: 30px 3fr 70px 80px 60px 60px 60px 30px;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            align-items: center;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+            min-height: 44px;
+        }
+
+        .task-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .task-item.selected {
+            background: rgba(74, 158, 255, 0.2);
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        .task-item.dragging {
+            opacity: 0.5;
+        }
+
+        .task-checkbox {
+            width: 16px;
+            height: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .task-checkbox.checked {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+            color: white;
+        }
+
+        .task-name {
+            font-weight: 500;
+            font-size: 0.8rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: text;
+        }
+
+        .task-name.editing {
+            background: var(--bg-primary);
+            border: 1px solid var(--accent-blue);
+            border-radius: 3px;
+            padding: 0.25rem;
+            outline: none;
+        }
+
+        .date-compact {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 0.65rem;
+            padding: 0.2rem 0.3rem;
+            width: 100%;
+            cursor: pointer;
+            text-align: center;
+            min-height: 22px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .date-compact:hover {
+            border-color: var(--accent-blue);
+            background: var(--hover-bg);
+        }
+
+        .date-compact.has-date {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .date-compact.no-date {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .calendar-icon {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        .date-compact:hover .calendar-icon {
+            color: var(--accent-blue);
+        }
+
+        .date-picker-popup {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: -10px;
+            z-index: 1000;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--accent-blue);
+            border-radius: 6px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            display: none;
+            padding: 0.5rem;
+            min-width: 180px;
+        }
+
+        .date-picker-popup.show {
+            display: block;
+        }
+
+        .date-picker-popup input[type="date"] {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-primary);
+            padding: 0.5rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .date-picker-popup input[type="date"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            filter: invert(1);
+            padding: 0.2rem;
+        }
+
+        .date-picker-popup input[type="date"]:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2);
+        }
+
+        .panel-resizer {
+            position: absolute;
+            top: 0;
+            right: -3px;
+            width: 6px;
+            height: 100%;
+            background: transparent;
+            cursor: col-resize;
+            z-index: 10;
+            border-right: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .panel-resizer:hover {
+            border-right-color: var(--accent-blue);
+        }
+
+        .panel-resizer.dragging {
+            border-right-color: var(--accent-blue);
+        }
+
+        .task-duration, .task-date {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .task-menu-btn {
+            width: 20px;
+            height: 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .task-menu-btn:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .timeline-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .timeline-header {
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+            flex-shrink: 0;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .date-grid {
+            display: grid;
+            grid-template-columns: repeat(var(--timeline-days, 21), minmax(80px, 1fr));
+            min-width: calc(var(--timeline-days, 21) * 80px);
+        }
+
+        .date-header {
+            padding: 0.5rem;
+            text-align: center;
+            border-right: 1px solid var(--border-color);
+            font-size: 0.7rem;
+            font-weight: 600;
+            position: relative;
+            min-height: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .date-header.today {
+            background: var(--accent-red);
+            color: white;
+        }
+
+        .date-header.weekend {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .timeline-content-container {
+            flex: 1;
+            overflow: auto;
+            position: relative;
+        }
+
+        .timeline-content {
+            min-width: calc(var(--timeline-days, 21) * 80px);
+            position: relative;
+        }
+
+        .timeline-row {
+            height: 40px;
+            position: relative;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .timeline-row:hover {
+            background: var(--hover-bg);
+        }
+
+        .timeline-row.selected {
+            background: rgba(74, 158, 255, 0.15);
+        }
+
+        .timeline-row.drop-target {
+            background: var(--drag-bg);
+        }
+
+        .task-bar {
+            position: absolute;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: white;
+            overflow: hidden;
+            cursor: move;
+            transition: all 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            user-select: none;
+            min-width: 40px;
+        }
+
+        .task-bar:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            border-color: rgba(255,255,255,0.4);
+            z-index: 10;
+        }
+
+        .task-bar.dragging {
+            z-index: 1000;
+            transform: rotate(2deg);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .task-bar.resizing {
+            transition: none;
+        }
+
+        .task-bar-content {
+            padding: 0 0.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            pointer-events: none;
+        }
+
+        .task-progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+            transition: width 0.3s;
+            pointer-events: none;
+        }
+
+        .resize-handle {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 8px;
+            cursor: ew-resize;
+            background: transparent;
+            z-index: 3;
+        }
+
+        .resize-handle.left {
+            left: 0;
+        }
+
+        .resize-handle.right {
+            right: 0;
+        }
+
+        .resize-handle:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Enhanced status colors */
+        .status-not-started { background: linear-gradient(135deg, #6c757d, #5a6268); }
+        .status-in-progress { background: linear-gradient(135deg, #ffc107, #e0a800); color: #000; }
+        .status-urgent { 
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52); 
+            animation: pulse 2s infinite;
+        }
+        .status-overdue { 
+            background: linear-gradient(135deg, #dc3545, #c82333); 
+            animation: flash 1s infinite alternate;
+        }
+        .status-review { background: linear-gradient(135deg, #4a9eff, #0d6efd); }
+        .status-completed { background: linear-gradient(135deg, #28a745, #20c997); }
+
+        .project-span-bar {
+            position: absolute;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: white;
+            overflow: hidden;
+            cursor: move;
+            transition: all 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            user-select: none;
+            min-width: 40px;
+            opacity: 0.8;
+        }
+
+        /* Project span bar status colors */
+        .project-span-bar.status-not-started { background: linear-gradient(135deg, #6c757d, #5a6268); }
+        .project-span-bar.status-in-progress { background: linear-gradient(135deg, #ffc107, #e0a800); color: #000; }
+        .project-span-bar.status-urgent {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            animation: pulse 2s infinite;
+        }
+        .project-span-bar.status-overdue {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            animation: flash 1s infinite alternate;
+        }
+        .project-span-bar.status-review { background: linear-gradient(135deg, #4a9eff, #0d6efd); }
+        .project-span-bar.status-completed { background: linear-gradient(135deg, #28a745, #20c997); }
+
+        .project-span-bar:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            border-color: rgba(255,255,255,0.4);
+            z-index: 10;
+            opacity: 1;
+        }
+
+        .project-span-bar .task-bar-content {
+            padding: 0 0.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            pointer-events: none;
+        }
+
+        .project-progress-indicator {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 20%;
+            background: var(--accent-green);
+            border-radius: 0 0 4px 4px;
+            transition: width 0.3s ease;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.8;
+        }
+
+        .milestone {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            transform: translateX(-50%) rotate(45deg);
+            border: 2px solid white;
+            top: 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 4;
+        }
+
+        .milestone.solicitation-due {
+            background: var(--accent-red);
+        }
+
+        .milestone.site-visit {
+            background: var(--accent-blue);
+        }
+
+        .milestone.work-start {
+            background: var(--accent-green);
+        }
+
+        .milestone.completion {
+            background: var(--accent-red);
+        }
+
+        .milestone:hover {
+            transform: translateX(-50%) rotate(45deg) scale(1.2);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+
+        .current-date-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-red);
+            z-index: 5;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        .current-date-line::before {
+            content: 'TODAY';
+            position: absolute;
+            top: -20px;
+            left: -15px;
+            font-size: 0.6rem;
+            color: var(--accent-red);
+            font-weight: 600;
+        }
+
+        /* Context Menu */
+        .context-menu {
+            position: fixed;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.25rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 2000;
+            min-width: 150px;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.15s;
+        }
+
+        .context-menu.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .context-menu-item {
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .context-menu-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .context-menu-item.separator {
+            border-top: 1px solid var(--border-color);
+            margin: 0.25rem 0;
+            padding: 0;
+            height: 1px;
+        }
+
+        /* Details Panel */
+        .details-panel {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            bottom: 0;
+            width: 400px;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-color);
+            z-index: 1500;
+            transition: right 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .details-panel.open {
+            right: 0;
+        }
+
+        .details-header {
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .details-content {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .detail-field {
+            margin-bottom: 1rem;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            font-size: 0.9rem;
+            padding: 0.5rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-primary);
+        }
+
+        .detail-value.editable {
+            cursor: text;
+        }
+
+        .detail-value.editable:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        /* Style the date picker calendar icon */
+        .detail-value[type="date"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            filter: invert(1);
+            padding: 0.2rem;
+        }
+
+        /* Style date input text */
+        .detail-value[type="date"] {
+            color: var(--text-primary);
+        }
+
+        .detail-value[type="date"]:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2);
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
+        }
+
+        @keyframes flash {
+            0% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+
+        /* Loading states */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-top: 2px solid var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Selection area */
+        .selection-area {
+            position: absolute;
+            border: 1px dashed var(--accent-blue);
+            background: rgba(74, 158, 255, 0.1);
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .task-panel {
+                width: 300px;
+            }
+            
+            .details-panel {
+                width: 100%;
+                right: -100%;
+            }
+            
+            .toolbar {
+                padding: 0.25rem 0.5rem;
+            }
+            
+            .btn {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header">
+            <h1>Interactive Project Timeline</h1>
+            <div class="header-actions">
+                <button class="btn btn-secondary btn-small" onclick="refreshData()">🔄 Refresh</button>
+                <a href="/my-solicitations" class="btn btn-secondary btn-small">← Back</a>
+            </div>
+        </div>
+
+        <div class="toolbar">
+            <div class="toolbar-left">
+                <button class="btn btn-small" onclick="addNewTask()">+ Add Task</button>
+                <button class="btn btn-secondary btn-small" onclick="toggleDetailsPanel()">📝 Details</button>
+                <button class="btn btn-secondary btn-small" onclick="exportData()">💾 Export</button>
+            </div>
+            <div class="toolbar-right">
+                <div class="zoom-controls">
+                    <button class="btn btn-secondary btn-small" onclick="zoomOut()">−</button>
+                    <div class="zoom-slider" onclick="setZoom(event)"></div>
+                    <button class="btn btn-secondary btn-small" onclick="zoomIn()">+</button>
+                    <span style="font-size: 0.7rem; margin-left: 0.5rem;" id="zoom-level">100%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline-container">
+            <div class="task-panel">
+                <div class="panel-resizer" id="panel-resizer"></div>
+                <div class="task-header">
+                    <div>✓</div>
+                    <div>Task Name</div>
+                    <div>Duration</div>
+                    <div>Solicitation Due Date</div>
+                    <div>Site Visit</div>
+                    <div>Work Start Date</div>
+                    <div>Completion Date</div>
+                    <div>⋮</div>
+                </div>
+                <div class="task-list-container">
+                    <ul class="task-list" id="task-list">
+                        <li class="loading">
+                            <div class="spinner"></div>
+                            Loading projects...
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="timeline-panel">
+                <div class="timeline-header">
+                    <div class="date-grid" id="date-grid"></div>
+                </div>
+                <div class="timeline-content-container">
+                    <div class="timeline-content" id="timeline-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div class="context-menu" id="context-menu">
+        <div class="context-menu-item" onclick="editTask()">📝 Edit Task</div>
+        <div class="context-menu-item" onclick="duplicateTask()">📋 Duplicate</div>
+        <div class="context-menu-item separator"></div>
+        <div class="context-menu-item" onclick="markComplete()">✅ Mark Complete</div>
+        <div class="context-menu-item" onclick="setUrgent()">⚡ Set Urgent</div>
+        <div class="context-menu-item separator"></div>
+        <div class="context-menu-item" onclick="deleteTask()" style="color: var(--accent-red);">🗑️ Delete</div>
+    </div>
+
+    <!-- Details Panel -->
+    <div class="details-panel" id="details-panel">
+        <div class="details-header">
+            <h3>Task Details</h3>
+            <button class="btn btn-secondary btn-small" onclick="toggleDetailsPanel()">✕</button>
+        </div>
+        <div class="details-content" id="details-content">
+            <div class="detail-field">
+                <div class="detail-label">Title</div>
+                <div class="detail-value editable" contenteditable="true" id="detail-title">Select a task to view details</div>
+            </div>
+            <div class="detail-field">
+                <div class="detail-label">Agency</div>
+                <div class="detail-value" id="detail-agency">-</div>
+            </div>
+            <div class="detail-field">
+                <div class="detail-label">Notice ID</div>
+                <div class="detail-value" id="detail-notice-id">-</div>
+            </div>
+            <div class="detail-field">
+                <div class="detail-label">Response Date</div>
+                <input type="date" class="detail-value" id="detail-response-date">
+            </div>
+            <div class="detail-field">
+                <div class="detail-label">Status</div>
+                <select class="detail-value" id="detail-status">
+                    <option value="not-started">Not Started</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="urgent">Urgent</option>
+                    <option value="review">Under Review</option>
+                    <option value="completed">Completed</option>
+                </select>
+            </div>
+            <div class="detail-field">
+                <div class="detail-label">Progress</div>
+                <input type="range" class="detail-value" id="detail-progress" min="0" max="100" value="0">
+                <span id="progress-value">0%</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let projects = [];
+        let timelineStart, timelineEnd, timelineDays = [];
+        let selectedTasks = new Set();
+        let currentTask = null;
+        let zoomLevel = 100;
+        let isDragging = false;
+        let isResizing = false;
+        let dragStart = null;
+        let resizeHandle = null;
+
+        // Interactive state
+        let contextMenuTarget = null;
+        let detailsPanelOpen = false;
+
+        // Calculate timeline dates with zoom
+        function calculateTimeline() {
+            const today = new Date();
+            const daysToShow = Math.round(21 * (zoomLevel / 100));
+            
+            timelineStart = new Date(today);
+            timelineStart.setDate(today.getDate() - Math.floor(daysToShow * 0.3));
+            
+            timelineEnd = new Date(today);
+            timelineEnd.setDate(today.getDate() + Math.ceil(daysToShow * 0.7));
+            
+            timelineDays = [];
+            for (let d = new Date(timelineStart); d <= timelineEnd; d.setDate(d.getDate() + 1)) {
+                timelineDays.push(new Date(d));
+            }
+            
+            document.documentElement.style.setProperty('--timeline-days', timelineDays.length);
+        }
+
+        // Parse date from various formats
+        function parseDate(dateStr) {
+            if (!dateStr) return null;
+            const date = new Date(dateStr);
+            return isNaN(date.getTime()) ? null : date;
+        }
+
+        // Enhanced project status determination
+        function getProjectStatus(project) {
+            const today = new Date();
+            const responseDate = parseDate(project.response_date);
+            
+            if (project.status) return project.status;
+            if (!responseDate) return 'not-started';
+            
+            const daysUntilResponse = Math.ceil((responseDate - today) / (1000 * 60 * 60 * 24));
+            
+            if (responseDate < today) return 'overdue';
+            if (daysUntilResponse <= 3) return 'urgent';
+            if (daysUntilResponse <= 7) return 'in-progress';
+            return 'not-started';
+        }
+
+        // Calculate progress
+        function calculateProgress(project) {
+            if (project.progress !== undefined) return project.progress;
+            
+            const status = getProjectStatus(project);
+            const progressMap = {
+                'not-started': 0,
+                'in-progress': 25,
+                'urgent': 50,
+                'review': 75,
+                'completed': 100,
+                'overdue': 100
+            };
+            return progressMap[status] || 0;
+        }
+
+        // Get position percentage for timeline
+        function getDatePosition(date) {
+            if (!date) return 0;
+            const timelineStartTime = timelineStart.getTime();
+            const timelineEndTime = timelineEnd.getTime();
+            const dateTime = date.getTime();
+            
+            if (dateTime < timelineStartTime) return 0;
+            if (dateTime > timelineEndTime) return 100;
+            
+            const progress = (dateTime - timelineStartTime) / (timelineEndTime - timelineStartTime);
+            return Math.max(0, Math.min(100, progress * 100));
+        }
+
+        // Convert position to date
+        function positionToDate(position) {
+            const timelineStartTime = timelineStart.getTime();
+            const timelineEndTime = timelineEnd.getTime();
+            const progress = position / 100;
+            return new Date(timelineStartTime + (timelineEndTime - timelineStartTime) * progress);
+        }
+
+        // Zoom controls
+        function zoomIn() {
+            zoomLevel = Math.min(200, zoomLevel + 25);
+            updateZoom();
+        }
+
+        function zoomOut() {
+            zoomLevel = Math.max(50, zoomLevel - 25);
+            updateZoom();
+        }
+
+        function setZoom(event) {
+            const rect = event.currentTarget.getBoundingClientRect();
+            const percent = (event.clientX - rect.left) / rect.width;
+            zoomLevel = Math.round(50 + (percent * 150));
+            updateZoom();
+        }
+
+        function updateZoom() {
+            // Calculate slider position (0-100%) based on zoom level (50-200%)
+            const sliderPercent = Math.max(0, Math.min(100, ((zoomLevel - 50) / 150) * 100));
+
+            document.documentElement.style.setProperty('--zoom-percent', zoomLevel + '%');
+            document.documentElement.style.setProperty('--zoom-slider-percent', sliderPercent + '%');
+            document.getElementById('zoom-level').textContent = zoomLevel + '%';
+            renderAll();
+        }
+
+        // Task selection
+        function selectTask(index, multi = false) {
+            if (!multi) {
+                selectedTasks.clear();
+                document.querySelectorAll('.task-item, .timeline-row').forEach(el => {
+                    el.classList.remove('selected');
+                });
+            }
+            
+            selectedTasks.add(index);
+            currentTask = index;
+            
+            const taskItem = document.querySelector(`.task-item[data-index="${index}"]`);
+            const timelineRow = document.querySelector(`.timeline-row[data-index="${index}"]`);
+            
+            if (taskItem) taskItem.classList.add('selected');
+            if (timelineRow) timelineRow.classList.add('selected');
+            
+            updateDetailsPanel();
+        }
+
+        // Inline editing
+        function enableInlineEdit(element, index, field) {
+            const currentValue = element.textContent;
+            element.contentEditable = true;
+            element.classList.add('editing');
+            element.focus();
+            
+            const range = document.createRange();
+            range.selectNodeContents(element);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            
+            function finishEdit() {
+                element.contentEditable = false;
+                element.classList.remove('editing');
+                
+                const newValue = element.textContent.trim();
+                if (newValue !== currentValue && newValue) {
+                    projects[index][field] = newValue;
+                    saveProject(index);
+                } else {
+                    element.textContent = currentValue;
+                }
+            }
+            
+            element.addEventListener('blur', finishEdit, { once: true });
+            element.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    finishEdit();
+                } else if (e.key === 'Escape') {
+                    element.textContent = currentValue;
+                    finishEdit();
+                }
+            });
+        }
+
+        // Context menu
+        function showContextMenu(e, target) {
+            e.preventDefault();
+            contextMenuTarget = target;
+            
+            const contextMenu = document.getElementById('context-menu');
+            contextMenu.style.left = e.pageX + 'px';
+            contextMenu.style.top = e.pageY + 'px';
+            contextMenu.classList.add('show');
+            
+            document.addEventListener('click', hideContextMenu, { once: true });
+        }
+
+        function hideContextMenu() {
+            document.getElementById('context-menu').classList.remove('show');
+            contextMenuTarget = null;
+        }
+
+        // Context menu actions
+        function editTask() {
+            if (contextMenuTarget) {
+                const index = parseInt(contextMenuTarget.dataset.index);
+                selectTask(index);
+                toggleDetailsPanel(true);
+            }
+            hideContextMenu();
+        }
+
+        function duplicateTask() {
+            if (contextMenuTarget) {
+                const index = parseInt(contextMenuTarget.dataset.index);
+                const project = { ...projects[index] };
+                project.title += ' (Copy)';
+                projects.push(project);
+                renderAll();
+            }
+            hideContextMenu();
+        }
+
+        function markComplete() {
+            if (contextMenuTarget) {
+                const index = parseInt(contextMenuTarget.dataset.index);
+                projects[index].status = 'completed';
+                projects[index].progress = 100;
+                saveProject(index);
+                renderAll();
+            }
+            hideContextMenu();
+        }
+
+        function setUrgent() {
+            if (contextMenuTarget) {
+                const index = parseInt(contextMenuTarget.dataset.index);
+                projects[index].status = 'urgent';
+                saveProject(index);
+                renderAll();
+            }
+            hideContextMenu();
+        }
+
+        function deleteTask() {
+            if (contextMenuTarget && confirm('Delete this task?')) {
+                const index = parseInt(contextMenuTarget.dataset.index);
+                projects.splice(index, 1);
+                renderAll();
+            }
+            hideContextMenu();
+        }
+
+        // Details panel
+        function toggleDetailsPanel(forceOpen = false) {
+            const panel = document.getElementById('details-panel');
+            detailsPanelOpen = forceOpen || !detailsPanelOpen;
+            
+            if (detailsPanelOpen) {
+                panel.classList.add('open');
+                updateDetailsPanel();
+            } else {
+                panel.classList.remove('open');
+            }
+        }
+
+        function updateDetailsPanel() {
+            if (!detailsPanelOpen || currentTask === null) return;
+            
+            const project = projects[currentTask];
+            if (!project) return;
+            
+            document.getElementById('detail-title').textContent = project.title;
+            document.getElementById('detail-agency').textContent = project.agency || 'Unknown';
+            document.getElementById('detail-notice-id').textContent = project.notice_id || 'N/A';
+            
+            const responseDate = parseDate(project.response_date);
+            if (responseDate) {
+                document.getElementById('detail-response-date').value = responseDate.toISOString().split('T')[0];
+            }
+            
+            document.getElementById('detail-status').value = getProjectStatus(project);
+            const progress = calculateProgress(project);
+            document.getElementById('detail-progress').value = progress;
+            document.getElementById('progress-value').textContent = progress + '%';
+        }
+
+        // Drag and drop functionality
+        function initializeDragAndDrop() {
+            let dragElement = null;
+            let dragOffset = { x: 0, y: 0 };
+            let originalPosition = null;
+
+            document.addEventListener('mousedown', (e) => {
+                const taskBar = e.target.closest('.task-bar');
+                const resizeHandle = e.target.closest('.resize-handle');
+                
+                if (resizeHandle && taskBar) {
+                    // Start resize
+                    e.preventDefault();
+                    isResizing = true;
+                    dragElement = taskBar;
+                    dragElement.classList.add('resizing');
+                    
+                    const isLeftHandle = resizeHandle.classList.contains('left');
+                    const rect = taskBar.getBoundingClientRect();
+                    originalPosition = {
+                        left: rect.left,
+                        width: rect.width,
+                        isLeftHandle
+                    };
+                    
+                } else if (taskBar) {
+                    // Start drag
+                    e.preventDefault();
+                    isDragging = true;
+                    dragElement = taskBar;
+                    dragElement.classList.add('dragging');
+                    
+                    const rect = taskBar.getBoundingClientRect();
+                    dragOffset.x = e.clientX - rect.left;
+                    dragOffset.y = e.clientY - rect.top;
+                    originalPosition = { left: rect.left, top: rect.top };
+                }
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!dragElement) return;
+                
+                if (isResizing) {
+                    const timelineRect = document.getElementById('timeline-content').getBoundingClientRect();
+                    const relativeX = e.clientX - timelineRect.left;
+                    const timelineWidth = timelineRect.width;
+                    const newPercent = (relativeX / timelineWidth) * 100;
+                    
+                    const currentLeft = parseFloat(dragElement.style.left) || 0;
+                    const currentWidth = parseFloat(dragElement.style.width) || 10;
+                    
+                    if (originalPosition.isLeftHandle) {
+                        const newWidth = currentWidth - (newPercent - currentLeft);
+                        if (newWidth > 2) {
+                            dragElement.style.left = newPercent + '%';
+                            dragElement.style.width = newWidth + '%';
+                        }
+                    } else {
+                        const newWidth = newPercent - currentLeft;
+                        if (newWidth > 2) {
+                            dragElement.style.width = newWidth + '%';
+                        }
+                    }
+                    
+                } else if (isDragging) {
+                    const timelineRect = document.getElementById('timeline-content').getBoundingClientRect();
+                    const relativeX = e.clientX - dragOffset.x - timelineRect.left;
+                    const relativeY = e.clientY - dragOffset.y - timelineRect.top;
+                    
+                    const timelineWidth = timelineRect.width;
+                    const newPercent = Math.max(0, Math.min(95, (relativeX / timelineWidth) * 100));
+                    
+                    dragElement.style.left = newPercent + '%';
+                    
+                    // Show drop targets
+                    const rowIndex = Math.floor(relativeY / 40);
+                    document.querySelectorAll('.timeline-row').forEach((row, index) => {
+                        row.classList.toggle('drop-target', index === rowIndex);
+                    });
+                }
+            });
+
+            document.addEventListener('mouseup', (e) => {
+                if (!dragElement) return;
+                
+                if (isResizing) {
+                    // Finish resize
+                    const index = parseInt(dragElement.closest('.timeline-row').dataset.index);
+                    const newLeft = parseFloat(dragElement.style.left);
+                    const newWidth = parseFloat(dragElement.style.width);
+                    
+                    // Update project dates based on new position/width
+                    const startDate = positionToDate(newLeft);
+                    const endDate = positionToDate(newLeft + newWidth);
+                    
+                    projects[index].response_date = endDate.toISOString().split('T')[0];
+                    saveProject(index);
+                    
+                } else if (isDragging) {
+                    // Finish drag
+                    const index = parseInt(dragElement.closest('.timeline-row').dataset.index);
+                    const newLeft = parseFloat(dragElement.style.left);
+                    
+                    // Update project date based on new position
+                    const newDate = positionToDate(newLeft);
+                    projects[index].response_date = newDate.toISOString().split('T')[0];
+                    saveProject(index);
+                }
+                
+                // Cleanup
+                if (dragElement) {
+                    dragElement.classList.remove('dragging', 'resizing');
+                }
+                document.querySelectorAll('.timeline-row').forEach(row => {
+                    row.classList.remove('drop-target');
+                });
+                
+                dragElement = null;
+                isDragging = false;
+                isResizing = false;
+                originalPosition = null;
+            });
+        }
+
+        // Save project changes
+        async function saveProject(index) {
+            console.log('Saving project:', projects[index]);
+
+            try {
+                // Save to localStorage as backup
+                localStorage.setItem('projects', JSON.stringify(projects));
+
+                // Optionally save to server (uncomment when backend endpoint is available)
+                /*
+                const response = await fetch('/save-project', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        index: index,
+                        project: projects[index]
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to save to server');
+                }
+                */
+
+                updateDetailsPanel();
+            } catch (error) {
+                console.error('Error saving project:', error);
+                // Could show user notification here
+            }
+        }
+
+        // Add new task
+        function addNewTask() {
+            const today = new Date();
+            const dueDate = new Date(today);
+            dueDate.setDate(today.getDate() + 30);
+            
+            const newTask = {
+                title: 'New Task',
+                agency: 'TBD',
+                notice_id: 'TBD',
+                response_date: dueDate.toISOString().split('T')[0],
+                type: 'RFP',
+                status: 'not-started',
+                progress: 0
+            };
+            
+            projects.push(newTask);
+            renderAll();
+            
+            // Select and edit the new task
+            const newIndex = projects.length - 1;
+            selectTask(newIndex);
+            
+            setTimeout(() => {
+                const taskNameElement = document.querySelector(`.task-item[data-index="${newIndex}"] .task-name`);
+                if (taskNameElement) {
+                    enableInlineEdit(taskNameElement, newIndex, 'title');
+                }
+            }, 100);
+        }
+
+        // Export data
+        function exportData() {
+            const data = {
+                projects: projects,
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'project-timeline-export.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Render functions
+        function renderTimelineHeader() {
+            const dateGrid = document.getElementById('date-grid');
+            const today = new Date();
+            
+            dateGrid.innerHTML = timelineDays.map(day => {
+                const isToday = day.toDateString() === today.toDateString();
+                const isWeekend = day.getDay() === 0 || day.getDay() === 6;
+                const dayStr = day.toLocaleDateString('en-US', { 
+                    weekday: 'short', 
+                    month: 'numeric', 
+                    day: 'numeric' 
+                });
+                
+                return `<div class="date-header ${isToday ? 'today' : ''} ${isWeekend ? 'weekend' : ''}">${dayStr}</div>`;
+            }).join('');
+        }
+
+        function renderTaskList() {
+            const taskList = document.getElementById('task-list');
+            
+            if (projects.length === 0) {
+                taskList.innerHTML = '<li class="loading">No projects found</li>';
+                return;
+            }
+
+            taskList.innerHTML = projects.map((project, index) => {
+                const responseDate = parseDate(project.response_date);
+                const today = new Date();
+                const duration = responseDate ? Math.ceil((responseDate - today) / (1000 * 60 * 60 * 24)) : 0;
+                const dueDateStr = responseDate ? responseDate.toLocaleDateString('en-US', { 
+                    month: 'numeric', 
+                    day: 'numeric' 
+                }) : 'No date';
+                
+                const isCompleted = project.status === 'completed';
+                const isSelected = selectedTasks.has(index);
+
+                return `
+                    <li class="task-item ${isSelected ? 'selected' : ''}" 
+                        data-index="${index}"
+                        onclick="selectTask(${index}, event.ctrlKey || event.metaKey)"
+                        oncontextmenu="showContextMenu(event, this)">
+                        <div class="task-checkbox ${isCompleted ? 'checked' : ''}" 
+                             onclick="event.stopPropagation(); toggleTaskComplete(${index})">
+                            ${isCompleted ? '✓' : ''}
+                        </div>
+                        <div class="task-name" 
+                             ondblclick="enableInlineEdit(this, ${index}, 'title')">${project.title}</div>
+                        <div class="task-duration">${duration}d</div>
+                        <div class="task-date">${dueDateStr}</div>
+                        <div class="site-visit-date">
+                            <div class="date-compact ${project.site_visit_date ? 'has-date' : 'no-date'}"
+                                 onclick="event.stopPropagation(); showDatePicker(this, ${index}, 'site_visit_date')"
+                                 title="Click to select date">
+                                <span>${project.site_visit_date ? formatCompactDate(project.site_visit_date) : 'Set Date'}</span>
+                                <span class="calendar-icon">📅</span>
+                            </div>
+                        </div>
+                        <div class="work-start-date">
+                            <div class="date-compact ${project.work_start_date ? 'has-date' : 'no-date'}"
+                                 onclick="event.stopPropagation(); showDatePicker(this, ${index}, 'work_start_date')"
+                                 title="Click to select date">
+                                <span>${project.work_start_date ? formatCompactDate(project.work_start_date) : 'Set Date'}</span>
+                                <span class="calendar-icon">📅</span>
+                            </div>
+                        </div>
+                        <div class="completion-date">
+                            <div class="date-compact ${project.completion_date ? 'has-date' : 'no-date'}"
+                                 onclick="event.stopPropagation(); showDatePicker(this, ${index}, 'completion_date')"
+                                 title="Click to select date">
+                                <span>${project.completion_date ? formatCompactDate(project.completion_date) : 'Set Date'}</span>
+                                <span class="calendar-icon">📅</span>
+                            </div>
+                        </div>
+                        <button class="task-menu-btn"
+                                onclick="event.stopPropagation(); showContextMenu(event, this.closest('.task-item'))">⋮</button>
+                    </li>
+                `;
+            }).join('');
+        }
+
+        function renderTimeline() {
+            const timelineContent = document.getElementById('timeline-content');
+            const today = new Date();
+
+            if (projects.length === 0) {
+                timelineContent.innerHTML = '';
+                return;
+            }
+
+            timelineContent.innerHTML = projects.map((project, index) => {
+                const responseDate = parseDate(project.response_date);
+                const siteVisitDate = parseDate(project.site_visit_date);
+                const workStartDate = parseDate(project.work_start_date);
+                const completionDate = parseDate(project.completion_date);
+                const status = getProjectStatus(project);
+                const progress = calculateProgress(project);
+
+                let barHtml = '';
+
+                // Create project span bar from solicitation due date to completion date
+                if (responseDate && completionDate) {
+                    const startPos = getDatePosition(responseDate);
+                    const endPos = getDatePosition(completionDate);
+
+                    const barWidth = Math.abs(endPos - startPos);
+                    const barLeft = Math.min(startPos, endPos);
+
+                    if (barWidth > 1) {
+                        barHtml += `
+                            <div class="project-span-bar status-${status}"
+                                 style="left: ${barLeft}%; width: ${barWidth}%;"
+                                 oncontextmenu="showContextMenu(event, this.closest('.timeline-row'))">
+                                <div class="project-progress-indicator" style="width: ${progress}%"></div>
+                                <div class="task-bar-content">
+                                    ${project.title.length > 15 ? project.title.substring(0, 15) + '...' : project.title}
+                                </div>
+                            </div>
+                        `;
+                    }
+                } else if (responseDate) {
+                    // Fallback to original bar if no completion date
+                    const startPos = getDatePosition(today);
+                    const endPos = getDatePosition(responseDate);
+
+                    const barWidth = Math.abs(endPos - startPos);
+                    const barLeft = Math.min(startPos, endPos);
+
+                    if (barWidth > 1) {
+                        barHtml += `
+                            <div class="task-bar status-${status}"
+                                 style="left: ${barLeft}%; width: ${barWidth}%;"
+                                 oncontextmenu="showContextMenu(event, this.closest('.timeline-row'))">
+                                <div class="task-progress" style="width: ${progress}%"></div>
+                                <div class="task-bar-content">
+                                    ${project.title.length > 15 ? project.title.substring(0, 15) + '...' : project.title}
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+
+                // Add milestone diamonds for each date type
+                if (responseDate) {
+                    const solicitationPos = getDatePosition(responseDate);
+                    barHtml += `<div class="milestone solicitation-due" style="left: ${solicitationPos}%" title="Solicitation Due Date"></div>`;
+                }
+
+                if (siteVisitDate) {
+                    const siteVisitPos = getDatePosition(siteVisitDate);
+                    barHtml += `<div class="milestone site-visit" style="left: ${siteVisitPos}%" title="Site Visit Date"></div>`;
+                }
+
+                if (workStartDate) {
+                    const workStartPos = getDatePosition(workStartDate);
+                    barHtml += `<div class="milestone work-start" style="left: ${workStartPos}%" title="Work Start Date"></div>`;
+                }
+
+                if (completionDate) {
+                    const completionPos = getDatePosition(completionDate);
+                    barHtml += `<div class="milestone completion" style="left: ${completionPos}%" title="Completion Date"></div>`;
+                }
+
+                const isSelected = selectedTasks.has(index);
+
+                return `
+                    <div class="timeline-row ${isSelected ? 'selected' : ''}"
+                         data-index="${index}"
+                         onclick="selectTask(${index}, event.ctrlKey || event.metaKey)">
+                        ${barHtml}
+                    </div>
+                `;
+            }).join('');
+
+            // Add current date line
+            const todayPos = getDatePosition(today);
+            timelineContent.innerHTML += `<div class="current-date-line" style="left: ${todayPos}%"></div>`;
+        }
+
+        function toggleTaskComplete(index) {
+            const isCompleted = projects[index].status === 'completed';
+            projects[index].status = isCompleted ? 'in-progress' : 'completed';
+            projects[index].progress = isCompleted ? 25 : 100;
+            saveProject(index);
+            renderAll();
+        }
+
+        function updateProjectField(index, field, value) {
+            if (projects[index]) {
+                projects[index][field] = value;
+                saveProject(index);
+                // Re-render if needed for timeline updates
+                setTimeout(() => {
+                    renderTimeline();
+                }, 100);
+            }
+        }
+
+        function formatCompactDate(dateStr) {
+            if (!dateStr) return 'Set Date';
+            try {
+                const date = new Date(dateStr);
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const day = date.getDate().toString().padStart(2, '0');
+                return `${month}/${day}`;
+            } catch (e) {
+                return 'Set Date';
+            }
+        }
+
+        function showDatePicker(element, index, field) {
+            // Close any existing popup
+            document.querySelectorAll('.date-picker-popup').forEach(popup => popup.remove());
+
+            // Create popup
+            const popup = document.createElement('div');
+            popup.className = 'date-picker-popup show';
+
+            const currentValue = projects[index][field] || '';
+
+            popup.innerHTML = `
+                <input type="date" value="${currentValue}"
+                       onchange="updateDateField(${index}, '${field}', this.value, this.parentElement)"
+                       onblur="setTimeout(() => { if (this.parentElement) this.parentElement.remove(); }, 200)">
+            `;
+
+            // Position the popup relative to the clicked element
+            element.style.position = 'relative';
+            element.appendChild(popup);
+
+            // Focus the date input to potentially trigger calendar
+            const dateInput = popup.querySelector('input[type="date"]');
+            setTimeout(() => {
+                dateInput.focus();
+                dateInput.showPicker && dateInput.showPicker(); // Modern browsers
+            }, 50);
+
+            // Handle clicking outside popup
+            const handleOutsideClick = function(e) {
+                if (!popup.contains(e.target) && !element.contains(e.target)) {
+                    popup.remove();
+                    document.removeEventListener('click', handleOutsideClick);
+                }
+            };
+
+            setTimeout(() => {
+                document.addEventListener('click', handleOutsideClick);
+            }, 100);
+        }
+
+        function updateDateField(index, field, value, popup) {
+            updateProjectField(index, field, value);
+            if (popup) {
+                popup.remove();
+            }
+            // Re-render the task list to show updated date
+            renderTaskList();
+        }
+
+        // Panel Resizer functionality
+        function initializePanelResizer() {
+            const resizer = document.getElementById('panel-resizer');
+            const taskPanel = resizer.parentElement;
+            const container = taskPanel.parentElement;
+            let isResizing = false;
+            let startX = 0;
+            let startWidth = 0;
+
+            resizer.addEventListener('mousedown', (e) => {
+                isResizing = true;
+                startX = e.clientX;
+                startWidth = taskPanel.offsetWidth;
+                resizer.classList.add('dragging');
+
+                // Prevent text selection during resize
+                document.body.style.userSelect = 'none';
+                document.body.style.cursor = 'col-resize';
+
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isResizing) return;
+
+                const deltaX = e.clientX - startX;
+                const newWidth = Math.max(250, Math.min(600, startWidth + deltaX));
+
+                // Update CSS custom property
+                document.documentElement.style.setProperty('--task-panel-width', newWidth + 'px');
+
+                // Save preference to localStorage
+                localStorage.setItem('task-panel-width', newWidth);
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isResizing) {
+                    isResizing = false;
+                    resizer.classList.remove('dragging');
+                    document.body.style.userSelect = '';
+                    document.body.style.cursor = '';
+                }
+            });
+
+            // Load saved width preference
+            const savedWidth = localStorage.getItem('task-panel-width');
+            if (savedWidth) {
+                document.documentElement.style.setProperty('--task-panel-width', savedWidth + 'px');
+            }
+        }
+
+        // Load data
+        async function loadData() {
+            try {
+                const response = await fetch('/my-filter', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ keyword: '' })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load data');
+                }
+                
+                const data = await response.json();
+                
+                projects = (data.solicitations || []).map(solicitation => ({
+                    title: solicitation.Title || solicitation.title || 'Untitled Project',
+                    notice_id: solicitation['Notice ID'] || solicitation.notice_id || '',
+                    response_date: solicitation['Current Response Date'] ||
+                                 solicitation['Response Date'] ||
+                                 solicitation.response_date || '',
+                    agency: solicitation.Agency || solicitation.agency || '',
+                    type: solicitation['Contract Opportunity Type'] ||
+                          solicitation.type || 'Unknown',
+                    status: undefined, // Will be calculated
+                    progress: 0,
+                    site_visit_date: '',
+                    work_start_date: '',
+                    completion_date: ''
+                }));
+
+                // Merge with saved data from localStorage
+                const savedProjects = localStorage.getItem('projects');
+                if (savedProjects) {
+                    try {
+                        const parsedSavedProjects = JSON.parse(savedProjects);
+                        // Merge saved data with fresh data based on notice_id
+                        projects = projects.map(project => {
+                            const savedProject = parsedSavedProjects.find(sp => sp.notice_id === project.notice_id);
+                            if (savedProject) {
+                                // Preserve saved dates and other custom fields
+                                return {
+                                    ...project,
+                                    site_visit_date: savedProject.site_visit_date || '',
+                                    work_start_date: savedProject.work_start_date || '',
+                                    completion_date: savedProject.completion_date || '',
+                                    status: savedProject.status,
+                                    progress: savedProject.progress || 0
+                                };
+                            }
+                            return project;
+                        });
+                    } catch (e) {
+                        console.error('Error parsing saved projects:', e);
+                    }
+                }
+                
+                projects.sort((a, b) => {
+                    const dateA = parseDate(a.response_date);
+                    const dateB = parseDate(b.response_date);
+                    if (!dateA && !dateB) return 0;
+                    if (!dateA) return 1;
+                    if (!dateB) return -1;
+                    return dateA - dateB;
+                });
+                
+                renderAll();
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('task-list').innerHTML = `
+                    <li class="loading">Error loading projects: ${error.message}</li>
+                `;
+            }
+        }
+
+        function refreshData() {
+            document.getElementById('task-list').innerHTML = '<li class="loading"><div class="spinner"></div>Refreshing...</li>';
+            selectedTasks.clear();
+            currentTask = null;
+            loadData();
+        }
+
+        function renderAll() {
+            calculateTimeline();
+            renderTimelineHeader();
+            renderTaskList();
+            renderTimeline();
+            updateDetailsPanel();
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                selectedTasks.clear();
+                currentTask = null;
+                document.querySelectorAll('.task-item, .timeline-row').forEach(el => {
+                    el.classList.remove('selected');
+                });
+                hideContextMenu();
+            } else if (e.key === 'Delete' && selectedTasks.size > 0) {
+                if (confirm(`Delete ${selectedTasks.size} task(s)?`)) {
+                    Array.from(selectedTasks).sort((a, b) => b - a).forEach(index => {
+                        projects.splice(index, 1);
+                    });
+                    selectedTasks.clear();
+                    currentTask = null;
+                    renderAll();
+                }
+            } else if (e.key === 'n' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                addNewTask();
+            } else if (e.key === 'd' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                toggleDetailsPanel();
+            }
+        });
+
+        // Details panel event listeners
+        document.getElementById('detail-response-date').addEventListener('change', (e) => {
+            if (currentTask !== null) {
+                projects[currentTask].response_date = e.target.value;
+                saveProject(currentTask);
+                renderAll();
+            }
+        });
+
+        document.getElementById('detail-status').addEventListener('change', (e) => {
+            if (currentTask !== null) {
+                projects[currentTask].status = e.target.value;
+                saveProject(currentTask);
+                renderAll();
+            }
+        });
+
+        document.getElementById('detail-progress').addEventListener('input', (e) => {
+            if (currentTask !== null) {
+                const progress = parseInt(e.target.value);
+                projects[currentTask].progress = progress;
+                document.getElementById('progress-value').textContent = progress + '%';
+                saveProject(currentTask);
+                renderAll();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDragAndDrop();
+            initializePanelResizer();
+            updateZoom(); // Set initial slider position
+            loadData();
+        });
+    </script>
+
+<script>
+// Enhanced Persistence Fix for SAM Project Tracking
+// Copy this entire script block and paste it before the 
+
+<script>
+// Enhanced Slider Position Persistence for SAM Project Tracking
+// This script ensures the slider position is always saved and restored
+
+console.log('Loading enhanced slider persistence...');
+
+// Wait for the page to fully load
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        console.log('Initializing enhanced slider persistence');
+
+        // Load saved slider position immediately
+        const savedZoomLevel = localStorage.getItem('timeline_zoom_level');
+        if (savedZoomLevel) {
+            window.zoomLevel = parseInt(savedZoomLevel);
+            console.log('✓ Restored saved zoom level:', window.zoomLevel);
+
+            // Force update the display
+            if (typeof updateZoom === 'function') {
+                updateZoom();
+            }
+        } else {
+            // Set default if no saved value
+            window.zoomLevel = 100;
+            localStorage.setItem('timeline_zoom_level', '100');
+            console.log('✓ Set default zoom level: 100');
+        }
+
+        // Function to save zoom level
+        function saveZoomLevel(level) {
+            localStorage.setItem('timeline_zoom_level', level.toString());
+            console.log('✓ Slider position SAVED:', level);
+
+            // Also save timestamp for debugging
+            localStorage.setItem('timeline_zoom_last_saved', new Date().toISOString());
+        }
+
+        // Override ALL zoom functions to save position
+        if (typeof window.zoomIn === 'function') {
+            const originalZoomIn = window.zoomIn;
+            window.zoomIn = function() {
+                originalZoomIn.call(this);
+                saveZoomLevel(window.zoomLevel);
+                console.log('Zoom IN - New position:', window.zoomLevel);
+            };
+        }
+
+        if (typeof window.zoomOut === 'function') {
+            const originalZoomOut = window.zoomOut;
+            window.zoomOut = function() {
+                originalZoomOut.call(this);
+                saveZoomLevel(window.zoomLevel);
+                console.log('Zoom OUT - New position:', window.zoomLevel);
+            };
+        }
+
+        if (typeof window.setZoom === 'function') {
+            const originalSetZoom = window.setZoom;
+            window.setZoom = function(event) {
+                originalSetZoom.call(this, event);
+                saveZoomLevel(window.zoomLevel);
+                console.log('Zoom SLIDER - New position:', window.zoomLevel);
+            };
+        }
+
+        // Additional backup: Monitor for ANY changes to zoomLevel variable
+        let lastKnownZoom = window.zoomLevel;
+        setInterval(function() {
+            if (window.zoomLevel !== lastKnownZoom) {
+                saveZoomLevel(window.zoomLevel);
+                lastKnownZoom = window.zoomLevel;
+                console.log('Zoom level changed detected, saved:', window.zoomLevel);
+            }
+        }, 1000);
+
+        // Save on page unload
+        window.addEventListener('beforeunload', function() {
+            if (typeof window.zoomLevel !== 'undefined') {
+                localStorage.setItem('timeline_zoom_level', window.zoomLevel.toString());
+                console.log('✓ Slider position saved on page close:', window.zoomLevel);
+            }
+        });
+
+        // Display current status
+        setTimeout(function() {
+            const currentZoom = localStorage.getItem('timeline_zoom_level');
+            const lastSaved = localStorage.getItem('timeline_zoom_last_saved');
+
+            console.log('=== SLIDER PERSISTENCE STATUS ===');
+            console.log('Current zoom level:', window.zoomLevel);
+            console.log('Saved zoom level:', currentZoom);
+            console.log('Last saved at:', lastSaved ? new Date(lastSaved).toLocaleString() : 'Never');
+            console.log('===============================');
+        }, 3000);
+
+        console.log('✓ Enhanced slider persistence activated');
+
+    }, 2500); // Wait 2.5 seconds for everything to load
+});
+
+console.log('Enhanced slider persistence script loaded');
+</script>
+</body> tag in project_tracking.html
+
+// Fix date field saving
+document.addEventListener('DOMContentLoaded', function() {
+    // Override the updateDateField function after the page loads
+    setTimeout(function() {
+        if (typeof window.updateDateField !== 'undefined') {
+            const originalUpdateDateField = window.updateDateField;
+
+            window.updateDateField = function(index, field, value, popup) {
+                console.log('Enhanced: Saving date field', field, 'to value', value);
+
+                if (projects && projects[index]) {
+                    projects[index][field] = value;
+
+                    // Force immediate save to localStorage
+                    localStorage.setItem('projects', JSON.stringify(projects));
+                    localStorage.setItem('projects_last_saved', new Date().toISOString());
+                    console.log('✓ Date saved successfully:', field, '=', value);
+
+                    // Update displays
+                    if (typeof renderTaskList === 'function') renderTaskList();
+                    if (typeof renderTimeline === 'function') renderTimeline();
+                }
+
+                if (popup) popup.remove();
+            };
+
+            console.log('✓ Enhanced date field saving activated');
+        }
+
+        // Enhanced zoom persistence
+        if (typeof window.zoomLevel !== 'undefined') {
+            // Load saved zoom level
+            const savedZoom = localStorage.getItem('timeline_zoom_level');
+            if (savedZoom) {
+                window.zoomLevel = parseInt(savedZoom);
+                console.log('✓ Zoom level restored:', window.zoomLevel);
+
+                // Update the display
+                if (typeof updateZoom === 'function') {
+                    updateZoom();
+                }
+            }
+
+            // Override zoom functions to save position
+            const originalZoomIn = window.zoomIn;
+            const originalZoomOut = window.zoomOut;
+            const originalSetZoom = window.setZoom;
+
+            if (originalZoomIn) {
+                window.zoomIn = function() {
+                    originalZoomIn.call(this);
+                    localStorage.setItem('timeline_zoom_level', window.zoomLevel);
+                    console.log('✓ Zoom saved:', window.zoomLevel);
+                };
+            }
+
+            if (originalZoomOut) {
+                window.zoomOut = function() {
+                    originalZoomOut.call(this);
+                    localStorage.setItem('timeline_zoom_level', window.zoomLevel);
+                    console.log('✓ Zoom saved:', window.zoomLevel);
+                };
+            }
+
+            if (originalSetZoom) {
+                window.setZoom = function(event) {
+                    originalSetZoom.call(this, event);
+                    localStorage.setItem('timeline_zoom_level', window.zoomLevel);
+                    console.log('✓ Zoom saved:', window.zoomLevel);
+                };
+            }
+
+            console.log('✓ Enhanced zoom persistence activated');
+        }
+
+    }, 2000); // Wait 2 seconds for everything to load
+
+    // Auto-save every 15 seconds
+    setInterval(function() {
+        if (typeof projects !== 'undefined' && projects && projects.length > 0) {
+            localStorage.setItem('projects', JSON.stringify(projects));
+            localStorage.setItem('projects_last_saved', new Date().toISOString());
+            console.log('✓ Auto-save completed');
+        }
+    }, 15000);
+
+    // Save on page close
+    window.addEventListener('beforeunload', function() {
+        if (typeof projects !== 'undefined' && projects && projects.length > 0) {
+            localStorage.setItem('projects', JSON.stringify(projects));
+            localStorage.setItem('projects_last_saved', new Date().toISOString());
+            if (typeof window.zoomLevel !== 'undefined') {
+                localStorage.setItem('timeline_zoom_level', window.zoomLevel);
+            }
+            console.log('✓ Data saved on close');
+        }
+    });
+});
+
+console.log('🚀 Enhanced persistence script loaded');
+</script>
+
+
+<script>
+// Enhanced Slider Position Persistence for SAM Project Tracking
+// This script ensures the slider position is always saved and restored
+
+console.log('Loading enhanced slider persistence...');
+
+// Wait for the page to fully load
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        console.log('Initializing enhanced slider persistence');
+
+        // Load saved slider position immediately
+        const savedZoomLevel = localStorage.getItem('timeline_zoom_level');
+        if (savedZoomLevel) {
+            window.zoomLevel = parseInt(savedZoomLevel);
+            console.log('✓ Restored saved zoom level:', window.zoomLevel);
+
+            // Force update the display
+            if (typeof updateZoom === 'function') {
+                updateZoom();
+            }
+        } else {
+            // Set default if no saved value
+            window.zoomLevel = 100;
+            localStorage.setItem('timeline_zoom_level', '100');
+            console.log('✓ Set default zoom level: 100');
+        }
+
+        // Function to save zoom level
+        function saveZoomLevel(level) {
+            localStorage.setItem('timeline_zoom_level', level.toString());
+            console.log('✓ Slider position SAVED:', level);
+
+            // Also save timestamp for debugging
+            localStorage.setItem('timeline_zoom_last_saved', new Date().toISOString());
+        }
+
+        // Override ALL zoom functions to save position
+        if (typeof window.zoomIn === 'function') {
+            const originalZoomIn = window.zoomIn;
+            window.zoomIn = function() {
+                originalZoomIn.call(this);
+                saveZoomLevel(window.zoomLevel);
+                console.log('Zoom IN - New position:', window.zoomLevel);
+            };
+        }
+
+        if (typeof window.zoomOut === 'function') {
+            const originalZoomOut = window.zoomOut;
+            window.zoomOut = function() {
+                originalZoomOut.call(this);
+                saveZoomLevel(window.zoomLevel);
+                console.log('Zoom OUT - New position:', window.zoomLevel);
+            };
+        }
+
+        if (typeof window.setZoom === 'function') {
+            const originalSetZoom = window.setZoom;
+            window.setZoom = function(event) {
+                originalSetZoom.call(this, event);
+                saveZoomLevel(window.zoomLevel);
+                console.log('Zoom SLIDER - New position:', window.zoomLevel);
+            };
+        }
+
+        // Additional backup: Monitor for ANY changes to zoomLevel variable
+        let lastKnownZoom = window.zoomLevel;
+        setInterval(function() {
+            if (window.zoomLevel !== lastKnownZoom) {
+                saveZoomLevel(window.zoomLevel);
+                lastKnownZoom = window.zoomLevel;
+                console.log('Zoom level changed detected, saved:', window.zoomLevel);
+            }
+        }, 1000);
+
+        // Save on page unload
+        window.addEventListener('beforeunload', function() {
+            if (typeof window.zoomLevel !== 'undefined') {
+                localStorage.setItem('timeline_zoom_level', window.zoomLevel.toString());
+                console.log('✓ Slider position saved on page close:', window.zoomLevel);
+            }
+        });
+
+        // Display current status
+        setTimeout(function() {
+            const currentZoom = localStorage.getItem('timeline_zoom_level');
+            const lastSaved = localStorage.getItem('timeline_zoom_last_saved');
+
+            console.log('=== SLIDER PERSISTENCE STATUS ===');
+            console.log('Current zoom level:', window.zoomLevel);
+            console.log('Saved zoom level:', currentZoom);
+            console.log('Last saved at:', lastSaved ? new Date(lastSaved).toLocaleString() : 'Never');
+            console.log('===============================');
+        }, 3000);
+
+        console.log('✓ Enhanced slider persistence activated');
+
+    }, 2500); // Wait 2.5 seconds for everything to load
+});
+
+console.log('Enhanced slider persistence script loaded');
+</script>
+</body>
+</html>

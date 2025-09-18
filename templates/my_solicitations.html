@@ -11,7 +11,7 @@
       --navy:#112a57; --bg:#f7f7fb; --card:#ffffff; --border:#e6e6ef;
       --grid-blue:#c3d3ff;
 
-      --min-col-w: 140px;
+      --min-col-w: 50px;
       --right-gutter: 140px;
       --bottom-bar-h: 18px;
     }
@@ -207,13 +207,13 @@
     }
 
     /* Controls (reduced set) */
-    .controls-wrap { max-width: 1200px; margin: 0 auto; padding: 4px 10px 0; }
+    .controls-wrap { max-width: 1600px; margin: 0 auto; padding: 2px 10px 0; display: flex; justify-content: center; }
     .controls {
       position: relative;
       display: inline-grid;
       width: max-content;
       max-width: 100%;
-      grid-template-columns: auto 1fr auto auto auto; /* lock | keyword | download | apply | reset */
+      grid-template-columns: auto 1fr auto auto auto auto auto; /* lock | keyword | apply | reset | project tracker | ai summary | download */
       align-items: center;
       gap: 10px;
       background: var(--card); border: 1px solid var(--grid-blue); border-radius: 12px;
@@ -222,9 +222,9 @@
     .controls input, .controls button { font-size: 14px; }
     .controls input {
       padding: 10px 12px; border: 1.25px solid var(--grid-blue); border-radius: 10px; outline: none;
-      background: #fff; color: #111; font-weight: 600; min-width: 260px;
+      background: #fff; color: #2d3d79; font-weight: 600; min-width: 260px;
     }
-    .controls input::placeholder { font-weight: 600; opacity: 0.9; }
+    .controls input::placeholder { font-weight: 600; opacity: 1.0; color: #0f1540; }
     .controls input:focus { outline: 0; border-color: var(--grid-blue); box-shadow: 0 0 0 2px rgba(195,211,255,0.45); }
     .controls button { padding: 10px 14px; border: 1px solid var(--border); border-radius: 10px; font-weight: 600; cursor: pointer; }
     #applyBtn { background: var(--navy); color:#fff; }
@@ -239,12 +239,33 @@
     .start-btn { display: inline-flex; align-items: center; gap: 8px; }
     .start-btn svg { width: 30px; height: 30px; }
 
-    .count { text-align: right; padding: 6px 20px 8px; font-weight: bold; color: var(--navy); }
+    /* Project Tracker and AI Summary button colors */
+    a[href="/project_tracking"].start-btn {
+      background: #e8f5e8 !important; /* Light green background */
+      color: #2d3d79 !important; /* Dark navy blue text */
+      border-color: #90c695 !important;
+    }
+    #generateAISummaryBtn.start-btn {
+      background: #e8f5e8 !important; /* Light green background */
+      color: #2d3d79 !important; /* Dark navy blue text */
+      border-color: #90c695 !important;
+    }
+
+    /* Highlights input save feedback */
+    .highlights-input.saving {
+      border: 3px solid #28a745 !important;
+      box-shadow: 0 0 15px rgba(40, 167, 69, 0.9) !important;
+      background-color: rgba(40, 167, 69, 0.15) !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .count { text-align: right; padding: 2px 20px 2px; font-weight: bold; color: var(--navy); }
 
     .table-scroll {
       height: calc(100vh - (220px + 10px + 52px + 14px + var(--bottom-bar-h)));
       overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch;
       padding: 0 10px calc(12px + var(--bottom-bar-h)) 10px; position: relative;
+      margin-top: -8px;
     }
     .hrow { display: inline-flex; align-items: stretch; width: max-content; min-width: 100%; }
     .scroll-spacer { width: var(--right-gutter); flex: 0 0 var(--right-gutter); display: block; }
@@ -261,6 +282,35 @@
       white-space: normal; word-break: break-word; overflow-wrap: anywhere;
       min-width: var(--min-col-w);
     }
+
+    /* Notice ID column - force fixed layout */
+    td.notice-id-enhanced {
+      position: relative !important;
+      overflow: hidden !important;
+      max-width: 0 !important;
+    }
+    .notice-id-value {
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+    .file-links-container {
+      position: absolute !important;
+      top: 30px !important;
+      left: 12px !important;
+      right: 12px !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      z-index: 1 !important;
+    }
+    /* Force all Notice ID content to be light blue - highest specificity */
+    table tbody tr td.notice-id-enhanced div.file-links-container div a,
+    table tbody tr td.notice-id-enhanced div.file-links-container div span,
+    table tbody tr td.notice-id-enhanced a,
+    table tbody tr td.notice-id-enhanced span {
+      color: #000080 !important;
+      text-decoration: underline !important;
+    }
     thead th { position: sticky; top: 0; z-index: 25; background: var(--navy); color: #fff; box-shadow: 0 2px 0 rgba(0,0,0,0.05); }
     thead th .col-resizer { position: absolute; right: -3px; top: 0; bottom: 0; width: 6px; cursor: col-resize; z-index: 30; background: transparent; }
     thead th .col-resizer:hover, thead th .col-resizer.active { background: rgba(17, 42, 87, 0.15); }
@@ -276,6 +326,42 @@
     .bottom-hscroll .spacer { height: 1px; width: 1px; }
 
     .notice-id-cell { color: var(--navy); font-weight: 700; text-decoration: underline; cursor: pointer; }
+
+    /* Enhanced Notice ID cells with file links */
+    .notice-id-enhanced .notice-id-value {
+      color: var(--navy); font-weight: 700; text-decoration: underline; cursor: pointer;
+      margin-bottom: 12px;
+    }
+    .file-links-container {
+      font-size: 14px;
+      line-height: 1.4;
+      margin-top: 8px;
+    }
+    .file-link {
+      display: inline;
+      color: #000080 !important;  /* Dark blue */
+      text-decoration: underline !important;
+      padding: 2px 3px;
+      border-radius: 3px;
+      font-size: 16px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .file-link:hover {
+      background: #f0f8ff;
+      color: #4da6ff !important;  /* Slightly darker light blue on hover */
+      text-decoration: underline !important;
+    }
+    .file-bullet {
+      color: #000080 !important;
+      font-weight: bold;
+      margin-right: 6px;
+      font-size: 18px;
+      text-decoration: none !important;
+      display: inline;
+      border: none;
+      background: none;
+    }
 
     /* Two-step action popover (View + Delete) */
     .action-popover {
@@ -296,6 +382,7 @@
       padding:10px;
     }
     .action-popover .grp + .grp{ margin-top:10px; } /* stack */
+    .action-popover .grp-view + .grp-folder{ margin-top:4px; } /* closer spacing between view and folder */
     .action-popover .q { font-weight: 700; color: var(--navy); margin-bottom: 8px; }
     .action-popover .row { display: flex; gap: 8px; justify-content: flex-end; }
     .action-popover button {
@@ -306,6 +393,27 @@
     .action-popover .no  { background: #fff; color: #222; }
     :root[data-theme="dark"] .action-popover { background:#20263a; border-color:#39446e; }
     :root[data-theme="dark"] .action-popover .grp{ background:#242b40; border-color:#39446e; }
+
+    /* Success notification positioned near popup */
+    .success-notification {
+      position: fixed;
+      z-index: 300;
+      display: none;
+      background: #d4edda;
+      border: 2px solid #28a745;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 8px 24px rgba(40, 167, 69, 0.3);
+      max-width: 320px;
+      font-weight: 600;
+      color: #155724;
+      white-space: pre-line;
+    }
+    :root[data-theme="dark"] .success-notification {
+      background: #1e3a2e;
+      border-color: #28a745;
+      color: #a3d9a5;
+    }
 /* === Uniform size for search/control buttons (main page) === */
 :root { --ctl-h: 44px; --ctl-pad-x: 14px; }
 
@@ -341,6 +449,75 @@ body[data-theme="dark"] #applyBtn {
 body[data-theme="dark"] #applyBtn:hover {
   background: #f5f5f5 !important;
 }
+
+/* Keyword highlighting styles */
+mark.hl {
+  background-color: #ffff00 !important;
+  color: #000 !important;
+  padding: 1px 2px !important;
+  border-radius: 2px !important;
+  font-weight: bold !important;
+  display: inline !important;
+}
+
+:root[data-theme="dark"] mark.hl {
+  background-color: #ffeb3b !important;
+  color: #000 !important;
+}
+
+/* Ensure highlighting works in contenteditable divs */
+.highlight-div mark.hl {
+  background-color: #ffff00 !important;
+  color: #000 !important;
+  padding: 1px 2px !important;
+  border-radius: 2px !important;
+  font-weight: bold !important;
+}
+
+/* AI Summary bullet point styling */
+.ai-summary-content {
+  font-size: 16px;
+  line-height: 1.6;
+}
+/* Tighter spacing for AI Summary column - ChatGPT recommendation */
+/* Tighten the whole cell */
+td[data-col="Highlight Summary"] {
+  padding: 4px 6px !important;            /* was 12px */
+  vertical-align: top !important;         /* FORCE top alignment */
+}
+
+/* Tighten the blue "AI Summary" box */
+td[data-col="Highlight Summary"] .ai-summary {
+  padding: 4px !important;                /* was 6px */
+  margin-bottom: 4px !important;          /* was 8px */
+  border-radius: 4px;                     /* keep your look */
+  display: flex !important;               /* Use flexbox for alignment */
+  flex-direction: column !important;      /* Stack content vertically */
+  justify-content: flex-start !important; /* Align content to TOP of this window */
+  align-items: flex-start !important;     /* Align content to left edge */
+  height: auto !important;                /* Auto height */
+  min-height: auto !important;            /* No minimum height - fully responsive to content */
+}
+
+/* Tighten the body content directly under the AI Summary */
+td[data-col="Highlight Summary"] .ai-summary-content {
+  margin: 0 !important;                   /* remove default gaps */
+  padding: 0 !important;
+  line-height: 1.2;                        /* tighter text lines */
+  white-space: pre-line;                   /* preserve your bullets/line breaks */
+}
+
+/* Optional: if you later wrap bullets in a <ul>, keep it snug */
+td[data-col="Highlight Summary"] .ai-summary-content ul {
+  margin: 0 !important;
+  padding-left: 1rem;                      /* smaller indent */
+}
+td[data-col="Highlight Summary"] .ai-summary-content li {
+  margin: 2px 0;                           /* tighter bullet spacing */
+}
+
+/* FINAL OVERRIDE - Notice ID links darker blue */
+.notice-id-enhanced a, .notice-id-enhanced span { color: #000080 !important; }
   </style>
 </head>
 <body>
@@ -348,35 +525,25 @@ body[data-theme="dark"] #applyBtn:hover {
     <header class="app-header">
       <div class="flag-banner"></div>
       <div class="title-bar">
-        <a class="top-cta-left" href="/" title="Back to SAM.gov Filter Tool">Go Back to Main Page</a>
         <h1 class="app-title">My Solicitations</h1>
         <button id="themeToggle" class="theme-toggle" type="button" aria-pressed="false" title="Toggle dark mode">🌙</button>
       </div>
     </header>
 
-    <!-- PROJECT TRACKER BUTTON -->
-    <div class="project-tracker-cta">
-   <a href="/project_tracking" class="btn-project-tracker" target="_blank" rel="noopener">
-        <div class="btn-content">
-          <div class="btn-icon">
-            📋
-          </div>
-          <div class="btn-text">
-            <div class="btn-title">Go to Project Tracker</div>
-            <div class="btn-subtitle">View Gantt chart timeline</div>
-          </div>
-          <div class="btn-arrow">
-            →
-          </div>
-        </div>
-      </a>
-    </div>
 
     <!-- Controls bar (reduced set) -->
     <div class="controls-wrap">
       <div class="controls" id="controls">
         <button id="lockColsBtn" class="lock-btn" type="button" aria-pressed="false" title="Lock column widths">🔓 Columns Unlocked</button>
-        <input id="keyword" type="text" placeholder="Keyword in Title/Description" />
+        <input id="keyword" type="text" placeholder="Search All Text in Spreadsheet" />
+        <button id="applyBtn" type="button" title="Apply filters">Apply</button>
+        <button id="resetBtn" type="button" title="Clear filters">Reset</button>
+        <a href="/project_tracking" class="start-btn" target="_blank" rel="noopener" title="Go to Project Tracker">
+          📋 Project Tracker
+        </a>
+        <button id="generateAISummaryBtn" class="start-btn" type="button" title="Generate AI summaries for all rows">
+          🤖 Generate AI Summary
+        </button>
         <button id="downloadBtn" class="start-btn" type="button" title="Download current filtered rows as Excel">
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M12 3v10m0 0l4-4m-4 4l-4-4M4 20h16"
@@ -384,8 +551,6 @@ body[data-theme="dark"] #applyBtn:hover {
           </svg>
           Download Updated File
         </button>
-        <button id="applyBtn" type="button" title="Apply filters">Apply</button>
-        <button id="resetBtn" type="button" title="Clear filters">Reset</button>
       </div>
     </div>
 
@@ -415,10 +580,31 @@ body[data-theme="dark"] #applyBtn:hover {
           <tr>
             {% for col in columns %}
               {% set lc = col|lower %}
-              {% if 'summary' in lc %}
+              {% if col == 'Highlight Summary' %}
+                <td data-col="{{ col }}" class="highlight-summary" style="max-width: 350px; vertical-align: top;">
+                  <div style="font-weight: bold; color: #0066cc; margin: 0 0 2px 0; padding: 0;">🤖 AI Summary:</div>
+                  <div class="ai-summary" style="background: #f0f8ff; border: 1px solid #ddd; border-radius: 4px; padding: 6px; margin-bottom: 8px; white-space: pre-line; vertical-align: top;">
+                    <div class="ai-summary-content" data-notice-id="{{ s.get('Notice ID', '') }}" style="vertical-align: top;">
+                      {% if s.get(col, '') %}
+                        {{ s.get(col, '') }}
+                      {% else %}
+                        <span style="font-style: italic; color: #666;">Click "Generate AI Summary" button above to generate summaries for all rows</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <input type="text" value="" placeholder="Add your highlights"
+                         style="width: 100%; border: 1px solid #ccc; background: white; padding: 8px; border-radius: 3px; font-size: 14px; height: 40px;"
+                         class="highlights-input" data-notice-id="{{ s.get('Notice ID', '') }}" />
+                </td>
+              {% elif 'summary' in lc %}
                 <td data-col="{{ col }}" class="summary">{{ s.get(col, '')|safe }}</td>
               {% elif 'desc' in lc %}
                 <td data-col="{{ col }}" class="desc">{{ s.get(col, '') }}</td>
+              {% elif 'notice' in lc and 'id' in lc %}
+                <td data-col="{{ col }}" class="notice-id-enhanced" data-notice-id="{{ s.get(col, '') }}" data-title="{{ s.get('Title', s.get('Opportunity Title', s.get('Notice Title', s.get('Name', '')))) }}">
+                  <div class="notice-id-value">{{ s.get(col, '') }}</div>
+                  <div class="file-links-container"></div>
+                </td>
               {% else %}
                 <td data-col="{{ col }}">{{ s.get(col, '') }}</td>
               {% endif %}
@@ -444,6 +630,13 @@ body[data-theme="dark"] #applyBtn:hover {
         <button class="yes yes-view" type="button">Yes</button>
       </div>
     </div>
+    <div class="grp grp-folder">
+      <div class="q">Create Folder for This Opportunity?</div>
+      <div class="row">
+        <button class="no no-folder"  type="button">No</button>
+        <button class="yes yes-folder" type="button">Yes</button>
+      </div>
+    </div>
     <div class="grp grp-del">
       <div class="q">Delete this row from My Solicitations?</div>
       <div class="row">
@@ -453,7 +646,151 @@ body[data-theme="dark"] #applyBtn:hover {
     </div>
   </div>
 
+  <!-- Success notification popup -->
+  <div id="successNotification" class="success-notification" role="alert" aria-hidden="true"></div>
+
   <script>
+    /* ---- File links functions ---- */
+    async function loadFolderFiles(title) {
+      try {
+        const response = await fetch('/get-folder-files', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: title })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          return data.files || [];
+        }
+      } catch (error) {
+        console.error('Error loading folder files:', error);
+      }
+      return [];
+    }
+
+    function populateFileLinks(cell, files) {
+      const container = cell.querySelector('.file-links-container');
+      if (!container) return;
+
+      // Check if already populated to prevent duplicates
+      if (container.hasAttribute('data-populated')) {
+        return;
+      }
+
+      container.innerHTML = '';
+
+      if (files.length === 0) {
+        container.setAttribute('data-populated', 'true');
+        return; // Don't show anything if no files
+      }
+
+      files.forEach(file => {
+        const linkWrapper = document.createElement('div');
+        linkWrapper.style.display = 'block';
+        linkWrapper.style.margin = '4px 0';
+
+        const bullet = document.createElement('span');
+        bullet.className = 'file-bullet';
+        bullet.textContent = '● ';
+
+        const link = document.createElement('a');
+        link.href = `/open-file/${encodeURIComponent(file.path)}`;
+        link.className = 'file-link';
+        link.title = `${file.name} (${file.size})`;
+        link.textContent = file.name;
+        link.onclick = function(e) {
+          e.preventDefault();
+          window.open(this.href, '_blank', 'width=1200,height=800,scrollbars=yes,resizable=yes');
+        };
+        // Removed inline textDecoration override to let CSS handle it
+
+        linkWrapper.appendChild(bullet);
+        linkWrapper.appendChild(link);
+        container.appendChild(linkWrapper);
+      });
+
+      // Mark as populated
+      container.setAttribute('data-populated', 'true');
+    }
+
+    async function loadAllFileLinks() {
+      const enhancedCells = document.querySelectorAll('.notice-id-enhanced');
+
+      for (const cell of enhancedCells) {
+        const title = cell.getAttribute('data-title');
+        if (title && title.trim()) {
+          const files = await loadFolderFiles(title.trim());
+          populateFileLinks(cell, files);
+        }
+      }
+    }
+
+    /* ---- Success notification functions ---- */
+    function showSuccessNotification(message) {
+      const notification = document.getElementById('successNotification');
+      const popup = document.getElementById('actionPopover');
+
+      if (!notification || !popup) return;
+
+      // Set the message content
+      notification.textContent = message;
+
+      // Position the notification near the popup
+      const popupRect = popup.getBoundingClientRect();
+      notification.style.display = 'block';
+      notification.setAttribute('aria-hidden', 'false');
+
+      // Position it to the right of the popup, or below if not enough space
+      const notificationWidth = 320; // max-width from CSS
+      const margin = 15;
+
+      let left = popupRect.right + margin;
+      let top = popupRect.top;
+
+      // If notification would go off-screen to the right, position it to the left
+      if (left + notificationWidth > window.innerWidth - margin) {
+        left = popupRect.left - notificationWidth - margin;
+      }
+
+      // If still off-screen to the left, position below the popup
+      if (left < margin) {
+        left = popupRect.left;
+        top = popupRect.bottom + margin;
+      }
+
+      // Ensure it doesn't go off-screen vertically
+      const notificationHeight = 100; // approximate height
+      if (top + notificationHeight > window.innerHeight - margin) {
+        top = window.innerHeight - notificationHeight - margin;
+      }
+      if (top < margin) {
+        top = margin;
+      }
+
+      notification.style.left = Math.max(margin, left) + 'px';
+      notification.style.top = Math.max(margin, top) + 'px';
+
+      // Auto-hide after 4 seconds
+      setTimeout(() => {
+        hideSuccessNotification();
+      }, 4000);
+
+      // Hide the original popup
+      hidePopover();
+
+      // Add click listener to close notification
+      notification.onclick = hideSuccessNotification;
+    }
+
+    function hideSuccessNotification() {
+      const notification = document.getElementById('successNotification');
+      if (notification) {
+        notification.style.display = 'none';
+        notification.setAttribute('aria-hidden', 'true');
+      }
+    }
+
     /* ---- Dark mode toggle (shared) ---- */
     (function(){
       const KEY = 'sam_theme_v1';
@@ -486,7 +823,7 @@ body[data-theme="dark"] #applyBtn:hover {
         });
       }
     })();
-  </script>
+</script>
 
   <script>
     const COLUMNS = {{ columns|tojson|safe }};
@@ -496,7 +833,7 @@ body[data-theme="dark"] #applyBtn:hover {
   { match: 'description', max: 600, def: 480, min: 160 },
   { match: 'summary',     max: 520, def: 420, min: 160 },
   { match: 'title',       max: 420, def: 360, min: 160 },
-  { match: 'notice id',   max: 280, def: 220, min: 120 },
+  { match: 'notice id',   max: 700, def: 220, min: 50 },
   { match: 'agency',      max: 320, def: 220, min: 140 },
   { match: 'date',        max: 300, def: 220, min: 140 },
   { match: '*',           max: 640, def: 220, min: parseInt(getComputedStyle(document.documentElement).getPropertyValue('--min-col-w')) || 140 }
@@ -596,6 +933,10 @@ function enforceWidthLimits(setDefaults=false) {
 
       const cols = Array.isArray(data.columns) && data.columns.length ? data.columns : COLUMNS;
       const tbody = document.getElementById("body");
+      // Clear any existing file link populated flags before refreshing table
+      document.querySelectorAll('.file-links-container[data-populated]').forEach(container => {
+        container.removeAttribute('data-populated');
+      });
       tbody.innerHTML = "";
 
       (data.solicitations || []).forEach(row => {
@@ -603,10 +944,30 @@ function enforceWidthLimits(setDefaults=false) {
         tr.innerHTML = cols.map(col => {
           const val = row[col] ?? "";
           const lc = String(col).toLowerCase();
-          if (lc.includes("summary")) {
+          if (col === "Highlight Summary") {
+            const noticeId = row['Notice ID'] || '';
+            const summaryContent = val || '<span style="font-style: italic; color: #666;">Click "Generate AI Summary" button above to generate summaries for all rows</span>';
+            return `<td data-col="${col}" class="highlight-summary" style="max-width: 350px; vertical-align: top;">
+                      <div style="font-weight: bold; color: #0066cc; margin: 0 0 2px 0; padding: 0;">🤖 AI Summary:</div>
+                      <div class="ai-summary" style="background: #f0f8ff; border: 1px solid #ddd; border-radius: 4px; padding: 6px; margin-bottom: 8px; white-space: pre-line; vertical-align: top;">
+                        <div class="ai-summary-content" data-notice-id="${noticeId}" style="vertical-align: top;">
+                          ${summaryContent}
+                        </div>
+                      </div>
+                      <input type="text" value="" placeholder="Add your highlights"
+                             style="width: 100%; border: 1px solid #ccc; background: white; padding: 8px; border-radius: 3px; font-size: 14px; height: 40px;"
+                             class="highlights-input" data-notice-id="${noticeId}" />
+                    </td>`;
+          } else if (lc.includes("summary")) {
             return `<td data-col="${col}" class="summary">${val}</td>`;
           } else if (lc.includes("desc")) {
             return `<td data-col="${col}" class="desc">${val}</td>`;
+          } else if (lc.includes("notice") && lc.includes("id")) {
+            const title = row['Title'] || row['Opportunity Title'] || row['Notice Title'] || row['Name'] || '';
+            return `<td data-col="${col}" class="notice-id-enhanced" data-notice-id="${val}" data-title="${title}">
+                      <div class="notice-id-value">${val}</div>
+                      <div class="file-links-container"></div>
+                    </td>`;
           }
           return `<td data-col="${col}">${val}</td>`;
         }).join("");
@@ -622,10 +983,169 @@ updateBottomBarWidth();
       updateBottomBarWidth();
       markNoticeIdCells();
       bindActionOnNoticeId();
+
+      // Load saved highlights first, then apply highlighting and load file links
+      loadHighlightsAfterUpdate().then(() => {
+        // Apply keyword highlighting to search results AFTER highlights are loaded
+        console.log('[MAIN] About to call highlightKeywordInTable with keyword:', keyword);
+        highlightKeywordInTable(keyword);
+        console.log('[MAIN] Finished calling highlightKeywordInTable');
+
+        // Load file links for all Notice ID cells
+        loadAllFileLinks();
+      });
     }
     function resetFilters() {
       document.getElementById("keyword").value = "";
       applyFilters();
+    }
+
+    /* ---------- Keyword highlighting ---------- */
+    function escapeRegExp(s) {
+      return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
+    function highlightKeywordInTable(keyword) {
+      console.log('[HIGHLIGHT] Function called with keyword:', keyword);
+      const kw = (keyword || "").trim();
+      const table = document.getElementById("result-table");
+      console.log('[HIGHLIGHT] Table found:', !!table);
+      console.log('[HIGHLIGHT] Trimmed keyword:', kw);
+
+      // Clean up any existing highlights and show normal inputs
+      document.querySelectorAll('.highlight-div').forEach(div => {
+        div.style.display = 'none';
+      });
+
+      // Show all normal input fields
+      document.querySelectorAll('.highlights-input').forEach(input => {
+        input.style.display = 'block';
+        input.style.color = '';
+        input.style.caretColor = '';
+      });
+
+      if (!table || !kw) {
+        console.log('[HIGHLIGHT] Early return - no table or keyword');
+        return;
+      }
+
+      const terms = kw.split(/\s+/).filter(Boolean).map(escapeRegExp);
+      if (!terms.length) return;
+
+      const re = new RegExp("(" + terms.join("|") + ")", "gi");
+
+      // Highlight in ALL columns including Highlight Summary
+      document.querySelectorAll("tbody td[data-col]").forEach(td => {
+        const col = (td.getAttribute("data-col") || "").toLowerCase();
+
+        if (col === "highlight summary") {
+          console.log('[DEBUG] Processing Highlight Summary column for keyword:', kw);
+
+          // Special handling for Highlight Summary column
+          const aiSummaryContent = td.querySelector('.ai-summary-content');
+          const highlightsInput = td.querySelector('.highlights-input');
+
+          console.log('[DEBUG] Found AI summary:', !!aiSummaryContent);
+          console.log('[DEBUG] Found highlights input:', !!highlightsInput);
+
+          // Highlight in AI summary content
+          if (aiSummaryContent) {
+            const summaryText = aiSummaryContent.textContent || "";
+            if (summaryText.match(re)) {
+              console.log('[DEBUG] Highlighting AI summary text');
+              aiSummaryContent.innerHTML = summaryText.replace(re, '<mark class="hl">$1</mark>');
+            }
+          }
+
+          // Highlight in highlights input value
+          if (highlightsInput) {
+            const inputValue = highlightsInput.value || "";
+            console.log('[DEBUG] Input value:', inputValue);
+            console.log('[DEBUG] Regex match:', !!inputValue.match(re));
+
+            if (inputValue && inputValue.match(re)) {
+              console.log('[DEBUG] Creating highlight div for input field');
+
+              // Create a contenteditable div to replace the input temporarily
+              let highlightDiv = td.querySelector('.highlight-div');
+
+              if (!highlightDiv) {
+                console.log('[DEBUG] Creating new highlight div');
+                highlightDiv = document.createElement('div');
+                highlightDiv.className = 'highlight-div';
+                highlightDiv.contentEditable = true;
+
+                // Copy all styles from the input
+                const computedStyle = window.getComputedStyle(highlightsInput);
+                highlightDiv.style.cssText = `
+                  width: 100%;
+                  border: 1px solid #ccc;
+                  background: white;
+                  padding: 8px;
+                  border-radius: 3px;
+                  font-size: 14px;
+                  height: 40px;
+                  outline: none;
+                  overflow-y: auto;
+                  font-family: ${computedStyle.fontFamily};
+                  line-height: 1.4;
+                  box-sizing: border-box;
+                `;
+
+                // Copy data attributes
+                highlightDiv.setAttribute('data-notice-id', highlightsInput.getAttribute('data-notice-id') || '');
+
+                // Insert after the input
+                highlightsInput.parentNode.insertBefore(highlightDiv, highlightsInput.nextSibling);
+
+                // Copy auto-save functionality to the new div
+                highlightDiv.addEventListener('input', function(e) {
+                  // Get plain text content and update the original input
+                  const plainText = highlightDiv.textContent || highlightDiv.innerText || '';
+                  highlightsInput.value = plainText;
+
+                  // Trigger the original input's input event for auto-save
+                  const event = new Event('input', { bubbles: true });
+                  highlightsInput.dispatchEvent(event);
+                });
+
+                // Handle focus events to ensure proper cursor positioning
+                highlightDiv.addEventListener('focus', function() {
+                  // Move cursor to end when focused
+                  const range = document.createRange();
+                  const selection = window.getSelection();
+                  range.selectNodeContents(highlightDiv);
+                  range.collapse(false);
+                  selection.removeAllRanges();
+                  selection.addRange(range);
+                });
+              }
+
+              // Show highlighted content and hide input
+              const highlightedText = inputValue.replace(re, '<mark class="hl">$1</mark>');
+              console.log('[DEBUG] Setting highlighted text:', highlightedText);
+
+              highlightDiv.innerHTML = highlightedText;
+              highlightDiv.style.display = 'block';
+              highlightsInput.style.display = 'none';
+
+            } else {
+              // Hide highlight div and show normal input
+              const highlightDiv = td.querySelector('.highlight-div');
+              if (highlightDiv) {
+                highlightDiv.style.display = 'none';
+              }
+              highlightsInput.style.display = 'block';
+            }
+          }
+        } else {
+          // Regular column highlighting
+          const textContent = td.textContent || "";
+          if (textContent.match(re)) {
+            td.innerHTML = textContent.replace(re, '<mark class="hl">$1</mark>');
+          }
+        }
+      });
     }
 
     document.getElementById("applyBtn").addEventListener("click", applyFilters);
@@ -814,27 +1334,58 @@ updateBottomBarWidth();
       tbody.dataset.actionsBound = '1';
 
       tbody.addEventListener('click', (e)=>{
+        // Check if the click was on the notice-id-value element specifically
+        const noticeIdValue = e.target.closest('.notice-id-value');
+        if (noticeIdValue) {
+          const td = noticeIdValue.closest('td');
+          if (!td || !td.parentElement) return;
+
+          const ths = Array.from(document.querySelectorAll('thead th'));
+          const cells = Array.from(td.parentElement.children);
+          const cellIndex = cells.indexOf(td);
+
+          const idx = findNoticeIdColIndex();
+          const headerName = (ths[cellIndex]?.getAttribute('data-col') || ths[cellIndex]?.textContent || '').trim();
+          const isByIndex  = (idx !== -1 && cellIndex === idx);
+          const isByLabel  = isNoticeIdHeader(headerName);
+
+          if (!(isByIndex || isByLabel)) return;
+
+          popRowEl = td.parentElement;
+          popNoticeId = noticeIdValue.textContent.trim();
+          popIdColName = headerName;
+          showPopoverAt(noticeIdValue);
+
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+
+        // Fallback for regular notice-id-cell (non-enhanced cells)
         const td = e.target.closest('td');
         if (!td || !td.parentElement) return;
 
-        const ths = Array.from(document.querySelectorAll('thead th'));
-        const cells = Array.from(td.parentElement.children);
-        const cellIndex = cells.indexOf(td);
+        // Only proceed if it's a regular notice-id-cell (not enhanced)
+        if (!td.classList.contains('notice-id-enhanced') && td.classList.contains('notice-id-cell')) {
+          const ths = Array.from(document.querySelectorAll('thead th'));
+          const cells = Array.from(td.parentElement.children);
+          const cellIndex = cells.indexOf(td);
 
-        const idx = findNoticeIdColIndex();
-        const headerName = (ths[cellIndex]?.getAttribute('data-col') || ths[cellIndex]?.textContent || '').trim();
-        const isByIndex  = (idx !== -1 && cellIndex === idx);
-        const isByLabel  = isNoticeIdHeader(headerName);
+          const idx = findNoticeIdColIndex();
+          const headerName = (ths[cellIndex]?.getAttribute('data-col') || ths[cellIndex]?.textContent || '').trim();
+          const isByIndex  = (idx !== -1 && cellIndex === idx);
+          const isByLabel  = isNoticeIdHeader(headerName);
 
-        if (!(isByIndex || isByLabel)) return;
+          if (!(isByIndex || isByLabel)) return;
 
-        popRowEl = td.parentElement;
-        popNoticeId = (td.textContent || '').trim();
-        popIdColName = headerName;
-        showPopoverAt(td);
+          popRowEl = td.parentElement;
+          popNoticeId = (td.textContent || '').trim();
+          popIdColName = headerName;
+          showPopoverAt(td);
 
-        e.preventDefault();
-        e.stopPropagation();
+          e.preventDefault();
+          e.stopPropagation();
+        }
       });
 
       document.addEventListener('click', (e)=>{
@@ -856,6 +1407,59 @@ updateBottomBarWidth();
       hidePopover();
       if (!nid){ alert('Missing Notice ID for this row.'); return; }
       window.open('/opportunity/' + encodeURIComponent(nid), '_blank', 'noopener');
+    });
+
+    // Create Folder – No: close
+    actPop.querySelector('.no-folder').addEventListener('click', hidePopover);
+    // Create Folder – Yes: create folder with opportunity title
+    actPop.querySelector('.yes-folder').addEventListener('click', async ()=>{
+      try{
+        if (!popRowEl) return hidePopover();
+
+        const ths = Array.from(document.querySelectorAll('thead th'));
+        const rowData = {};
+        ths.forEach((th, i) => {
+          const colName = (th.getAttribute('data-col') || th.textContent || '').trim();
+          const cellVal = (popRowEl.children[i]?.textContent || '').trim();
+          rowData[colName] = cellVal;
+        });
+
+        // Find the title from the row data
+        let title = '';
+        const titleKeys = ['Title', 'Opportunity Title', 'Notice Title', 'Name', 'Project Title', 'Solicitation Title'];
+        for (const key of titleKeys) {
+          if (rowData[key] && rowData[key].trim()) {
+            title = rowData[key].trim();
+            break;
+          }
+        }
+
+        if (!title) {
+          title = popNoticeId || 'Unnamed Opportunity';
+        }
+
+        const res = await fetch('/create-opportunity-folder', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            notice_id: popNoticeId,
+            title: title
+          })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+          alert(data.message || 'Could not create folder.');
+          return;
+        }
+
+        showSuccessNotification(`✅ Folder created successfully!\n\nLocation: ${data.folder_path}\nTitle: ${title}`);
+
+      } catch(err){
+        console.error(err);
+        alert('Error creating folder: ' + err.message);
+      } finally {
+        hidePopover();
+      }
     });
 
     // Delete – No: close
@@ -914,7 +1518,301 @@ updateBottomBarWidth();
       updateBottomBarWidth();
       markNoticeIdCells();
       bindActionOnNoticeId();
+      initAISummaryButton();
+
+      // Load file links for initial page load
+      setTimeout(() => {
+        loadAllFileLinks();
+      }, 500);
     });
-  </script>
+
+    /* ---------- AI Summary Generation ---------- */
+    function initAISummaryButton() {
+      var generateBtn = document.getElementById('generateAISummaryBtn');
+      if (generateBtn) {
+        generateBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          generateAllAISummaries();
+        });
+      }
+    }
+
+    async function generateAllAISummaries() {
+      var generateBtn = document.getElementById('generateAISummaryBtn');
+      var table = document.getElementById('result-table');
+      if (!table) {
+        alert('No table found');
+        return;
+      }
+
+      // Get all rows with data
+      var rows = table.querySelectorAll('tbody tr');
+      if (rows.length === 0) {
+        alert('No data rows found');
+        return;
+      }
+
+      // First check if API key is configured by testing with a simple request
+      try {
+        var testResponse = await fetch('/generate-ai-summary', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ description: 'test' })
+        });
+
+        if (testResponse.status === 500) {
+          var testData = await testResponse.json();
+          if (testData.message && testData.message.includes('OpenAI API key not configured')) {
+            alert('⚠️ OpenAI API key is not configured!\n\nTo enable AI summaries, please set the OPENAI_API_KEY environment variable and restart the application.\n\nWithout the API key, AI summary generation is disabled.');
+            return;
+          }
+        }
+      } catch (error) {
+        console.error('Error checking API key status:', error);
+      }
+
+      // Show loading state
+      generateBtn.disabled = true;
+      var originalContent = generateBtn.innerHTML;
+      generateBtn.innerHTML = '<div class="btn-content"><div class="btn-icon">⏳</div><div class="btn-text"><div class="btn-title">Generating...</div><div class="btn-subtitle">Processing all rows</div></div></div>';
+
+      var processed = 0;
+      var successful = 0;
+      var apiKeyError = false;
+
+      try {
+        for (var i = 0; i < rows.length; i++) {
+          var row = rows[i];
+
+          // Find description column
+          var descCell = row.querySelector('td[data-col*="escription"], td[data-col*="esc"]');
+          if (!descCell) {
+            processed++;
+            continue;
+          }
+
+          var description = descCell.textContent.trim();
+          if (!description || description.length < 50) {
+            processed++;
+            continue;
+          }
+
+          // Find AI summary content area
+          var summaryContent = row.querySelector('.ai-summary-content');
+          if (!summaryContent) {
+            processed++;
+            continue;
+          }
+
+          // Get Notice ID for this row
+          var noticeId = summaryContent.getAttribute('data-notice-id') || '';
+
+          try {
+            // Show processing for this row
+            summaryContent.innerHTML = '<span style="color: #0066cc;">Processing...</span>';
+
+            var response = await fetch('/generate-ai-summary', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                description: description,
+                notice_id: noticeId
+              })
+            });
+
+            var data = await response.json();
+
+            if (data.ok && data.summary) {
+              summaryContent.innerHTML = data.summary;
+              successful++;
+            } else {
+              summaryContent.innerHTML = '<span style="color: #ff6600;">Error: ' + (data.message || 'Failed to generate') + '</span>';
+              if (data.message && data.message.includes('OpenAI API key not configured')) {
+                apiKeyError = true;
+              }
+            }
+
+            processed++;
+
+            // Update button with progress
+            generateBtn.innerHTML = '<div class="btn-content"><div class="btn-icon">⏳</div><div class="btn-text"><div class="btn-title">Processing...</div><div class="btn-subtitle">' + processed + '/' + rows.length + ' completed</div></div></div>';
+
+            // Small delay to prevent overwhelming the API
+            await new Promise(resolve => setTimeout(resolve, 200));
+
+          } catch (error) {
+            console.error('Error processing row ' + i + ':', error);
+            summaryContent.innerHTML = '<span style="color: #ff0000;">Error: ' + error.message + '</span>';
+            processed++;
+          }
+        }
+
+        // Show completion message
+        var message = 'AI Summary generation completed!\n\nProcessed: ' + processed + ' rows\nSuccessful: ' + successful + ' summaries';
+
+        if (apiKeyError && successful === 0) {
+          message += '\n\n⚠️ All summaries failed because OpenAI API key is not configured.\n\nTo enable AI summaries:\n1. Set OPENAI_API_KEY environment variable\n2. Restart the application\n3. Try generating summaries again';
+        } else if (successful === 0) {
+          message += '\n\n⚠️ No summaries were generated successfully.\nThis may be due to API issues or configuration problems.';
+        } else if (successful < processed) {
+          message += '\n\nSome rows failed to generate summaries. Check individual row error messages for details.';
+        }
+
+        alert(message);
+
+      } catch (error) {
+        console.error('Bulk AI Summary Error:', error);
+        alert('Error during bulk generation: ' + error.message);
+      } finally {
+        // Reset button
+        generateBtn.disabled = false;
+        generateBtn.innerHTML = originalContent;
+      }
+    }
+
+    /* ---------- Auto-save highlights to file (Python virtual environment) ---------- */
+    async function saveHighlightsToFile(noticeId, highlights) {
+      try {
+        console.log('💾 Attempting to save to file via Flask endpoint...');
+        const response = await fetch('/save-highlights', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            notice_id: noticeId,
+            highlights: highlights
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('✅ Saved to file:', noticeId, '=', highlights);
+          return true;
+        } else {
+          console.error('❌ Failed to save to file:', response.statusText);
+          return false;
+        }
+      } catch (error) {
+        console.error('❌ Failed to save to file:', error);
+        return false;
+      }
+    }
+
+    async function loadHighlightsFromFile(noticeId) {
+      try {
+        console.log('🔍 Attempting to load from file for notice:', noticeId);
+        const response = await fetch('/load-highlights', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ notice_id: noticeId })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const result = data.highlights || '';
+          console.log('🎯 Loaded from file for notice:', noticeId, '=', result);
+          return result;
+        } else {
+          console.log('📂 No file data found for notice:', noticeId);
+          return '';
+        }
+      } catch (error) {
+        console.error('❌ Failed to load from file:', error);
+        return '';
+      }
+    }
+
+    async function loadSavedHighlights() {
+      console.log('🔄 Loading saved highlights on page...');
+
+      // Load saved highlights for all current inputs
+      const inputs = document.querySelectorAll('.highlights-input');
+      console.log('🎯 Found', inputs.length, 'highlights input fields');
+
+      for (let i = 0; i < inputs.length; i++) {
+        const input = inputs[i];
+        const noticeId = input.getAttribute('data-notice-id');
+        console.log(`📝 Input ${i + 1}: noticeId =`, noticeId);
+        if (noticeId) {
+          const savedHighlights = await loadHighlightsFromFile(noticeId);
+          if (savedHighlights) {
+            input.value = savedHighlights;
+            console.log('✅ Loaded highlights into input:', savedHighlights);
+          } else {
+            console.log('📭 No saved highlights for this notice');
+          }
+        } else {
+          console.log('⚠️ No notice ID found for input');
+        }
+      }
+
+      // Return a resolved promise to indicate completion
+      return Promise.resolve();
+    }
+
+    function initHighlightsAutoSave() {
+      // Auto-save on input (using event delegation for dynamic content)
+      document.addEventListener('input', function(e) {
+        if (e.target.classList.contains('highlights-input')) {
+          console.log('Highlights input detected:', e.target.value); // Debug log
+          const noticeId = e.target.getAttribute('data-notice-id');
+          const highlights = e.target.value;
+
+          if (!noticeId) {
+            console.error('No notice ID found for highlights input');
+            return;
+          }
+
+          // Auto-save after a short delay
+          clearTimeout(e.target.saveTimeout);
+          e.target.saveTimeout = setTimeout(async () => {
+            try {
+              const saveSuccess = await saveHighlightsToFile(noticeId, highlights);
+              console.log('Saved highlights for notice:', noticeId, highlights); // Debug log
+              console.log('Applying green flash...'); // Debug log
+              // Visual feedback for successful save using CSS class
+              e.target.classList.add('saving');
+              console.log('Green flash applied via CSS class'); // Debug log
+              setTimeout(() => {
+                console.log('Removing green flash...'); // Debug log
+                e.target.classList.remove('saving');
+              }, 1500);
+            } catch (error) {
+              console.error('Auto-save failed:', error);
+              e.target.style.borderColor = '#dc3545';
+              e.target.style.borderWidth = '2px';
+              e.target.style.boxShadow = '0 0 5px rgba(220, 53, 69, 0.5)';
+              setTimeout(() => {
+                e.target.style.borderColor = '#ccc';
+                e.target.style.borderWidth = '1px';
+                e.target.style.boxShadow = 'none';
+              }, 2000);
+            }
+          }, 500); // 0.5 second delay for local storage
+        }
+      });
+    }
+
+    // Initialize auto-save when page loads
+    initHighlightsAutoSave();
+
+    // Load saved highlights after DOM is ready and after a short delay
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(loadSavedHighlights, 200);
+    });
+
+    // Also load highlights immediately (for initial page load)
+    setTimeout(loadSavedHighlights, 500);
+
+    // Also load highlights after table updates (for filtered results)
+    function loadHighlightsAfterUpdate() {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          loadSavedHighlights().then(() => {
+            resolve();
+          });
+        }, 100);
+      });
+    }
+</script>
 </body>
 </html>
