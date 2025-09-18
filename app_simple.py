@@ -11,7 +11,7 @@ from io import BytesIO
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-change-in-production')
-app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024  # 2MB max file size for Vercel
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
 # Sample data for demo
 def get_sample_data():
@@ -69,6 +69,9 @@ def project_tracking():
 @app.route("/upload-data", methods=["POST"])
 def upload_data():
     """Upload a CSV/XLSX file and store in memory."""
+    print(f"[UPLOAD] Request content length: {request.content_length}")
+    print(f"[UPLOAD] Request files: {list(request.files.keys())}")
+
     if "file" not in request.files:
         return jsonify({"ok": False, "message": "No file part"}), 400
 
@@ -169,7 +172,7 @@ def my_filter():
 def too_large(e):
     return jsonify({
         "ok": False,
-        "message": "File too large. Maximum size is 2MB for this demo. Try a smaller file or compress your data."
+        "message": "File too large. Maximum size is 16MB."
     }), 413
 
 @app.errorhandler(404)
