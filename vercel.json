@@ -16,5 +16,8 @@
     "app_simple.py": {
       "maxDuration": 30
     }
+  },
+  "env": {
+    "VERCEL": "1"
   }
 }

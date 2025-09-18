@@ -11,7 +11,11 @@ from io import BytesIO
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-change-in-production')
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
+# Set different limits based on environment
+if os.environ.get('VERCEL'):
+    app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024  # 1MB for Vercel
+else:
+    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB for local
 
 # Sample data for demo
 def get_sample_data():
@@ -69,11 +73,16 @@ def project_tracking():
 @app.route("/upload-data", methods=["POST"])
 def upload_data():
     """Upload a CSV/XLSX file and store in memory."""
-    print(f"[UPLOAD] Request content length: {request.content_length}")
-    print(f"[UPLOAD] Request files: {list(request.files.keys())}")
+    try:
+        print(f"[UPLOAD] Environment: {'Vercel' if os.environ.get('VERCEL') else 'Local'}")
+        print(f"[UPLOAD] Request content length: {request.content_length}")
+        print(f"[UPLOAD] Request files: {list(request.files.keys())}")
 
-    if "file" not in request.files:
-        return jsonify({"ok": False, "message": "No file part"}), 400
+        if "file" not in request.files:
+            return jsonify({"ok": False, "message": "No file part"}), 400
+    except Exception as e:
+        print(f"[UPLOAD] Initial error: {e}")
+        return jsonify({"ok": False, "message": f"Request processing error: {str(e)}"}), 400
 
     file = request.files["file"]
     if file.filename == "":
@@ -170,9 +179,10 @@ def my_filter():
 
 @app.errorhandler(413)
 def too_large(e):
+    max_size = "1MB" if os.environ.get('VERCEL') else "16MB"
     return jsonify({
         "ok": False,
-        "message": "File too large. Maximum size is 16MB."
+        "message": f"File too large. Maximum size is {max_size}."
     }), 413
 
 @app.errorhandler(404)
